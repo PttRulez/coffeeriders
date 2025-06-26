@@ -35,4 +35,12 @@ export interface User {
     updated_at: string;
 }
 
+export interface Bike {
+    id: number;
+
+    name: string;
+    img_url: string;
+    short_description: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

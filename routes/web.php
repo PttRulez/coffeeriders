@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\BikeRentController;
+use App\Models\Bike;
+use App\Services\BikeRentService;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -7,9 +10,7 @@ Route::get('/', function () {
     return redirect()->route('rent-bikes');
 })->name('home');
 
-Route::get('/rent-bikes', function () {
-    return Inertia::render('rent-bikes/Index');
-})->name('rent-bikes');
+Route::get('/rent-bikes', [BikeRentController::class, 'index'])->name('rent-bikes');
 
 Route::fallback(function () {
     return redirect()->route('rent-bikes');

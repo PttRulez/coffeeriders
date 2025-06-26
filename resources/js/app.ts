@@ -6,12 +6,41 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import AppLayout from '@/layouts/AppLayout.vue';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+// Extend ImportMeta interface for Vite...
+declare module 'vite/client' {
+    interface ImportMetaEnv {
+        readonly VITE_APP_NAME: string;
+        [key: string]: string | boolean | undefined;
+    }
+
+    interface ImportMeta {
+        readonly env: ImportMetaEnv;
+        readonly glob: <T>(pattern: string) => Record<string, () => Promise<T>>;
+    }
+}
+
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
-    resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
+    title: (title) => {
+        const appName = import.meta.env.VITE_APP_NAME || 'Coffee Riders';
+        return title ? `${title} | ${appName}` : appName;
+    },
+    // resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
+    resolve: async (name) => {
+        const pages = import.meta.glob('./pages/**/*.vue')
+        const page = await resolvePageComponent(`./pages/${name}.vue`, pages)
+        if (page.default.layout === undefined) {
+            page.default.layout = AppLayout;
+        }
+
+        // if (name.toLowerCase().startsWith('auth/')) {
+        //     page.default.layout = AuthLayout;
+        // }
+
+		return page
+	},
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
