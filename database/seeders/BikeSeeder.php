@@ -28,7 +28,7 @@ class BikeSeeder extends Seeder
             [
                 'name' => 'Giant Revolt M',
                 'short_description' => 'Ручки grx810. Тормоза ХТ. Кассета m7000',
-                'img_url' => 'https://www.summumbike.com/1027-thickbox_default/velo-de-gravel-giant-revolt-adv-1-taille-m.jpg'
+                'img_url' => 'https://www.sefiles.net/images/library/zoom/giant-revolt-advanced-pro-1-570972-1.png'
             ],
             [
                 'name' => 'Pardus Sport XL',
