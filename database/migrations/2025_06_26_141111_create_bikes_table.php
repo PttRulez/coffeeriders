@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('bikes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('short_description');
+            $table->string('category');
             $table->string('img_url');
+            $table->string('name');
+            $table->json('prices');
+            $table->string('short_description');
+            $table->longText('full_description')->default('');
             $table->timestamps();
         });
     }

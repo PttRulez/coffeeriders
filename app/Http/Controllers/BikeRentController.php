@@ -9,12 +9,14 @@ use Inertia\Response;
 
 class BikeRentController extends Controller
 {
+    public function __construct(private readonly BikeRentService $bikeRentService){}
+    
     public function index(): Response
     {
-        $rentService = new BikeRentService();
+//        $rentService = new BikeRentService();
         
         return Inertia::render('rent-bikes/Index', [
-            'bikes' => $rentService->getAllBikes()->toArray()
+            'bikes' => $this->bikeRentService->getAllBikes()->toArray()
         ]);
     }
 }

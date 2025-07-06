@@ -1,17 +1,17 @@
 import '../css/app.css';
 
-import { createInertiaApp } from '@inertiajs/vue3';
+import AppLayout from '@/layout/AppLayout.vue';
+import { createInertiaApp, Head, Link } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
-import AppLayout from '@/layouts/AppLayout.vue';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
+
         [key: string]: string | boolean | undefined;
     }
 
@@ -21,7 +21,6 @@ declare module 'vite/client' {
     }
 }
 
-
 createInertiaApp({
     title: (title) => {
         const appName = import.meta.env.VITE_APP_NAME || 'Coffee Riders';
@@ -29,8 +28,8 @@ createInertiaApp({
     },
     // resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
     resolve: async (name) => {
-        const pages = import.meta.glob('./pages/**/*.vue')
-        const page = await resolvePageComponent(`./pages/${name}.vue`, pages)
+        const pages = import.meta.glob('./pages/**/*.vue');
+        const page = await resolvePageComponent(`./pages/${name}.vue`, pages);
         if (page.default.layout === undefined) {
             page.default.layout = AppLayout;
         }
@@ -39,12 +38,14 @@ createInertiaApp({
         //     page.default.layout = AuthLayout;
         // }
 
-		return page
-	},
+        return page;
+    },
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .component('Head', Head)
+            .component('Link', Link)
             .mount(el);
     },
     progress: {

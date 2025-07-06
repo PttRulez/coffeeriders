@@ -1,0 +1,102 @@
+<script lang="ts" setup="">
+import ErrorBag from '@/components/form/ErrorBag.vue';
+import FormInput from '@/components/form/FormInput.vue';
+import FormSelect, { SelectOption } from '@/components/form/FormSelect.vue';
+import InputError from '@/components/InputError.vue';
+import { Button } from '@/components/shadecn/button';
+import { Textarea } from '@/components/shadecn/textarea';
+import BikeForm from '@/pages/adminka/rent-bikes/BikeForm.vue';
+import { Bike } from '@/types';
+import { BikeCategory } from '@/types/enums';
+import { useForm } from '@inertiajs/vue3';
+
+interface BikeForm extends Partial<Bike>, Record<string, any> {
+    img: File | null;
+    prices: Array<{
+        period: string;
+        price: number;
+    }>;
+}
+
+const { bike } = defineProps<{ bike?: Bike }>();
+
+const form = useForm<BikeForm>(
+    bike
+        ? {
+              ...bike,
+              img: null,
+              _method: 'PUT',
+          }
+        : ({
+              category: undefined,
+              full_description: undefined,
+              id: undefined,
+              img: null,
+              name: undefined,
+              short_description: undefined,
+              prices: [{ price: 2500, period: 'сутки' }],
+          } as BikeForm),
+);
+
+const bikeCategories: SelectOption[] = [
+    {
+        label: 'Шоссер',
+        value: BikeCategory.Road,
+    },
+    {
+        label: 'Гравийник',
+        value: BikeCategory.Gravel,
+    },
+    {
+        label: 'МТБшка',
+        value: BikeCategory.MTB,
+    },
+];
+
+const submit = () => {
+    if (form.id) {
+        form['_method'] = 'PUT';
+        form.post(route('adminka.rent-bikes.update', form.id), {
+            forceFormData: true,
+        });
+    } else {
+        form.post(route('adminka.rent-bikes.store'), {
+            forceFormData: true,
+            headers: {
+                'X-HTTP-Method-Override': 'PUT',
+            },
+        });
+    }
+};
+</script>
+
+<template>
+    <form @submit.prevent="submit" class="mx-auto flex min-w-xl flex-col gap-5 rounded-4xl border border-sidebar-border/80 p-10">
+        <h1 class="text-center text-2xl" v-if="form.id">Правка вела</h1>
+        <h1 class="text-center text-2xl" v-else>Форма нового вела</h1>
+        <FormInput v-model="form.name" :errorMessage="form.errors.name" field-name="name" placeholder="название велика" />
+
+        <FormSelect v-model="form.category" :errorMessage="form.errors.category" :options="bikeCategories" placeholder="категория" field-name="" />
+
+        <section v-for="(_, i) in form.prices" :key="i">
+            <div class="flex gap-10">
+                <FormInput type="number" v-model="form.prices[i].price" :field-name="'price' + ' ' + i" placeholder="цена" />
+                <FormInput v-model="form.prices[i].period" :field-name="'period' + ' ' + i" placeholder="период" />
+            </div>
+            <ErrorBag :errors="[form.errors[`prices.${i}.price`], form.errors[`prices.${i}.period`]]" class="mt-5" />
+        </section>
+
+        <Button class="w-fit cursor-pointer" @click="() => form.prices.push({})" type="button">Добавить цену</Button>
+
+        <FormInput @input="form.img = $event.target.files[0]" field-name="img" type="file" class="cursor-pointer" enctype="multipart/form-data" />
+
+        <Textarea placeholder="Краткое описание" class="resize-none" v-model="form.short_description" />
+        <InputError :message="form.errors.short_description" />
+
+        <Textarea placeholder="Полное описание" class="resize-none" v-model="form.full_description" />
+        <InputError :message="form.errors.full_description" />
+
+        <Button class="mt-10 cursor-pointer p-7" v-if="form.id">Сохранить</Button>
+        <Button class="mt-10 cursor-pointer p-7" v-else>Создать</Button>
+    </form>
+</template>

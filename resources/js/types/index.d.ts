@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-vue-next';
 import type { Config } from 'ziggy-js';
+import { BikeCategory, Role } from '@/types/enums';
 
 export interface Auth {
     user: User;
@@ -11,10 +12,11 @@ export interface BreadcrumbItem {
 }
 
 export interface NavItem {
-    title: string;
     href: string;
     icon?: LucideIcon;
     isActive?: boolean;
+    show: boolean;
+    title: string;
 }
 
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -26,20 +28,28 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
 };
 
 export interface User {
+    avatar?: string;
+    created_at: string;
+    email: string;
+    email_verified_at: string | null;
     id: number;
     name: string;
-    email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    created_at: string;
+    role: Role;
     updated_at: string;
 }
 
-export interface Bike {
-    id: number;
+export interface BikePrice {
+    period: string;
+    price: number;
+}
 
-    name: string;
+export interface Bike {
+    category: BikeCategory;
+    full_description: string;
+    id: number;
     img_url: string;
+    name: string;
+    prices: BikePrice[];
     short_description: string;
 }
 

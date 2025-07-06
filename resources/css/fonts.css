@@ -1,0 +1,14 @@
+@import "tw-animate-css";
+
+@font-face {
+  font-family: 'Zefani';
+  src: url('/fonts/Zefani_Uppercase_Demo-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer utilities {
+  .font-zefani {
+    font-family: 'Zefani', sans-serif;
+  }
+}
