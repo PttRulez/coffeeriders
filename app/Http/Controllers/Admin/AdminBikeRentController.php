@@ -33,9 +33,11 @@ class AdminBikeRentController extends Controller
     public function store(CreateBikeRequest $request): RedirectResponse
     {
         $v = $request->validated();
+        
         if ($request->hasFile('img') && $request->file('img')->isValid()) {
             $path = $request->file('img')?->store('uploads', 'public');
-            $v['img_url'] = $path;
+            $url = Storage::url($path);
+            $v['img_url'] = $url;
         }
         unset($v['img']);
         
