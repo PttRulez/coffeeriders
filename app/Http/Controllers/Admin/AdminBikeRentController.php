@@ -56,9 +56,11 @@ class AdminBikeRentController extends Controller
     public function update(CreateBikeRequest $request, Bike $bike): RedirectResponse
     {
         $v = $request->validated();
+        
         if ($request->hasFile('img') && $request->file('img')->isValid()) {
             $path = $request->file('img')?->store('uploads', 'public');
-            $v['img_url'] = $path;
+            $url = Storage::url($path);
+            $v['img_url'] = $url;
             
             if ($bike->img_url && Storage::disk('public')->exists($bike->img_url)) {
                 Storage::disk('public')->delete($bike->img_url);
