@@ -9,6 +9,7 @@ import BikeForm from '@/pages/adminka/rent-bikes/BikeForm.vue';
 import { Bike } from '@/types';
 import { BikeCategory } from '@/types/enums';
 import { useForm } from '@inertiajs/vue3';
+import { Trash } from 'lucide-vue-next';
 
 interface BikeForm extends Partial<Bike>, Record<string, any> {
     img: File | null;
@@ -53,7 +54,29 @@ const bikeCategories: SelectOption[] = [
     },
 ];
 
+const validatePrices = () => {
+    if (!form.prices || !Array.isArray(form.prices)) {
+        form.setError('prices', 'Цены обязательны');
+        return false;
+    }
+
+    const hasValidPrice = form.prices.some((p) => p.price && p.price.toString().trim() !== '');
+
+    if (!hasValidPrice) {
+        form.setError('prices', 'Добавьте хотя бы одну цену');
+        return false;
+    }
+
+    delete form.errors.prices;
+    return true;
+};
+
 const submit = () => {
+    console.log(form);
+    if (!validatePrices()) {
+        return;
+    }
+
     if (form.id) {
         form['_method'] = 'PUT';
         form.post(route('adminka.rent-bikes.update', form.id), {
@@ -62,9 +85,6 @@ const submit = () => {
     } else {
         form.post(route('adminka.rent-bikes.store'), {
             forceFormData: true,
-            headers: {
-                'X-HTTP-Method-Override': 'PUT',
-            },
         });
     }
 };
@@ -79,13 +99,22 @@ const submit = () => {
         <FormSelect v-model="form.category" :errorMessage="form.errors.category" :options="bikeCategories" placeholder="категория" field-name="" />
 
         <section v-for="(_, i) in form.prices" :key="i">
-            <div class="flex gap-10">
+            <div class="flex items-center gap-10">
                 <FormInput v-model="form.prices[i].price" type="number" :field-name="'price' + ' ' + i" placeholder="цена" class="max-md:px-2" />
                 <FormInput v-model="form.prices[i].period" :field-name="'period' + ' ' + i" placeholder="период" class="max-md:px-2" />
+                <button
+                    type="button"
+                    @click="() => form.prices.splice(i, 1)"
+                    :disabled="form.prices.length === 1"
+                    class="cursor-pointer text-red-600 hover:text-red-800 disabled:hidden"
+                >
+                    <Trash />
+                </button>
             </div>
             <ErrorBag :errors="[form.errors[`prices.${i}.price`], form.errors[`prices.${i}.period`]]" class="mt-5" />
         </section>
 
+        <InputError :message="form.errors.prices" />
         <Button class="w-fit cursor-pointer" @click="() => form.prices.push({})" type="button">Добавить цену</Button>
 
         <FormInput @input="form.img = $event.target.files[0]" field-name="img" type="file" class="cursor-pointer" enctype="multipart/form-data" />
@@ -93,7 +122,7 @@ const submit = () => {
         <Textarea placeholder="Краткое описание" class="resize-none" v-model="form.short_description" />
         <InputError :message="form.errors.short_description" />
 
-        <Textarea placeholder="Полное описание" class="resize-none hidden" v-model="form.full_description" />
+        <Textarea placeholder="Полное описание" class="hidden resize-none" v-model="form.full_description" />
         <InputError class="hidden" :message="form.errors.full_description" />
 
         <Button class="mt-10 cursor-pointer p-7" v-if="form.id">Сохранить</Button>

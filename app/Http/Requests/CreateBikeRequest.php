@@ -23,6 +23,11 @@ class CreateBikeRequest extends FormRequest
             'name' => 'required|string',
             'img' => 'sometimes',
             'category' => ['required', new Enum(BikeCategory::class)],
+            'prices' => ['required', 'array', function ($attribute, $value, $fail) {
+                if (count($value) < 1) {
+                    $fail('At least one price is required.');
+                }
+            }],
             'prices.*.price' => 'required',
             'prices.*.period' => 'required|string',
             'short_description' => 'required|string',
