@@ -45,7 +45,7 @@ const submit = () => {
                         required
                         autofocus
                         :tabindex="1"
-                        autocomplete="email"
+                        autocomplete="off"
                         v-model="form.email"
                         placeholder="email@example.com"
                     />
@@ -64,7 +64,7 @@ const submit = () => {
                         type="password"
                         required
                         :tabindex="2"
-                        autocomplete="current-password"
+                        autocomplete="off"
                         v-model="form.password"
                         placeholder="Password"
                     />
