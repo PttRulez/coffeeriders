@@ -47,7 +47,7 @@ const mainNavItems: NavItem[] = [
 </script>
 
 <template>
-    <div class="fixed w-full bg-background">
+    <div class="fixed w-full bg-background z-10">
         <div class="border-b border-sidebar-border/80">
             <div class="mx-auto flex items-center gap-4 h-16 justify-between  px-4 md:max-w-7xl">
                 <!-- Mobile Menu -->

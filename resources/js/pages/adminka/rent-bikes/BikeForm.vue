@@ -99,9 +99,9 @@ const submit = () => {
         <FormSelect v-model="form.category" :errorMessage="form.errors.category" :options="bikeCategories" placeholder="категория" field-name="" />
 
         <section v-for="(_, i) in form.prices" :key="i">
-            <div class="flex items-center gap-10">
-                <FormInput v-model="form.prices[i].price" type="number" :field-name="'price' + ' ' + i" placeholder="цена" class="max-md:px-2" />
-                <FormInput v-model="form.prices[i].period" :field-name="'period' + ' ' + i" placeholder="период" class="max-md:px-2" />
+            <div class="flex items-center gap-2 md:gap-10">
+                <FormInput v-model="form.prices[i].price" type="number" :field-name="'price' + ' ' + i" placeholder="цена" class="max-md:px-2 max-md:text-sm" />
+                <FormInput v-model="form.prices[i].period" :field-name="'period' + ' ' + i" placeholder="период" class="max-md:px-2 max-md:text-sm" />
                 <button
                     type="button"
                     @click="() => form.prices.splice(i, 1)"
