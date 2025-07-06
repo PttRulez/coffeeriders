@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->json('prices');
             $table->string('short_description');
-            $table->longText('full_description')->default('');
+            $table->longText('full_description')->nullable();
             $table->timestamps();
         });
     }

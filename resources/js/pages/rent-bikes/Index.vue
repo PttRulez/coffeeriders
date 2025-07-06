@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/shadecn/card';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator
+} from '@/components/shadecn/breadcrumb';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/shadecn/card';
 import { Bike } from '@/types';
 import { BikeCategory } from '@/types/enums';
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { getPriceStringWithSeparators } from '@/helpers/price';
 
 type Props = {
     bikes: Bike[];
@@ -41,8 +49,8 @@ const getCategoryName = (name: BikeCategory): string => {
 <template>
     <Head title="Аренда чётких великов" />
     <template v-for="(bikes, categoryName) in groupedBikes" :key="categoryName">
-        <h1 class="text-2xl text-center">{{ getCategoryName(categoryName) }}</h1>
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-3 mb-10 md:mb-20">
+        <h1 class="text-center text-2xl">{{ getCategoryName(categoryName) }}</h1>
+        <div class="mb-10 grid grid-cols-1 gap-4 md:mb-20 md:grid-cols-3">
             <Card v-for="bike in bikes" :key="bike.id">
                 <CardContent>
                     <img class="mx-auto h-40 md:h-50" :src="bike.img_url" alt="Specialized Crux" />
@@ -52,7 +60,18 @@ const getCategoryName = (name: BikeCategory): string => {
                     <CardDescription>{{ bike.short_description }}</CardDescription>
                 </CardHeader>
 
-                <!--            <CardFooter> Card Footer</CardFooter>-->
+                <CardFooter>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <template v-for="(p, i) in bike.prices" :key="i">
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage><span class="font-bold text-purple-900">{{ getPriceStringWithSeparators(p.price) }}</span> <span class="text-muted-foreground">/ {{ p.period }}</span></BreadcrumbPage>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator v-if="i < bike.prices.length - 1" />
+                            </template>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </CardFooter>
             </Card>
         </div>
     </template>

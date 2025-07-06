@@ -47,20 +47,7 @@ const menuItems = ref<MenuItem[]>([
         url: route('meals.index'),
         show: !!user.value,
     },
-
-    // {
-    //     label: t('Tracks'),
-    //     show: true,
-    //     children: [
-    //         {
-    //             label: t('Cycling'),
-    //             url: route('tracks.cycling'),
-    //             show: true,
-    //         },
-    //     ],
-    // },
 ]);
-console.log(user);
 const dropdownItems = ref<MenuItem[]>([
     {
         label: t('Settings'),

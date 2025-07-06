@@ -10,7 +10,6 @@ type Props = {
 
 const { bikes } = defineProps<Props>();
 
-console.log(bikes);
 </script>
 
 <template>

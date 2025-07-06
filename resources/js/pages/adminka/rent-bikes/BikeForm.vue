@@ -71,7 +71,7 @@ const submit = () => {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="mx-auto flex min-w-xl flex-col gap-5 rounded-4xl border border-sidebar-border/80 p-10">
+    <form @submit.prevent="submit" class="mx-auto flex flex-col gap-5 rounded-4xl border border-sidebar-border/80 p-10 md:min-w-xl">
         <h1 class="text-center text-2xl" v-if="form.id">Правка вела</h1>
         <h1 class="text-center text-2xl" v-else>Форма нового вела</h1>
         <FormInput v-model="form.name" :errorMessage="form.errors.name" field-name="name" placeholder="название велика" />
@@ -80,8 +80,8 @@ const submit = () => {
 
         <section v-for="(_, i) in form.prices" :key="i">
             <div class="flex gap-10">
-                <FormInput type="number" v-model="form.prices[i].price" :field-name="'price' + ' ' + i" placeholder="цена" />
-                <FormInput v-model="form.prices[i].period" :field-name="'period' + ' ' + i" placeholder="период" />
+                <FormInput v-model="form.prices[i].price" type="number" :field-name="'price' + ' ' + i" placeholder="цена" class="max-md:px-2" />
+                <FormInput v-model="form.prices[i].period" :field-name="'period' + ' ' + i" placeholder="период" class="max-md:px-2" />
             </div>
             <ErrorBag :errors="[form.errors[`prices.${i}.price`], form.errors[`prices.${i}.period`]]" class="mt-5" />
         </section>
@@ -93,8 +93,8 @@ const submit = () => {
         <Textarea placeholder="Краткое описание" class="resize-none" v-model="form.short_description" />
         <InputError :message="form.errors.short_description" />
 
-        <Textarea placeholder="Полное описание" class="resize-none" v-model="form.full_description" />
-        <InputError :message="form.errors.full_description" />
+        <Textarea placeholder="Полное описание" class="resize-none hidden" v-model="form.full_description" />
+        <InputError class="hidden" :message="form.errors.full_description" />
 
         <Button class="mt-10 cursor-pointer p-7" v-if="form.id">Сохранить</Button>
         <Button class="mt-10 cursor-pointer p-7" v-else>Создать</Button>

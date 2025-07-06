@@ -23,29 +23,31 @@ class AuthenticatedSessionController extends Controller
             'status' => $request->session()->get('status'),
         ]);
     }
-
+    
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): \Symfony\Component\HttpFoundation\Response
     {
         $request->authenticate();
-
+        
         $request->session()->regenerate();
-
-        return redirect()->intended(route('home', absolute: false));
+        
+        $intended = session()->pull('url.intended', route('home'));
+        
+        return Inertia::location($intended);
     }
-
+    
     /**
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
+        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
+        
         return redirect('/');
     }
 }
