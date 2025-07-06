@@ -51,7 +51,7 @@ const getCategoryName = (name: BikeCategory): string => {
     <template v-for="(bikes, categoryName) in groupedBikes" :key="categoryName">
         <h1 class="text-center text-2xl">{{ getCategoryName(categoryName) }}</h1>
         <div class="mb-10 grid grid-cols-1 gap-4 md:mb-20 md:grid-cols-3">
-            <Card v-for="bike in bikes" :key="bike.id">
+            <Card v-for="bike in bikes.sort((a,b) => b.prices[0].price - a.prices[0].price)" :key="bike.id">
                 <CardContent>
                     <img class="mx-auto h-40 md:h-50" :src="bike.img_url" alt="Specialized Crux" />
                 </CardContent>
