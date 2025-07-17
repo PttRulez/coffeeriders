@@ -10,6 +10,7 @@ import { Bike } from '@/types';
 import { BikeCategory } from '@/types/enums';
 import { useForm } from '@inertiajs/vue3';
 import { Trash } from 'lucide-vue-next';
+import MarkdownEditor from '@/components/MarkdownEditor.vue';
 
 interface BikeForm extends Partial<Bike>, Record<string, any> {
     img: File | null;
@@ -122,8 +123,9 @@ const submit = () => {
         <Textarea placeholder="Краткое описание" class="resize-none" v-model="form.short_description" />
         <InputError :message="form.errors.short_description" />
 
-        <Textarea placeholder="Полное описание" class="hidden resize-none" v-model="form.full_description" />
-        <InputError class="hidden" :message="form.errors.full_description" />
+        <Textarea placeholder="Full описание" class="resize-none" v-model="form.full_description" />
+        <MarkdownEditor v-model="form.full_description" />
+        <InputError  :message="form.errors.full_description" />
 
         <Button class="mt-10 cursor-pointer p-7" v-if="form.id">Сохранить</Button>
         <Button class="mt-10 cursor-pointer p-7" v-else>Создать</Button>
