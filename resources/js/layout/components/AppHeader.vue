@@ -33,7 +33,7 @@ const isCurrentRoute = computed(() => (url: string) => page.url === url);
 const mainNavItems: NavItem[] = [
     {
         title: 'Аренда',
-        href: route('rent-bikes'),
+        href: route('rent-bikes.index'),
         icon: Bike,
         show: true,
     },

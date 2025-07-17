@@ -169,6 +169,9 @@
 
 
 /*              GENERAL STYLES               */
+h1 {
+    @apply text-3xl font-bold;
+}
 a {
    @apply cursor-pointer;
 }

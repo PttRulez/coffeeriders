@@ -8,10 +8,11 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
-    return redirect()->route('rent-bikes');
+    return redirect()->route('rent-bikes.index');
 })->name('home');
 
-Route::get('/rent-bikes', [BikeRentController::class, 'index'])->name('rent-bikes');
+Route::get('/rent-bikes', [BikeRentController::class, 'index'])->name('rent-bikes.index');
+Route::get('/rent-bikes/{bike}', [BikeRentController::class, 'show'])->name('rent-bikes.show');
 
 //Route::get('dashboard', function () {
 //    return Inertia::render('Dashboard');

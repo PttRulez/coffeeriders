@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { Iframe } from '@/extension/iframe';
+import Youtube from '@/extension/youtube';
+import TextAlign from '@tiptap/extension-text-align';
 import { StarterKit } from '@tiptap/starter-kit';
 import { EditorContent, useEditor } from '@tiptap/vue-3';
-import { Markdown } from 'tiptap-markdown';
-import { watch } from 'vue';
 import 'remixicon/fonts/remixicon.css';
+import { onMounted, watch } from 'vue';
 
 const model = defineModel();
 
@@ -16,7 +18,11 @@ const editor = useEditor({
                 levels: [2, 3, 4],
             },
         }),
-        Markdown,
+        Youtube,
+        Iframe,
+        TextAlign.configure({
+            types: ['heading', 'paragraph'],
+        }),
     ],
     editorProps: {
         attributes: {
@@ -24,35 +30,82 @@ const editor = useEditor({
         },
     },
     onUpdate: () => {
-        model.value = editor.value?.storage.markdown.getMarkdown();
+        model.value = editor.value?.getHTML();
     },
 });
 
-const promptUserForHref = () => {
-    if (editor.value?.isActive('link')) {
-        return editor.value?.chain().unsetLink().run();
+const addYoutube = () => {
+    const url = prompt('Вставь ссылку на YouTube');
+    const match = url?.match(/(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([\w\-]+)/);
+    const videoId = match?.[1];
+    if (videoId) {
+        editor.value?.commands.insertContent({
+            type: 'youtube',
+            attrs: { videoId },
+        });
+    } else {
+        alert('Не удалось определить videoId');
     }
-
-    const href = prompt('Type in proper web address');
-
-    if (!href) {
-        return editor.value?.chain().focus().run();
-    }
-
-    return editor.value?.chain().focus().setLink({ href }).run();
 };
 
-watch(
+const insertIframe = () => {
+    const url = prompt('Вставьте ссылку на iframe (например, YouTube embed)');
+
+    if (!url) {
+        alert('Вы не ввели ссылку');
+        return;
+    }
+
+    // Вариантально: валидация (например, только youtube/embed или любая iframe-ссылка)
+    if (!url.startsWith('http')) {
+        alert('Некорректная ссылка');
+        return;
+    }
+
+    editor.value?.commands.insertContent({
+        type: 'iframe',
+        attrs: {
+            src: url,
+            width: 560,
+            height: 315,
+        },
+    });
+};
+
+const promptUserForHref = () => {
+    if (!editor.value) return;
+
+    if (editor.value.isActive('link')) {
+        editor.value.chain().focus().unsetLink().run();
+        return;
+    }
+
+    const href = prompt('Введите ссылку');
+
+    if (!href) return;
+
+    editor.value
+        .chain()
+        .focus()
+        .extendMarkRange('link') // <-- важно для перезаписи существующих ссылок
+        .setLink({ href })
+        .run();
+};
+
+onMounted(() => {
+  watch(
     model,
     (value: any) => {
-        if (value === editor.value?.storage.markdown.getMarkdown()) {
-            return;
-        }
-
-        editor.value?.commands.setContent(value);
+      if (value === editor.value?.getHTML()) {
+        console.log('hui tam');
+        return;
+      }
+      console.log(value);
+      editor.value?.commands.setContent(value);
     },
     { immediate: true },
-);
+  );
+});
 </script>
 
 <template>
@@ -162,6 +215,17 @@ watch(
             </li>
             <li>
                 <button
+                    @click="() => editor.chain().focus().toggleTextAlign('center').run()"
+                    type="button"
+                    class="px-3 py-2"
+                    :class="[editor.isActive({ textAlign: 'center' }) ? 'bg-indigo-500 text-white' : 'hover:bg-gray-200']"
+                    title="Text Align Center"
+                >
+                    <i class="ri-align-center" />
+                </button>
+            </li>
+            <li>
+                <button
                     @click="promptUserForHref"
                     type="button"
                     class="px-3 py-2"
@@ -171,7 +235,13 @@ watch(
                     <i class="ri-link" />
                 </button>
             </li>
+            <li>
+                <button @click="addYoutube" type="button" class="px-3 py-2 hover:bg-gray-200" title="Add link">
+                    <i class="ri-youtube-fill" />
+                </button>
+            </li>
         </menu>
         <EditorContent :editor="editor" />
     </div>
 </template>
+<!--https://www.youtube.com/watch?v=_f0nc8wS5rA-->

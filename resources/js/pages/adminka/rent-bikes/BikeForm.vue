@@ -73,7 +73,6 @@ const validatePrices = () => {
 };
 
 const submit = () => {
-    console.log(form);
     if (!validatePrices()) {
         return;
     }
@@ -92,7 +91,7 @@ const submit = () => {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="mx-auto flex flex-col gap-5 rounded-4xl border border-sidebar-border/80 p-10 md:min-w-xl">
+    <form @submit.prevent="submit" class="mx-auto flex flex-col gap-5 rounded-4xl border border-sidebar-border/80 p-10 md:min-w-xl w-full">
         <h1 class="text-center text-2xl" v-if="form.id">Правка вела</h1>
         <h1 class="text-center text-2xl" v-else>Форма нового вела</h1>
         <FormInput v-model="form.name" :errorMessage="form.errors.name" field-name="name" placeholder="название велика" />
@@ -123,7 +122,6 @@ const submit = () => {
         <Textarea placeholder="Краткое описание" class="resize-none" v-model="form.short_description" />
         <InputError :message="form.errors.short_description" />
 
-        <Textarea placeholder="Full описание" class="resize-none" v-model="form.full_description" />
         <MarkdownEditor v-model="form.full_description" />
         <InputError  :message="form.errors.full_description" />
 
