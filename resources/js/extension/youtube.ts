@@ -34,13 +34,11 @@ export default Node.create({
         return [
             'div',
             {
-                class: 'flex justify-center',
+                class: 'youtube-wrapper',
             },
             [
                 'iframe',
                 {
-                    width: '560',
-                    height: '315',
                     src: `https://www.youtube.com/embed/${HTMLAttributes.videoId}`,
                     frameborder: '0',
                     allowfullscreen: 'true',
@@ -52,11 +50,9 @@ export default Node.create({
     addNodeView() {
         return ({ node }) => {
             const wrapper = document.createElement('div');
-            wrapper.className = 'flex justify-center';
+            wrapper.className = 'youtube-wrapper';
 
             const iframe = document.createElement('iframe');
-            iframe.setAttribute('width', '560');
-            iframe.setAttribute('height', '315');
             iframe.setAttribute('src', `https://www.youtube.com/embed/${node.attrs.videoId}`);
             iframe.setAttribute('frameborder', '0');
             iframe.setAttribute('allowfullscreen', 'true');

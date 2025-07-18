@@ -111,9 +111,9 @@ onMounted(() => {
 <template>
     <div
         v-if="editor"
-        class="rounded-md border-0 bg-white shadow-sm ring-1 ring-gray-300 ring-inset focus:ring-[3px] focus:ring-indigo-600 focus:ring-inset focus-visible:ring-[3px]"
+        class="rounded-md aspect-video border-0 bg-white shadow-sm ring-1 ring-gray-300 ring-inset focus:ring-[3px] focus:ring-indigo-600 focus:ring-inset focus-visible:ring-[3px]"
     >
-        <menu class="flex divide-x border-b">
+        <menu class="flex flex-wrap divide-x border-b">
             <li>
                 <button
                     @click="() => editor.chain().focus().toggleBold().run()"
@@ -244,4 +244,3 @@ onMounted(() => {
         <EditorContent :editor="editor" />
     </div>
 </template>
-<!--https://www.youtube.com/watch?v=_f0nc8wS5rA-->

@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+
 @plugin '@tailwindcss/typography';
 
 @import 'tw-animate-css';
@@ -75,13 +76,22 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    .youtube-wrapper iframe {
+        @apply w-full h-full ;
+    }
+}
+
+@layer components {
+    .youtube-wrapper {
+        @apply w-full max-w-3xl mx-auto aspect-video;
+    }
 }
 
 @layer utilities {
     body,
     html {
-        --font-sans:
-            'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     }
 }
 
@@ -162,6 +172,7 @@
     * {
         @apply border-border outline-ring/50;
     }
+
     body {
         @apply bg-background text-foreground;
     }
@@ -172,6 +183,7 @@
 h1 {
     @apply text-3xl font-bold;
 }
+
 a {
-   @apply cursor-pointer;
+    @apply cursor-pointer;
 }
