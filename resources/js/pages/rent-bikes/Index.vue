@@ -41,7 +41,10 @@ const getCategoryName = (name: BikeCategory): string => {
 </script>
 
 <template>
-    <Head title="Аренда чётких великов" />
+    <Head title="Прокат велосипедов в Санкт-Петербурге">
+        <meta name="description" content="Аренда шоссейных, гравийных и МТБ велосипедов в СПб. Велопрокат Coffeeriders — самовывоз у метро Удельная, честные цены, техподдержка, комфорт." />
+        <meta name="keywords" content="велопрокат спб, аренда велосипедов санкт-петербург, cofeeriders" />
+    </Head>
     <template v-for="(bikes, categoryName) in groupedBikes" :key="categoryName">
         <h1 class="text-center text-2xl">{{ getCategoryName(categoryName) }}</h1>
         <div class="mb-10 grid grid-cols-1 gap-4 md:mb-20 md:grid-cols-3">
