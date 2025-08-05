@@ -26,8 +26,4 @@ export default defineConfig({
             '@': path.resolve(__dirname, './resources/js'),
         },
     },
-    build: {
-        ssr: true,
-        outDir: 'bootstrap/ssr',
-    },
 });
