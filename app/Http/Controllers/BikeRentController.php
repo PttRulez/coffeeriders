@@ -20,6 +20,13 @@ class BikeRentController extends Controller
         ]);
     }
     
+    public function category(string $categoryName): Response
+    {
+        return Inertia::render('rent-bikes/' . ucfirst($categoryName), [
+            'bikes' => $this->bikeRentService->getByCategoryName($categoryName)->toArray()
+        ]);
+    }
+    
     public function show(Bike $bike): Response
     {
         return Inertia::render('rent-bikes/Show', [
