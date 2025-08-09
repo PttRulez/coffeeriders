@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-vue-next';
 import type { Config } from 'ziggy-js';
-import { BikeCategory, Role } from '@/types/enums';
+import { Role } from '@/types/enums';
 
 export interface Auth {
     user: User;
@@ -38,19 +38,5 @@ export interface User {
     updated_at: string;
 }
 
-export interface BikePrice {
-    period: string;
-    price: number;
-}
-
-export interface Bike {
-    category: BikeCategory;
-    full_description: string;
-    id: number;
-    img_url: string;
-    name: string;
-    prices: BikePrice[];
-    short_description: string;
-}
 
 export type BreadcrumbItemType = BreadcrumbItem;

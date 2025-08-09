@@ -2,15 +2,17 @@
 import InputError from '@/components/InputError.vue';
 import { Input } from '@/components/shadecn/input';
 import { Label } from '@/components/shadecn/label';
+import { Textarea } from '@/components/shadecn/textarea';
 import { cn } from '@/lib/utils';
 
-const model = defineModel();
+const model = defineModel<any>();
 
 type Props = {
     class?: string;
     errorMessage?: string;
     fieldName: string;
     label?: string;
+    multiline?: boolean;
     placeholder?: string;
     type?: string;
 };
@@ -18,27 +20,29 @@ type Props = {
 defineOptions({
     inheritAttrs: false,
 });
-
-const { class: className, errorMessage, fieldName, placeholder, type } = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+    multiline: false,
+});
 </script>
 
 <template>
     <div class="grid gap-2">
-        <div v-if="label" class="flex items-center justify-between">
-            <Label :for="fieldName" class="text-lg">{{ label }}</Label>
+        <div v-if="props.label" class="flex items-center justify-between">
+            <Label :for="props.fieldName" class="text-lg">{{ props.label }}</Label>
 
             <slot name="additionToLabel" />
         </div>
-        <Input
-            :class="cn('p-6 text-xl', className)"
+        <component
+            :is="props.multiline ? Textarea : Input"
+            :class="cn({'p-6 text-xl': true, [props.class]: !! props.class, 'py-2': props.multiline})"
             v-model="model"
-            :id="fieldName"
-            :type="type ?? 'text'"
+            :id="props.fieldName"
+            :type="props.type ?? 'text'"
             v-bind="$attrs"
-            :placeholder="placeholder"
+            :placeholder="props.placeholder"
             autocomplete="off"
         />
-        <InputError :message="errorMessage" />
+        <InputError :message="props.errorMessage" />
     </div>
 </template>
 
@@ -46,16 +50,15 @@ const { class: className, errorMessage, fieldName, placeholder, type } = defineP
 /* use deep selector if necessary */
 :deep(input[type='number'])::-webkit-outer-spin-button,
 :deep(input[type='number'])::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 :deep(input[type='number']) {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 :deep(input[type='file']) {
     padding: 5px;
 }
-
 </style>

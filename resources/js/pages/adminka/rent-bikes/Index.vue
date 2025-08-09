@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/shadecn/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shadecn/table';
-import { Bike } from '@/types';
+import { Bike } from '@/types/rent-bikes';
 import { SquarePen } from 'lucide-vue-next';
 
 type Props = {

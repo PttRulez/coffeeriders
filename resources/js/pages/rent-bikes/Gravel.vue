@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/shadecn/breadcrumb';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/shadecn/card';
-import { Bike } from '@/types';
+import { Bike } from '@/types/rent-bikes';
 import { Head } from '@inertiajs/vue3';
-import { getPriceStringWithSeparators } from '../../helpers/price';
+import { getPriceStringWithSeparators } from '@/helpers/price';
 
 type Props = {
     bikes: Bike[];

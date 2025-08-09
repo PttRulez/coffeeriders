@@ -3,7 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/shadecn/breadcrumb';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/shadecn/card';
 import { getPriceStringWithSeparators } from '@/helpers/price';
-import { Bike } from '@/types';
+import { Bike } from '@/types/rent-bikes';
 import { BikeCategory } from '@/types/enums';
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
