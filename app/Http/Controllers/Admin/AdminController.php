@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Models\BikeBooking;
 use Inertia\Response;
-use function to_route;
+use Inertia\Inertia;
 
 class AdminController extends Controller
 {
-    public function index(): RedirectResponse
+    public function index(): Response
     {
-        return to_route('adminka.rent-bikes.index');
+        return Inertia::render('adminka/Index', [
+            'bookings' => BikeBooking::with('bike')->get()
+        ]);
     }
 }

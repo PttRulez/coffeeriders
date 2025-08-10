@@ -8,7 +8,7 @@
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
-        "ssr:deploy": "npm run build && npm run build:ssr && pm2 start bootstrap/ssr/ssr.js --name inertia-ssr || pm2 restart inertia-ssr"
+        "ssr:deploy": "npm run build && npm run build:ssr && pm2 startOrRestart bootstrap/ssr/ssr.js --name inertia-ssr || pm2 restart inertia-ssr"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",

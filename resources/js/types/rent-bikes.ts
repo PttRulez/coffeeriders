@@ -19,6 +19,7 @@ export interface Bike {
 
 export interface BikeBooking {
     bike_id: number;
+    bike: Bike;
     comment: string;
     customer_name: string;
     ends_at: string;
