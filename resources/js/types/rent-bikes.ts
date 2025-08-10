@@ -6,6 +6,8 @@ export interface BikePrice {
 }
 
 export interface Bike {
+    booked_dates: Array<string>;
+    bookings: BikeBooking[];
     category: BikeCategory;
     full_description: string;
     id: number;
@@ -13,4 +15,15 @@ export interface Bike {
     name: string;
     prices: BikePrice[];
     short_description: string;
+}
+
+export interface BikeBooking {
+    bike_id: number;
+    comment: string;
+    customer_name: string;
+    ends_at: string;
+    id: number;
+    phone: string;
+    starts_at: string;
+    telegram_username: string;
 }

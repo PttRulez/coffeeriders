@@ -6,11 +6,12 @@ import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/shadecn/button';
 import { useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { DateRange } from 'reka-ui';
+import { DateRange, DateValue } from 'reka-ui';
 import { Ref, ref } from 'vue';
 
 type Props = {
     bike_id: number;
+    booked_dates: Array<string>;
 };
 const props = defineProps<Props>();
 const emit = defineEmits<{
@@ -28,6 +29,11 @@ const form = useForm({
     starts_at: '',
     ends_at: '',
 });
+
+function isBooked(day: DateValue): boolean {
+    const iso = day.toString();
+    return props.booked_dates.includes(iso);
+}
 
 function submit(): void {
     form.starts_at = dateRange.value.start?.toString() ?? '';
@@ -51,7 +57,11 @@ function submit(): void {
             />
 
             <div>
-                <DateRangePicker v-model="dateRange" placeholderText="даты брони" />
+                <DateRangePicker
+                    :is-date-disabled="isBooked"
+                    v-model="dateRange"
+                    placeholderText="даты брони"
+                />
                 <InputError v-if="form.errors.starts_at" :message="form.errors.starts_at" />
                 <InputError v-if="form.errors.ends_at" :message="form.errors.ends_at" />
             </div>

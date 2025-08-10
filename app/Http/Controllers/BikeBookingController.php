@@ -7,10 +7,11 @@ use App\Http\Requests\CreateBikeBookingRequest;
 use App\Models\BikeBooking;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class BikeBookingController extends Controller
 {
-    public function store(CreateBikeBookingRequest $request): JsonResponse
+    public function store(CreateBikeBookingRequest $request): mixed
     {
         $data = $request->validated();
 
@@ -29,6 +30,6 @@ class BikeBookingController extends Controller
             'telegram_username' => $data['telegram_username'] ?? null,
         ]);
 
-        return response()->json($booking, 201);
+        return back()->with('success', 'Бронирование создано');
     }
 }

@@ -28,7 +28,7 @@ function onSuccess() {
                 <DialogHeader>
                     <DialogTitle class="text-center max-md:px-5 leading-relaxed">Бронирование {{ bike.name }}</DialogTitle>
                 </DialogHeader>
-                <BookingForm :bike_id="bike.id" @success="onSuccess"/>
+                <BookingForm :bike_id="bike.id" :booked_dates="bike.booked_dates" @success="onSuccess"/>
             </DialogContent>
         </Dialog>
     </div>

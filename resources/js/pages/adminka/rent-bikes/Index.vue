@@ -30,7 +30,11 @@ const { bikes } = defineProps<Props>();
         </TableHeader>
         <TableBody>
             <TableRow v-for="bike in bikes" :key="bike.id">
-                <TableCell class="font-medium">{{ bike.name }}</TableCell>
+                <TableCell class="font-medium">
+                    <Link :href="route('adminka.rent-bikes.show', { bike: bike.id })">
+                        {{ bike.name }}
+                    </Link>
+                </TableCell>
                 <TableCell class="hidden lg:table-cell">{{ bike.short_description }}</TableCell>
                 <TableCell class="flex flex-col gap-3">
                     <p v-for="p in bike.prices" :key="p.period">

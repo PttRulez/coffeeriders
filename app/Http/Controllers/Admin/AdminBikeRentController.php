@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBikeRequest;
+use App\Http\Resources\BikeResource;
 use App\Models\Bike;
 use App\Services\BikeRentService;
 use Illuminate\Http\Request;
@@ -28,6 +29,13 @@ class AdminBikeRentController extends Controller
     public function create(): Response
     {
         return Inertia::render('adminka/rent-bikes/Create');
+    }
+    
+    public function show(Bike $bike): Response
+    {
+        return Inertia::render('adminka/rent-bikes/Show', [
+            'bike' => fn () => BikeResource::make($bike)->resolve(),
+        ]);
     }
     
     public function store(CreateBikeRequest $request): RedirectResponse

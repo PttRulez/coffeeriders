@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Markdown;
 
 class BikeResource extends JsonResource
 {
@@ -15,8 +15,22 @@ class BikeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $bookedDates = [];
+        
+        foreach ($this->bookings as $booking) {
+            $start = Carbon::parse($booking->starts_at);
+            $end = Carbon::parse($booking->ends_at);
+            
+            while ($start->lt($end)) {
+                $bookedDates[] = $start->toDateString();
+                $start->addDay();
+            }
+        }
+        
         return [
             'id' => $this->id,
+            'bookings' => BikeBookingResource::collection($this->bookings)->resolve(),
+            'booked_dates' => $bookedDates,
             'category' => $this->category,
             'img_url' => asset($this->img_url),
             'name' => $this->name,
