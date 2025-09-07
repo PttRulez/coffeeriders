@@ -13,7 +13,7 @@ const { bikes } = defineProps<Props>();
 </script>
 
 <template>
-    <Head title="Прокат горных велосипедов (MTB) в СПб">
+    <Head title="Прокат горных (МТБ) велосипедов в СПб">
         <meta name="description" content="Прокат горных и MTB велосипедов в Санкт-Петербурге — аренда на сутки или дольше.
             Катайтесь по лесу, паркам и пересечёнке. В наличии шлемы, фляги и другие аксессуары.">
         <meta name="keywords" content="аренда горного велосипеда, прокат горного велосипеда СПб,
@@ -22,7 +22,7 @@ const { bikes } = defineProps<Props>();
             rent a mountain bike in SPb">
     </Head>
 
-    <h1 class="text-center">Аренда горного (MTB) велосипеда</h1>
+    <h1 class="text-center">Аренда горного (МТБ) велосипеда</h1>
 
     <div class="mb-10 grid grid-cols-1 gap-4 md:mb-20 md:grid-cols-3">
         <Link v-for="bike in bikes.sort((a, b) => b.prices[0].price - a.prices[0].price)" :key="bike.id" :href="route('rent-bikes.show', bike.id)">

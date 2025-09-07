@@ -1,37 +1,52 @@
 <script setup lang="ts">
-import { Button } from '@/components/shadecn/button';
-import { Dialog, DialogHeader, DialogTitle, DialogTrigger, DialogContent } from '@/components/shadecn/dialog';
-import { Bike } from '@/types/rent-bikes';
 import BookingForm from '@/components/rent-bikes/BookingForm.vue';
+import { Button } from '@/components/shadecn/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/shadecn/dialog';
+import { Bike } from '@/types/rent-bikes';
 import { ref } from 'vue';
+import ImgCarousel from '@/components/ImgCarousel.vue';
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
 const { bike } = defineProps<{ bike: Bike }>();
 
-const bookingDialogOpen = ref(false)
+const bookingDialogOpen = ref(false);
 
 function onSuccess() {
-  bookingDialogOpen.value = false
+    bookingDialogOpen.value = false;
 }
 </script>
 
 <template>
-    <div class="mb-10 flex flex-col items-center gap-10">
-        <h1 class="text-center">{{ bike.name }}</h1>
-        <img :src="bike.img_url" :alt="bike.name" class="mx-auto md:max-w-[560px]" />
-        <Dialog v-model:open="bookingDialogOpen">
-            <DialogTrigger as-child>
-                <Button variant="secondary">Забронировать</Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle class="text-center max-md:px-5 leading-relaxed">Бронирование {{ bike.name }}</DialogTitle>
-                </DialogHeader>
-                <BookingForm :bike_id="bike.id" :booked_dates="bike.booked_dates" @success="onSuccess"/>
-            </DialogContent>
-        </Dialog>
+    <div class="flow-root">
+        <div class="flex flex-col items-center gap-5 mb-10 max-md:px-5 md:pr-10 md:float-left md:mr-10 md:mb-10 md:w-[720px]">
+            <h1 class="text-center">{{ bike.name }}</h1>
+            <ImgCarousel :images="bike.images" />
+            <p class="text-sm text-muted-foreground">{{ bike.short_description }}</p>
+            <Dialog v-model:open="bookingDialogOpen">
+                <DialogTrigger as-child>
+                    <Button>Забронировать</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle class="text-center leading-relaxed max-md:px-5"
+                            >Бронирование {{ bike.name }}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <BookingForm
+                        :bike_id="bike.id"
+                        :booked_dates="bike.booked_dates"
+                        @success="onSuccess"
+                    />
+                </DialogContent>
+            </Dialog>
+        </div>
+        <article class="prose prose-sm max-w-none" v-html="bike.full_description"></article>
     </div>
-    <p class="text-sm text-muted-foreground">{{ bike.short_description }}</p>
-    <article class="prose prose-sm mt-6 max-w-none" v-html="bike.full_description"></article>
 </template>

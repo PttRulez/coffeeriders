@@ -3,8 +3,10 @@ import TelegramIcon from '@/components/icons/TelegramIcon.vue';
 import { Button } from '@/components/shadecn/button';
 import {
     NavigationMenu,
+    NavigationMenuContent,
     NavigationMenuItem,
     NavigationMenuList,
+    NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/shadecn/navigation-menu';
 import {
@@ -19,10 +21,10 @@ import AppLogo from '@/layout/components/AppLogo.vue';
 import AppLogoIcon from '@/layout/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/layout/components/Breadcrumbs.vue';
 import type { BreadcrumbItem, NavItem } from '@/types';
-import { Role } from '@/types/enums';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { BikeCategory, Role } from '@/types/enums';
+import { Link, usePage } from '@inertiajs/vue3';
 import { Bike, FolderKanban, Menu, PhoneCall } from 'lucide-vue-next';
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { computed } from 'vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -47,9 +49,9 @@ const navItems = computed<NavItem[]>(() =>
     page.url.includes('adminka')
         ? [
               {
-                  title: 'Велики',
                   href: route('adminka.rent-bikes.index'),
                   icon: Bike,
+                  title: 'Велики',
                   show: true,
               },
               {
@@ -70,6 +72,23 @@ const navItems = computed<NavItem[]>(() =>
                   href: route('rent-bikes.index'),
                   icon: Bike,
                   show: true,
+                  children: [
+                      {
+                          title: 'Шоссер',
+                          href: route('rent-bikes.category', BikeCategory.Road),
+                          show: true,
+                      },
+                      {
+                          title: 'Гравийные',
+                          href: route('rent-bikes.category', BikeCategory.Gravel),
+                          show: true,
+                      },
+                      {
+                          title: 'МТБ',
+                          href: route('rent-bikes.category', BikeCategory.MTB),
+                          show: true,
+                      },
+                  ],
               },
               {
                   title: 'Админка',
@@ -116,6 +135,23 @@ const navItems = computed<NavItem[]>(() =>
                                                 />
                                                 {{ item.title }}
                                             </Link>
+                                            <template v-if="item.children?.length">
+                                                <template v-for="item in item.children">
+                                                    <Link
+                                                        v-if="item.show"
+                                                        :href="item.href"
+                                                        class="ml-9 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+                                                        :class="activeItemStyles(item.href)"
+                                                    >
+                                                        <component
+                                                            v-if="item.icon"
+                                                            :is="item.icon"
+                                                            class="h-5 w-5"
+                                                        />
+                                                        {{ item.title }}
+                                                    </Link>
+                                                </template>
+                                            </template>
                                         </SheetClose>
                                     </template>
                                 </nav>
@@ -131,6 +167,7 @@ const navItems = computed<NavItem[]>(() =>
                     Coffee Riders
                 </Link>
                 <AppLogo class="hidden lg:block" />
+
                 <!-- Desktop Menu -->
                 <div class="hidden h-full lg:flex lg:flex-1">
                     <NavigationMenu class="ml-10 flex h-full items-stretch">
@@ -140,25 +177,69 @@ const navItems = computed<NavItem[]>(() =>
                                     v-if="item.show"
                                     class="relative flex h-full items-center"
                                 >
-                                    <Link
-                                        :class="[
-                                            navigationMenuTriggerStyle(),
-                                            activeItemStyles(item.href),
-                                            'h-9 cursor-pointer px-3 text-xl',
-                                        ]"
-                                        :href="item.href"
-                                    >
-                                        <component
-                                            v-if="item.icon"
-                                            :is="item.icon"
-                                            class="mr-2 h-6"
-                                        />
-                                        {{ item.title }}
-                                    </Link>
-                                    <div
-                                        v-if="isCurrentRoute(item.href)"
-                                        class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
-                                    ></div>
+                                    <template v-if="item.children?.length">
+                                        <NavigationMenuTrigger
+                                            :class="[
+                                                navigationMenuTriggerStyle(),
+                                                activeItemStyles(item.href),
+                                                'h-9 px-3 text-xl',
+                                            ]"
+                                        >
+                                            <Link :href="item.href" class="flex">
+                                                <component
+                                                    v-if="item.icon"
+                                                    :is="item.icon"
+                                                    class="mr-2 h-6"
+                                                />
+                                                {{ item.title }}
+                                            </Link>
+                                        </NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            <ul>
+                                                <li
+                                                    v-for="subitem in item.children"
+                                                    :key="subitem.title"
+                                                >
+                                                    <Link
+                                                        :class="[
+                                                            navigationMenuTriggerStyle(),
+                                                            activeItemStyles(subitem.href),
+                                                            'h-9 cursor-pointer px-3 text-xl flex w-full!',
+                                                        ]"
+                                                        :href="subitem.href"
+                                                    >
+                                                        <component
+                                                            v-if="subitem.icon"
+                                                            :is="subitem.icon"
+                                                            class="mr-2 h-6"
+                                                        />
+                                                        {{ subitem.title }}
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </NavigationMenuContent>
+                                    </template>
+                                    <template v-else>
+                                        <Link
+                                            :class="[
+                                                navigationMenuTriggerStyle(),
+                                                activeItemStyles(item.href),
+                                                'h-9 cursor-pointer px-3 text-xl',
+                                            ]"
+                                            :href="item.href"
+                                        >
+                                            <component
+                                                v-if="item.icon"
+                                                :is="item.icon"
+                                                class="mr-2 h-6"
+                                            />
+                                            {{ item.title }}
+                                        </Link>
+                                        <div
+                                            v-if="isCurrentRoute(item.href)"
+                                            class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
+                                        ></div>
+                                    </template>
                                 </NavigationMenuItem>
                             </template>
                         </NavigationMenuList>

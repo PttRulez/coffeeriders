@@ -11,7 +11,7 @@ export interface Bike {
     category: BikeCategory;
     full_description: string;
     id: number;
-    img_url: string;
+    images: any[];
     name: string;
     prices: BikePrice[];
     short_description: string;

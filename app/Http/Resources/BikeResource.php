@@ -32,7 +32,7 @@ class BikeResource extends JsonResource
             'bookings' => BikeBookingResource::collection($this->bookings)->resolve(),
             'booked_dates' => $bookedDates,
             'category' => $this->category,
-            'img_url' => asset($this->img_url),
+            'images' => $this->images,
             'name' => $this->name,
             'prices' => $this->prices,
             'short_description' => $this->short_description,

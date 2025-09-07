@@ -8,6 +8,7 @@ import { useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { DateRange, DateValue } from 'reka-ui';
 import { Ref, ref } from 'vue';
+import { today } from '@internationalized/date';
 
 type Props = {
     bike_id: number;
@@ -30,9 +31,11 @@ const form = useForm({
     ends_at: '',
 });
 
+
 function isBooked(day: DateValue): boolean {
-    const iso = day.toString();
-    return props.booked_dates.includes(iso);
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const todayDate = today(timeZone);
+    return props.booked_dates.includes(day.toString()) || (day.compare(todayDate) < 0);
 }
 
 function submit(): void {

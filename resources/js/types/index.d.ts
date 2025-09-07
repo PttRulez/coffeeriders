@@ -12,6 +12,7 @@ export interface BreadcrumbItem {
 }
 
 export interface NavItem {
+    children?: NavItem[];
     href: string;
     icon?: LucideIcon;
     isActive?: boolean;
@@ -40,3 +41,4 @@ export interface User {
 
 
 export type BreadcrumbItemType = BreadcrumbItem;
+export * from './rent-bikes';

@@ -103,7 +103,7 @@ const getCategoryName = (name: BikeCategory): string => {
             >
                 <Card class="h-full">
                     <CardContent>
-                        <img class="mx-auto h-40 md:h-50" :src="bike.img_url" alt="Specialized Crux" />
+                        <img class="mx-auto h-40 md:h-50" :src="bike.title_img" alt="Specialized Crux" />
                     </CardContent>
                     <CardHeader>
                         <CardTitle>{{ bike.name }}</CardTitle>

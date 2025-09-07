@@ -22,6 +22,8 @@ class CreateBikeRequest extends FormRequest
         return [
             'name' => 'required|string',
             'img' => 'sometimes',
+            'images' => ['nullable','array'],
+            'images.*' => ['image','max:8192'], // 8 МБ на файл
             'category' => ['required', new Enum(BikeCategory::class)],
             'prices' => ['required', 'array', function ($attribute, $value, $fail) {
                 if (count($value) < 1) {

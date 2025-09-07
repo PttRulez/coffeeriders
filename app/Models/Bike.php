@@ -21,4 +21,11 @@ class Bike extends Model
     {
         return $this->hasMany(BikeBooking::class);
     }
+    
+    public function images(): HasMany
+    {
+        return $this->hasMany(BikeImage::class)->orderBy('sort');
+    }
+    
+    
 }

@@ -10,6 +10,9 @@ import {
 import { BikeBooking } from '@/types/rent-bikes';
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { Trash } from 'lucide-vue-next';
+import { router } from '@inertiajs/vue3';
+import { toast } from 'vue-sonner';
 
 type Props = {
     bookings: BikeBooking[];
@@ -19,6 +22,15 @@ const props = defineProps<Props>();
 
 const formatDate = (date: string) => {
     return format(parseISO(date), 'd MMMM', { locale: ru });
+};
+
+const deleteBooking = (id: number) => {
+    router.delete(route('adminka.rent-bikes.booking.destroy', id), {
+        onSuccess: () => {
+            toast.success('Букинг удален');
+            router.reload({ only: ['bookings'] });
+        },
+    });
 };
 </script>
 
@@ -31,6 +43,7 @@ const formatDate = (date: string) => {
                 <TableHead>имя</TableHead>
                 <TableHead>телефон</TableHead>
                 <TableHead>телеграм</TableHead>
+                <TableHead></TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -68,6 +81,9 @@ const formatDate = (date: string) => {
                     >
                         {{ booking.telegram_username }}
                     </a>
+                </TableCell>
+                <TableCell>
+                    <Trash @click="deleteBooking(booking.id)" class="cursor-pointer" />
                 </TableCell>
             </TableRow>
         </TableBody>

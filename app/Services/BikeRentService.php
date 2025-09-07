@@ -13,7 +13,11 @@ class BikeRentService
      */
     function getAllBikes(): Collection
     {
-        return Bike::all();
+        return Bike::with('images')->get()->each(function ($bike) {
+            $bike['title_img'] = $bike->images->filter(function ($image) {
+                return $image->is_primary;
+            })->first()->url ?? '';
+        });
     }
     
     function getByCategoryName(string $categoryName): Collection
