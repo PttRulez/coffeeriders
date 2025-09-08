@@ -15,6 +15,7 @@ export interface Bike {
     name: string;
     prices: BikePrice[];
     short_description: string;
+    title_img: string;
 }
 
 export interface BikeBooking {

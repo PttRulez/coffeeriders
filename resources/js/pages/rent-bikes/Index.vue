@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadecn/accordion';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/shadecn/breadcrumb';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/shadecn/card';
-import { getPriceStringWithSeparators } from '@/helpers/price';
 import { Bike } from '@/types/rent-bikes';
 import { BikeCategory } from '@/types/enums';
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import BikeCard from '@/components/BikeCard.vue';
 
 type Props = {
     bikes: Bike[];
@@ -101,31 +99,7 @@ const getCategoryName = (name: BikeCategory): string => {
                 :key="bike.id"
                 :href="route('rent-bikes.show', bike.id)"
             >
-                <Card class="h-full">
-                    <CardContent>
-                        <img class="mx-auto h-40 md:h-50" :src="bike.title_img" alt="Specialized Crux" />
-                    </CardContent>
-                    <CardHeader>
-                        <CardTitle>{{ bike.name }}</CardTitle>
-                        <CardDescription>{{ bike.short_description }}</CardDescription>
-                    </CardHeader>
-
-                    <CardFooter>
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <template v-for="(p, i) in bike.prices" :key="i">
-                                    <BreadcrumbItem>
-                                        <BreadcrumbPage
-                                            ><span class="font-bold text-purple-900">{{ getPriceStringWithSeparators(p.price) }}</span>
-                                            <span class="text-muted-foreground">/ {{ p.period }}</span>
-                                        </BreadcrumbPage>
-                                    </BreadcrumbItem>
-                                    <BreadcrumbSeparator v-if="i < bike.prices.length - 1" />
-                                </template>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                    </CardFooter>
-                </Card>
+                <BikeCard :bike="bike" />
             </Link>
         </div>
     </template>

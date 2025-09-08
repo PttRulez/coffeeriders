@@ -135,8 +135,10 @@ const navItems = computed<NavItem[]>(() =>
                                                 />
                                                 {{ item.title }}
                                             </Link>
-                                            <template v-if="item.children?.length">
-                                                <template v-for="item in item.children">
+                                        </SheetClose>
+                                        <template v-if="item.children?.length">
+                                            <template v-for="item in item.children">
+                                                <SheetClose as-child>
                                                     <Link
                                                         v-if="item.show"
                                                         :href="item.href"
@@ -150,9 +152,9 @@ const navItems = computed<NavItem[]>(() =>
                                                         />
                                                         {{ item.title }}
                                                     </Link>
-                                                </template>
+                                                </SheetClose>
                                             </template>
-                                        </SheetClose>
+                                        </template>
                                     </template>
                                 </nav>
                             </div>
@@ -204,7 +206,7 @@ const navItems = computed<NavItem[]>(() =>
                                                         :class="[
                                                             navigationMenuTriggerStyle(),
                                                             activeItemStyles(subitem.href),
-                                                            'h-9 cursor-pointer px-3 text-xl flex w-full!',
+                                                            'flex h-9 w-full! cursor-pointer px-3 text-xl',
                                                         ]"
                                                         :href="subitem.href"
                                                     >
