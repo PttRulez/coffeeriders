@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import CarouselAutoplay from '@/components/CarouselAutoplay.vue';
+import PodrobneeBtn from '@/components/PodrobneeBtn.vue';
 import { Card, CardContent } from '@/components/shadecn/card';
 import { Separator } from '@/components/shadecn/separator';
-import PodrobneeBtn from '@/components/PodrobneeBtn.vue';
 
 const bannerImages = [
     {
@@ -126,25 +126,27 @@ const teamImages = [
         <section class="space-y-5">
             <h2>Вступайте в команду</h2>
 
-            <CarouselAutoplay
-                :images="teamImages"
-                :hideArrows="true"
-                class="md:float-left md:mr-10 md:max-w-[50%]"
-            />
-            <p>
-                Члены команды получают возможность быть участником всех наших событий с
-                привилегиями, скидками и командой атмосферой.
-            </p>
-            <p>Каждый участник получает скидку на все наши продукты:</p>
-            <ul class="list-inside list-disc pl-4 text-xl md:text-2xl">
-                <li>Тренировки</li>
-                <li>Кемпы</li>
-                <li>Вело мастерскую</li>
-                <li>Вело студию</li>
-                <li>Прокат велосипедов</li>
-                <li>Скидку на слоты соревнований</li>
-                <li>Приятности от партнеров</li>
-            </ul>
+            <div class="flex gap-10 max-md:flex-col">
+                <div class="md:max-w-[50%]">
+                    <CarouselAutoplay :images="teamImages" :hideArrows="true" />
+                </div>
+                <div class="flex flex-col gap-5">
+                    <p>
+                        Члены команды получают возможность быть участником всех наших событий с
+                        привилегиями, скидками и командой атмосферой.
+                    </p>
+                    <p>Каждый участник получает скидку на все наши продукты:</p>
+                    <ul class="list-inside list-disc pl-5">
+                        <li>Тренировки</li>
+                        <li>Кемпы</li>
+                        <li>Вело мастерскую</li>
+                        <li>Вело студию</li>
+                        <li>Прокат велосипедов</li>
+                        <li>Скидку на слоты соревнований</li>
+                        <li>Приятности от партнеров</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <Separator />
@@ -177,17 +179,19 @@ const teamImages = [
 
         <section class="space-y-5">
             <h2>Прокат велосипедов</h2>
-            <div class="flex max-md:flex-col gap-10">
+            <div class="flex gap-10 max-md:flex-col">
                 <img src="/img/pages/home/rent.jpg" class="md:max-w-[50%]" />
                 <div class="flex flex-col items-center gap-5">
                     <p>
-                        Coffeeriders предлагает <Link :href="route('rent-bikes.index')" class="text-blue-400">
-                        аренду велосипедов в Санкт-Петербурге</Link> с договором —
-                        прозрачно, оперативно и по-человечески. У нас большой выбор велосипедов под
-                        разные задачи: гонки, тренировки, коферайды или активные досуг в приятной
-                        компании. Мы следим за сервисом: быстро отвечаем, не усложняем процесс и
-                        всегда на связи. Все модели проходят регулярное техническое обслуживание и
-                        укомплектованы всем необходимым.
+                        Coffeeriders предлагает
+                        <Link :href="route('rent-bikes.index')" class="text-blue-400">
+                            аренду велосипедов в Санкт-Петербурге
+                        </Link>
+                        с договором — прозрачно, оперативно и по-человечески. У нас большой выбор
+                        велосипедов под разные задачи: гонки, тренировки, коферайды или активные
+                        досуг в приятной компании. Мы следим за сервисом: быстро отвечаем, не
+                        усложняем процесс и всегда на связи. Все модели проходят регулярное
+                        техническое обслуживание и укомплектованы всем необходимым.
                     </p>
                     <PodrobneeBtn :href="route('rent-bikes.index')" />
                 </div>

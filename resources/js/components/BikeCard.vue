@@ -16,14 +16,14 @@ const { bike } = defineProps<{
         </CardContent>
         <CardHeader>
             <CardTitle>{{ bike.name }}</CardTitle>
-            <CardDescription>{{ bike.short_description }}</CardDescription>
+            <CardDescription class="text-base!">{{ bike.short_description }}</CardDescription>
         </CardHeader>
 
         <CardFooter>
             <Breadcrumb>
                 <BreadcrumbList>
                     <template v-for="(p, i) in bike.prices" :key="i">
-                        <BreadcrumbItem>
+                        <BreadcrumbItem class="text-base!">
                             <BreadcrumbPage
                                 ><span class="font-bold text-purple-900">{{
                                     getPriceStringWithSeparators(p.price)

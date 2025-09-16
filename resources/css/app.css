@@ -224,9 +224,8 @@ p {
 }
 
 li {
-     @apply text-xl;
+    @apply text-xl;
 }
-
 
 
 #app {

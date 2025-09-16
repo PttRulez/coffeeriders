@@ -135,7 +135,7 @@ const getCategoryName = (name: BikeCategory): string => {
         </div>
     </template>
 
-    <section class="space-y-5 text-2xl break-words!">
+    <section class="space-y-5 break-words!">
         <p>
             Coffeeriders предлагает
             <strong>аренду велосипедов в Санкт-Петербурге с договором</strong> — прозрачно,
