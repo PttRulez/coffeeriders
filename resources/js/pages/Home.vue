@@ -2,7 +2,6 @@
 import CarouselAutoplay from '@/components/CarouselAutoplay.vue';
 import { Card, CardContent } from '@/components/shadecn/card';
 import { Separator } from '@/components/shadecn/separator';
-import { Button } from '@/components/ui/button';
 import PodrobneeBtn from '@/components/PodrobneeBtn.vue';
 
 const bannerImages = [

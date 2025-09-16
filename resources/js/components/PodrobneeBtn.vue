@@ -1,5 +1,5 @@
 <script lang="ts" setup="">
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadecn/button';
 
 type Props = {
     href: string;
