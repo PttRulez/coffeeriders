@@ -10,7 +10,7 @@ import {
 } from '@/components/shadecn/dialog';
 import { Bike } from '@/types/rent-bikes';
 import { ref } from 'vue';
-import ImgCarousel from '@/components/ImgCarousel.vue';
+import CarouselThumbs from '@/components/CarouselThumbs.vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -27,7 +27,7 @@ function onSuccess() {
     <div class="flow-root">
         <div class="flex flex-col items-center gap-5 mb-10 max-md:px-5 md:pr-10 md:float-left md:mr-10 md:mb-10 md:w-[720px]">
             <h1 class="text-center">{{ bike.name }}</h1>
-            <ImgCarousel :images="bike.images" />
+            <CarouselThumbs :images="bike.images" />
             <p class="text-sm text-muted-foreground">{{ bike.short_description }}</p>
             <Dialog v-model:open="bookingDialogOpen">
                 <DialogTrigger as-child>

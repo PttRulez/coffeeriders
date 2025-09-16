@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import 'vue-sonner/style.css';
+import 'remixicon/fonts/remixicon.css';
 
 createInertiaApp({
     title: (title) => {

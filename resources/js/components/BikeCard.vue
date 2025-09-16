@@ -2,7 +2,7 @@
 import { Bike } from '@/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/shadecn/card';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/shadecn/breadcrumb';
-import { getPriceStringWithSeparators } from '@/helpers/price';
+import { getPriceStringWithSeparators } from '@/helpers/helpers';
 
 const { bike } = defineProps<{
     bike: Bike;

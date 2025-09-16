@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class ZwiftStation extends Model
+{
+    protected $fillable = ['name'];
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(ZwiftStationBooking::class);
+    }
+}

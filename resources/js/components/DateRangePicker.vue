@@ -70,6 +70,7 @@ watch(
                 :is-date-disabled="isDateDisabled"
                 :week-starts-on="1"
                 initial-focus
+                :hideTimeZone="false"
             />
         </PopoverContent>
     </Popover>

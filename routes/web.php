@@ -1,10 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::get('/', function () {
-    return redirect()->route('rent-bikes.index');
-})->name('home');
-
+Route::get('/', fn () => Inertia::render('Home'))->name('home');
+Route::get('/contacts', fn () => Inertia::render('Contacts'))->name('contacts');
 
 require __DIR__ . '/admin.php';
 require __DIR__.'/auth.php';

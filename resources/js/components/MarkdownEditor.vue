@@ -4,7 +4,6 @@ import Youtube from '@/extension/youtube';
 import TextAlign from '@tiptap/extension-text-align';
 import { StarterKit } from '@tiptap/starter-kit';
 import { EditorContent, useEditor } from '@tiptap/vue-3';
-import 'remixicon/fonts/remixicon.css';
 import { onMounted, watch } from 'vue';
 
 const model = defineModel();

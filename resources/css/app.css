@@ -212,10 +212,26 @@
 }
 
 /*              GENERAL STYLES               */
-h1 {
-    @apply text-3xl font-bold;
+h1, h2, h3 {
+    @apply text-center font-bold;
 }
 
-a {
-    @apply cursor-pointer;
+h1 {
+    @apply text-3xl
+}
+p {
+    @apply break-words text-xl;
+}
+
+
+
+#app {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.my-container {
+    /*@apply mx-auto md:max-w-[1920px];*/
+    @apply mx-auto md:max-w-7xl;
 }

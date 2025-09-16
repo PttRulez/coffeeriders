@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
         Inertia::share([
             'phoneNumber' => config('app.phone_number'),
             'telegramLink' => config('app.telegram_link'),
+            'instagramLink' => config('app.instagram_link'),
+            'vkLink' => config('app.vk_link'),
         ]);
     }
 }

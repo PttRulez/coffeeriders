@@ -30,9 +30,15 @@
       }
   </style>
 
-  <link rel="icon" href="/img/coffee-riders-logo.jpg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/img/favicon/apple-touch-icon.png">
+
+  <link rel="manifest" href="/site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.bunny.net" />
   <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
 
@@ -70,7 +76,7 @@
   </noscript>
   <!-- /Yandex.Metrika counter -->
 </head>
-<body class="font-sans antialiased">
+<body class="font-sans antialiased min-h-screen flex flex-col">
 
 @inertia
 </body>

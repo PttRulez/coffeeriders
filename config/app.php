@@ -124,6 +124,8 @@ return [
     ],
     
     'phone_number' => env('APP_PHONE_NUMBER', '+0000000000'),
-    'telegram_link' => env('APP_TG', 'https://t.me/Facabuch'),
+    'telegram_link' => env('APP_TG', ''),
+    'instagram_link' => env('APP_INSTAGRAM', ''),
+    'vk_link' => env('APP_VK', ''),
 
 ];
