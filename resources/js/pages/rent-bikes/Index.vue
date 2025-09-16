@@ -60,15 +60,15 @@ const getCategoryName = (name: BikeCategory): string => {
 
     <Accordion type="single" class="" collapsible>
         <AccordionItem value="terms" class="border-none">
-            <AccordionTrigger class="max-w-fit cursor-pointer">Условия аренды</AccordionTrigger>
+            <AccordionTrigger class="max-w-fit cursor-pointer text-xl items-center">Условия аренды</AccordionTrigger>
             <AccordionContent>
-                <h3>⏱ Срок аренды</h3>
+                <h3 class="text-left! text-2xl font-bold">⏱ Срок аренды</h3>
                 <p>
                     Минимальный срок — 1 сутки. Также возможна аренда на выходные или неделю. Для
                     постоянных клиентов доступны скидки и акции.
                 </p>
 
-                <h3>Стоимость</h3>
+                <h3  class="text-left! text-2xl font-bold">Стоимость</h3>
                 <p>Цена зависит от типа велосипеда и срока аренды. В среднем:</p>
                 <ul>
                     <li>Шоссейные — от 2500 ₽ в сутки</li>
@@ -77,7 +77,7 @@ const getCategoryName = (name: BikeCategory): string => {
                 </ul>
                 <p>Актуальные цены указаны в карточках моделей.</p>
 
-                <h3>📄 Документы</h3>
+                <h3 class="text-left! text-2xl font-bold">📄 Документы</h3>
                 <p>
                     Оформляем простой договор. Нужен только паспорт и возвратный залог в 10 000
                     рублей.
@@ -85,8 +85,8 @@ const getCategoryName = (name: BikeCategory): string => {
             </AccordionContent>
         </AccordionItem>
         <AccordionItem value="who">
-            <AccordionTrigger class="max-w-fit cursor-pointer"
-                >Кому подойдёт аренда велосипеда
+            <AccordionTrigger class="max-w-fit cursor-pointer  text-xl items-center">
+                Кому подойдёт аренда велосипеда
             </AccordionTrigger>
             <AccordionContent>
                 <p>

@@ -223,6 +223,10 @@ p {
     @apply break-words text-xl;
 }
 
+li {
+     @apply text-xl;
+}
+
 
 
 #app {
