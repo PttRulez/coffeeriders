@@ -22,30 +22,44 @@ class RegisteredUserController extends Controller
     {
         return Inertia::render('auth/Register');
     }
-
+    
     /**
      * Handle an incoming registration request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): mixed
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'telegram_username' => ['nullable', 'string', 'max:64', 'required_without:phone'],
+            'phone' => ['nullable', 'string', 'max:32', 'required_without:telegram_username'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
+        ],
+            [
+                'name.required' => 'Пожалуйста, укажите ваше имя.',
+                'email.required' => 'Введите email.',
+                'email.email' => 'Формат email некорректный.',
+                'email.unique' => 'Такой email уже зарегистрирован.',
+                'telegram_username.required_without' => 'Укажите Telegram или телефон.',
+                'phone.required_without' => 'Укажите телефон или Telegram.',
+                'password.required' => 'Придумайте пароль.',
+                'password.confirmed' => 'Пароли не совпадают.',
+            ]);
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'telegram_username' => $request->telegram_username,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
-
+        
         event(new Registered($user));
-
+        
         Auth::login($user);
-
-        return to_route('home');
+        
+        return Inertia::location(route('home'));
     }
 }

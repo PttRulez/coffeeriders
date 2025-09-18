@@ -6,9 +6,3 @@
   font-weight: normal;
   font-style: normal;
 }
-
-@layer utilities {
-  .font-zefani {
-    font-family: 'Zefani', sans-serif;
-  }
-}

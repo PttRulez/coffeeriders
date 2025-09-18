@@ -33,9 +33,7 @@ class AuthenticatedSessionController extends Controller
         
         $request->session()->regenerate();
         
-        $intended = session()->pull('url.intended', route('home'));
-        
-        return Inertia::location($intended);
+        return Inertia::location(route('home'));
     }
     
     /**

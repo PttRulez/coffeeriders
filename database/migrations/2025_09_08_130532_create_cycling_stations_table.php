@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('zwift_stations', function (Blueprint $table) {
+        Schema::create('cycling_stations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->boolean('is_zwift_bike')->default(false);
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('zwift_stations');
+        Schema::dropIfExists('cycling_stations');
     }
 };

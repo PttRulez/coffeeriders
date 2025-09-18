@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
             :placeholder="props.placeholder"
             autocomplete="off"
         />
-        <InputError :message="props.errorMessage" />
+        <InputError class="text-xs!" :message="props.errorMessage" />
     </div>
 </template>
 

@@ -35,7 +35,9 @@ export interface User {
     email_verified_at: string | null;
     id: number;
     name: string;
+    phone: string;
     role: Role;
+    telegram_username: string;
     updated_at: string;
 }
 

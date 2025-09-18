@@ -33,6 +33,7 @@ const props = defineProps<Props>();
                     delay: 4000,
                 }),
             ]"
+            :opts="{ loop: true }"
         >
             <CarouselContent>
                 <CarouselItem v-for="(img, index) in props.images" :key="img.id ?? index">

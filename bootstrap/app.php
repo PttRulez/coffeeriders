@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminOnly;
+use App\Http\Middleware\AuthenticatedOnly;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -18,7 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
         
         $middleware->alias([
-            'admin' => AdminOnly::class
+            'admin' => AdminOnly::class,
+            'authed' => AuthenticatedOnly::class
         ]);
         
         $middleware->web(append: [

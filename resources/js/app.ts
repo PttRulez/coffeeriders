@@ -14,13 +14,12 @@ createInertiaApp({
         return title ? `${title} | ${appName}` : appName;
     },
     resolve: async (name) => {
-        const pages = import.meta.glob('./pages/**/*.vue');
-
+        const pages = import.meta.glob('./pages/**/*.vue', { eager: false });
         const module: any = await resolvePageComponent(`./pages/${name}.vue`, pages);
         const component = module.default || module;
-        return Object.assign({}, component, {
-            layout: component.layout ?? AppLayout,
-        });
+
+        component.layout = component.layout ?? AppLayout;
+        return component;
     },
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })

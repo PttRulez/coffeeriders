@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /adminka/
+
+Sitemap: https://coffee-riders.ru/sitemap.xml

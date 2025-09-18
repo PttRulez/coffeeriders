@@ -101,6 +101,16 @@ const navItems = computed<NavItem[]>(() =>
                   show: true,
               },
               {
+                  title: 'Войти',
+                  href: route('login'),
+                  show: !auth.user,
+              },
+              {
+                  title: 'Регистрация',
+                  href: route('register'),
+                  show: !auth.user,
+              },
+              {
                   title: 'Админка',
                   href: route('adminka.index'),
                   show: auth.user?.role === Role.Admin,
@@ -112,7 +122,7 @@ const navItems = computed<NavItem[]>(() =>
 <template>
     <nav class="fixed z-10 w-full bg-background">
         <div
-            class="my-container flex justify-between h-16 flex-1 items-center gap-4 border-b border-sidebar-border/80 px-1 md:px-10"
+            class="my-container flex h-16 flex-1 items-center justify-between gap-4 border-b border-sidebar-border/80 px-1 md:px-10"
         >
             <!-- Mobile Menu -->
             <div class="lg:hidden">
@@ -179,13 +189,13 @@ const navItems = computed<NavItem[]>(() =>
 
             <Link
                 :href="route('home')"
-                class="font-zefani text-center text-2xl text-purple-900 lg:hidden"
+                class="font-ze text-center text-2xl text-purple-900 lg:hidden"
             >
-                Coffee Riders
+                Coffeeriders
             </Link>
             <Link
                 :href="route('home')"
-                class="font-zefani hidden text-center text-2xl text-purple-900 lg:block"
+                class="hidden text-center text-2xl text-purple-900 lg:block"
             >
                 <AppLogo />
             </Link>

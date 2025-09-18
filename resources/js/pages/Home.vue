@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CarouselAutoplay from '@/components/CarouselAutoplay.vue';
-import PodrobneeBtn from '@/components/PodrobneeBtn.vue';
+import ActionButton from '@/components/ActionButton.vue';
 import { Card, CardContent } from '@/components/shadecn/card';
 import { Separator } from '@/components/shadecn/separator';
 
@@ -46,6 +46,7 @@ const teamImages = [
         alt: 'hello',
     },
 ];
+
 </script>
 
 <template>
@@ -155,7 +156,7 @@ const teamImages = [
             <h2>Велостудия</h2>
             <div class="flex flex-col items-center gap-5 md:float-left md:mr-10 md:max-w-[50%]">
                 <img src="/img/pages/studio/zwift-studio.jpg" />
-                <PodrobneeBtn href="route('cycling-studio.index')" />
+                <ActionButton :href="route('cycling-studio.index')" />
             </div>
             <p>
                 Чтобы быть полноценной экосистемой, мы открыли
@@ -193,7 +194,7 @@ const teamImages = [
                         усложняем процесс и всегда на связи. Все модели проходят регулярное
                         техническое обслуживание и укомплектованы всем необходимым.
                     </p>
-                    <PodrobneeBtn :href="route('rent-bikes.index')" />
+                    <ActionButton :href="route('rent-bikes.index')" />
                 </div>
             </div>
         </section>

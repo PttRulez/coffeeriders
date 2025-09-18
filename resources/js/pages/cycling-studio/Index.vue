@@ -1,6 +1,7 @@
 <script lang="ts" setup="">
 import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
 import { Head } from '@inertiajs/vue3';
+import ActionButton from '@/components/ActionButton.vue';
 </script>
 
 <template>
@@ -13,6 +14,7 @@ import { Head } from '@inertiajs/vue3';
 
     <div class="space-y-5">
         <h1>Велостудия</h1>
+
         <img src="/img/pages/studio/zwift-studio.jpg" />
 
         <div class="flex max-md:flex-col max-md:px-10 justify-center gap-5">
@@ -26,12 +28,31 @@ import { Head } from '@inertiajs/vue3';
 
             <Card class="md:w-[240px]">
                 <CardContent class="text-xl font-bold text-center">
+                    <p>4 занятия</p>
+                    <br />
+                </CardContent>
+                <CardFooter><p class="w-full text-center">5 000 руб</p></CardFooter>
+            </Card>
+
+            <Card class="md:w-[240px]">
+                <CardContent class="text-xl font-bold text-center">
+                    <p>10 занятий</p>
+                    <br />
+                </CardContent>
+                <CardFooter><p class="w-full text-center">10 000 руб</p></CardFooter>
+            </Card>
+
+            <Card class="md:w-[240px]">
+                <CardContent class="text-xl font-bold text-center">
                     <p>Безлимит на месяц</p>
                     <br />
                 </CardContent>
                 <CardFooter><p class="w-full text-center">12 000 руб</p></CardFooter>
             </Card>
         </div>
+        <div class="flex justify-center">
+        <ActionButton :href="route('cycling-studio.booking')" text="Забронировать" />
+            </div>
         <p>
             Наша велостудия — это больше, чем просто тренировки. Это сообщество единомышленников,
             объединённых любовью к активному образу жизни. Позвоните нам или оставьте заявку на
