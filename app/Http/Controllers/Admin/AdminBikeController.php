@@ -40,7 +40,7 @@ class AdminBikeController extends Controller
     public function index(): Response
     {
         return Inertia::render('adminka/rent-bikes/Index', [
-            'bikes' =>$this->bikeRentService->getAllBikes(),
+            'bikes' => $this->bikeRentService->getAllBikes(),
         ]);
     }
     
@@ -106,7 +106,7 @@ class AdminBikeController extends Controller
                 foreach ($request->file('images') as $i => $file) {
                     if (!$file->isValid()) continue;
                     
-                   $url = $imgService->save($file);
+                    $url = $imgService->save($file);
                     
                     $bike->images()->create([
                         'url' => $url,

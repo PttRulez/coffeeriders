@@ -5,17 +5,18 @@ import { Button } from '@/components/shadecn/button';
 import { Calendar as CalendarIcon } from 'lucide-vue-next';
 import { cn } from '@/lib/utils';
 import { RangeCalendar } from '@/components/shadecn/range-calendar';
-import { DateRange } from 'reka-ui';
+import { DateRange, DateValue } from 'reka-ui';
 import { Matcher, toDate } from 'reka-ui/date';
-import { DateFormatter } from '@internationalized/date';
+import { DateFormatter, today } from '@internationalized/date';
 
 const props = withDefaults(
     defineProps<{
         placeholderText?: string;
         isDateDisabled?: Matcher;
+         bookedDates?: string[];
         class?: string;
     }>(),
-    { placeholderText: 'Даты аренды', isDateDisabled: undefined },
+    { placeholderText: 'Даты аренды', bookedDates: () => [] },
 );
 
 const model = defineModel<DateRange>({
@@ -32,6 +33,30 @@ watch(
     },
     { deep: true },
 );
+
+const isDateDisabled = (day: DateValue): boolean => {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const todayDate = today(timeZone);
+  const iso = day.toString();
+
+  // прошлое всегда блокируем
+  if (day.compare(todayDate) < 0) {
+    return true;
+  }
+
+  // если start ещё не выбран → выбираем start
+  if (!placeholder.value?.start) {
+    return props.bookedDates.includes(iso);
+  }
+
+  // если start уже выбран → выбираем end
+  if (props.bookedDates.includes(iso)) {
+    // можно end = start (однодневная аренда)
+    return iso !== placeholder.value.start.toString();
+  }
+
+  return false;
+}
 </script>
 
 <template>

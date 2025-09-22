@@ -1,16 +1,10 @@
 <script setup lang="ts">
+import CarouselThumbs from '@/components/CarouselThumbs.vue';
+import Modal from '@/components/Modal.vue';
 import BookingForm from '@/components/rent-bikes/BookingForm.vue';
 import { Button } from '@/components/shadecn/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/shadecn/dialog';
 import { Bike } from '@/types/rent-bikes';
 import { ref } from 'vue';
-import CarouselThumbs from '@/components/CarouselThumbs.vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -25,27 +19,23 @@ function onSuccess() {
 
 <template>
     <div class="flow-root">
-        <div class="flex flex-col items-center gap-5 mb-10 max-md:px-5 md:pr-10 md:float-left md:mr-10 md:mb-10 md:w-[720px]">
+        <div
+            class="mb-10 flex flex-col items-center gap-5 max-md:px-5 md:float-left md:mr-10 md:mb-10 md:w-[720px] md:pr-10"
+        >
             <h1 class="text-center">{{ bike.name }}</h1>
             <CarouselThumbs :images="bike.images" />
             <p class="text-sm text-muted-foreground">{{ bike.short_description }}</p>
-            <Dialog v-model:open="bookingDialogOpen">
-                <DialogTrigger as-child>
+             <Modal v-model:open="bookingDialogOpen" :title="`Бронирование ${bike.name}`">
+                <template #trigger>
                     <Button>Забронировать</Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle class="text-center leading-relaxed max-md:px-5"
-                            >Бронирование {{ bike.name }}
-                        </DialogTitle>
-                    </DialogHeader>
-                    <BookingForm
-                        :bike_id="bike.id"
-                        :booked_dates="bike.booked_dates"
-                        @success="onSuccess"
-                    />
-                </DialogContent>
-            </Dialog>
+                </template>
+
+                <BookingForm
+                    :bike_id="bike.id"
+                    :booked_dates="bike.booked_dates"
+                    @success="onSuccess"
+                />
+            </Modal>
         </div>
         <article class="prose prose-sm max-w-none" v-html="bike.full_description"></article>
     </div>

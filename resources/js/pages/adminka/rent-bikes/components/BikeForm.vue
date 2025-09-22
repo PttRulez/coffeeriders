@@ -7,7 +7,7 @@ import MarkdownEditor from '@/components/MarkdownEditor.vue';
 import { Button } from '@/components/shadecn/button';
 import { Textarea } from '@/components/shadecn/textarea';
 import { useTypedForm } from '@/composables/useTypedForm';
-import BikeForm from '@/pages/adminka/rent-bikes/BikeForm.vue';
+import BikeForm from '@/pages/adminka/rent-bikes/components/BikeForm.vue';
 import { BikeCategory } from '@/types/enums';
 import { Bike } from '@/types/rent-bikes';
 import { Trash } from 'lucide-vue-next';

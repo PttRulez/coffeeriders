@@ -7,8 +7,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/shadecn/radio-group';
 import { useTypedForm } from '@/composables/useTypedForm';
 import { usePage } from '@inertiajs/vue3';
 import axios from 'axios';
-import { format } from 'date-fns';
 import { ref, watch } from 'vue';
+import type { DateValue } from '@internationalized/date';
+import { today } from '@internationalized/date';
+import { dateValueToIso } from '@/helpers';
 
 const bikes = ref<
     | {
@@ -33,23 +35,24 @@ const form = useTypedForm<BookingForm>({
     starts_at: null,
 });
 
-const selectedDate = ref<Date | null>(null);
+const selectedDate = ref<DateValue | null>(today("Europe/Moscow"));
 const selectedTime = ref<string>('');
 
 watch([selectedDate, selectedTime], async ([date, time]) => {
-    if (date && time) {
-        const isoDate = format(date, 'yyyy-MM-dd');
-        const datetime = `${isoDate}T${time}:00`;
-        form.starts_at = datetime;
-        try {
-            const { data } = await axios.post(route('cycling-studio.bike-check'), {
-                datetime,
-            });
-            bikes.value = data.stations;
-        } catch (e) {
-            console.error('Ошибка при запросе:', e);
-        }
+  if (date && time) {
+    const isoDate = dateValueToIso(date as DateValue);
+    const datetime = `${isoDate}T${time}:00`;
+    form.starts_at = datetime;
+
+    try {
+      const { data } = await axios.post(route('cycling-studio.bike-check'), {
+        datetime,
+      });
+      bikes.value = data.stations;
+    } catch (e) {
+      console.error('Ошибка при запросе:', e);
     }
+  }
 });
 
 const submit = () => {

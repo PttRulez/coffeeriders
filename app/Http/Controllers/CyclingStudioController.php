@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\CyclingActivity;
 use App\Models\CyclingStation;
+use App\Services\AdminTelegram;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -23,7 +25,7 @@ class CyclingStudioController extends Controller
         return Inertia::render('cycling-studio/Booking');
     }
     
-    public function storeBooking(Request $request): JsonResponse
+    public function storeBooking(Request $request, AdminTelegram $adminTelegram): RedirectResponse
     {
         $validated = $request->validate([
             'cycling_station_id' => ['required', 'exists:cycling_stations,id'],
@@ -39,7 +41,7 @@ class CyclingStudioController extends Controller
         $hasConflict = CyclingActivity::where('cycling_station_id', $validated['cycling_station_id'])
             ->where(function ($q) use ($startsAt, $endsAt) {
                 $q->where('starts_at', '<', $endsAt)
-                ->where('ends_at', '>', $startsAt);
+                    ->where('ends_at', '>', $startsAt);
             })
             ->exists();
         
@@ -56,10 +58,11 @@ class CyclingStudioController extends Controller
             'ends_at' => $endsAt,
         ]);
         
-        return response()->json([
-            'message' => 'Занятие успешно забронировано.',
-            'activity' => $activity,
-        ], 201);
+        $adminTelegram->sendStudioBookingNotification($activity);
+        
+        return redirect()
+            ->route('cycling-studio.index')
+            ->with('success', 'Занятие успешно забронировано.');
     }
     
     public function bikeCheck(Request $request): JsonResponse

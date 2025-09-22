@@ -5,11 +5,7 @@ import { Card } from '@/components/shadecn/card';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Button } from '@/components/shadecn/button';
 import { LoaderCircle } from 'lucide-vue-next';
-
-defineProps<{
-    status?: string;
-    canResetPassword: boolean;
-}>();
+import FormCheckBox from '@/components/form/FormCheckBox.vue';
 
 const form = useForm({
     email: '',
@@ -45,6 +41,8 @@ const submit = () => {
                 v-model="form.password"
                 :error-message="form.errors.password"
             />
+
+            <FormCheckBox v-model="form.remember" field-name="remember" label="Запомнить меня" />
 
             <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
                 <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />

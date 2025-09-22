@@ -24,7 +24,7 @@ import { BikeCategory, Role } from '@/types/enums';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Bike, FolderKanban, Menu, PhoneCall } from 'lucide-vue-next';
 import { computed } from 'vue';
-import { formatPhone } from '../../helpers/helpers';
+import { formatPhone } from '../../helpers';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -45,20 +45,39 @@ const activeItemStyles = computed(
 const { auth, phoneNumber, telegramLink } = page.props;
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
-const navItems = computed<NavItem[]>(() =>
+const navItems = computed((): NavItem[] =>
     page.url.includes('adminka')
         ? [
               {
-                  href: route('adminka.rent-bikes.index'),
-                  icon: Bike,
-                  title: 'Велики',
+                  title: 'Прокат',
                   show: true,
+                  href: '',
+                  children: [
+                      {
+                          href: route('adminka.rent-bikes.index'),
+                          icon: Bike,
+                          title: 'Велики',
+                          show: true,
+                      },
+                      {
+                          title: 'Бронь',
+                          href: route('adminka.rent-bikes.bookings'),
+                          icon: FolderKanban,
+                          show: true,
+                      },
+                  ],
               },
               {
-                  title: 'Бронь',
-                  href: route('adminka.index'),
-                  icon: FolderKanban,
-                  show: auth.user?.role === Role.Admin,
+                  title: 'Студия',
+                  show: true,
+                  href: '',
+                  children: [
+                      {
+                          href: route('adminka.cycling-studio.index'),
+                          title: 'Бронирования',
+                          show: true,
+                      },
+                  ],
               },
               {
                   title: 'Сайт',

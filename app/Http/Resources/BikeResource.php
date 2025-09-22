@@ -21,6 +21,13 @@ class BikeResource extends JsonResource
             $start = Carbon::parse($booking->starts_at);
             $end = Carbon::parse($booking->ends_at);
             
+            // один день аренды
+            if ($start->equalTo($end)) {
+                $bookedDates[] = $start->toDateString();
+                continue;
+            }
+            
+            // иначе блокируем все дни до даты возврата (не включая её)
             while ($start->lt($end)) {
                 $bookedDates[] = $start->toDateString();
                 $start->addDay();

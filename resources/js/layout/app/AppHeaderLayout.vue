@@ -3,7 +3,7 @@ import AppContent from '@/layout/components/AppContent.vue';
 import AppFooter from '@/layout/components/AppFooter.vue';
 import AppHeader from '@/layout/components/AppHeader.vue';
 import type { BreadcrumbItemType } from '@/types';
-import { Toaster } from 'vue-sonner';
+import FlashToaster from '@/components/FlashToaster.vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -17,7 +17,7 @@ withDefaults(defineProps<Props>(), {
 <template>
     <AppHeader :breadcrumbs="breadcrumbs" />
     <AppContent>
-        <Toaster richColors position="top-center" />
+        <FlashToaster />
         <slot />
     </AppContent>
     <AppFooter />

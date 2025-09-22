@@ -2,7 +2,7 @@
 
 import { Bike } from '@/types/rent-bikes';
 
-import BookingsTable from '@/pages/adminka/components/BookingsTable.vue';
+import BookingsTable from '@/pages/adminka/rent-bikes/components/BookingsTable.vue';
 
 const props = defineProps<{ bike: Bike }>();
 

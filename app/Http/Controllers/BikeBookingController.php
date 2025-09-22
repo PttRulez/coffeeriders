@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Enums\BookingStatusEnum;
 use App\Http\Requests\CreateBikeBookingRequest;
 use App\Models\BikeBooking;
+use App\Services\AdminTelegram;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Telegram\Bot\Api;
 
 class BikeBookingController extends Controller
 {
-    public function store(CreateBikeBookingRequest $request): mixed
+    public function store(CreateBikeBookingRequest $request, AdminTelegram $adminTelegram): mixed
     {
         $data = $request->validated();
 
@@ -30,6 +32,8 @@ class BikeBookingController extends Controller
             'status'            => BookingStatusEnum::Booked->value,
             'telegram_username' => $data['telegram_username'] ?? null,
         ]);
+        
+        $adminTelegram->sendProkatBookingNotification($booking);
 
         return back()->with('success', 'Бронирование создано');
     }

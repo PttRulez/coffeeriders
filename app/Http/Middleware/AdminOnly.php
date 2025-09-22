@@ -18,7 +18,11 @@ class AdminOnly
     {
         $user = $request->user();
         
-        if (!$user || !$user->isAdmin()) {
+        if (!$user) {
+            return redirect()->route('login');
+        }
+        
+        if (!$user->isAdmin()) {
             throw new NotFoundHttpException();
         }
 

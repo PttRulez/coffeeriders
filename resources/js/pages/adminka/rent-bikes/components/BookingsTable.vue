@@ -35,7 +35,7 @@ const deleteBooking = (id: number) => {
 </script>
 
 <template>
-    <Table class="min-w-full">
+    <Table class="min-w-max">
         <TableHeader>
             <TableRow>
                 <TableHead v-if="showBikeName">велик</TableHead>

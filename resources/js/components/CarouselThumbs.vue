@@ -49,6 +49,10 @@ watchOnce(emblaMainApi, (emblaMainApi) => {
     <div class="w-full sm:w-auto">
         <Carousel
             class="relative w-full"
+            :opts="{
+                align: 'start',
+                loop: true,
+            }"
             @init-api="(val: UnwrapRefCarouselApi) => (emblaMainApi = val)"
         >
             <CarouselContent>

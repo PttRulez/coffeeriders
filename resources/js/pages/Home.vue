@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import CarouselAutoplay from '@/components/CarouselAutoplay.vue';
 import ActionButton from '@/components/ActionButton.vue';
-import { Card, CardContent } from '@/components/shadecn/card';
 import { Separator } from '@/components/shadecn/separator';
 
 const bannerImages = [
@@ -82,15 +81,11 @@ const teamImages = [
             <h2>Наши тренеры</h2>
 
             <!--      Игорь          -->
-            <div class="flex gap-5 max-md:flex-col-reverse">
-                <Card class="md:flex-1">
-                    <CardContent>
-                        <p class="italic">"1500 ватт - это только начало интервала"</p>
-                    </CardContent>
-                </Card>
+            <div class="flex gap-5 max-md:flex-col-reverse justify-between  items-center">
+                <p class="italic">"1500 ватт - это только начало интервала"</p>
                 <div class="flex flex-col items-center gap-2">
                     <img
-                        class="max-w-[320px] rounded-full"
+                        class="max-w-[240px] rounded-full"
                         src="/img/pages/home/igor_petrov.jpg"
                         alt="Игорь Петров"
                     />
@@ -102,23 +97,21 @@ const teamImages = [
             </div>
 
             <!--      Егор          -->
-            <div class="flex gap-5 max-md:flex-col">
+            <div class="flex gap-5 max-md:flex-col items-center">
                 <div class="flex flex-col items-center gap-2 md:gap-10">
                     <img
-                        class="max-w-[320px] rounded-full"
+                        class="max-w-[240px] rounded-full"
                         src="/img/pages/home/mash.jpg"
-                        alt="Егор"
+                        alt="Егор Маш"
                     />
                     <div class="text-lg!">
-                        <p class="text-center text-lg! font-bold">Егор</p>
-                        <p class="text-center text-lg!">МС по маунтинбайку</p>
+                        <p class="text-center text-lg! font-bold">Егор Маш</p>
+                        <p class="text-center text-lg!">МС по велоспорту</p>
                     </div>
                 </div>
-                <Card class="md:flex-1">
-                    <CardContent>
-                        <p class="italic">"Обожаю хруст карбона"</p>
-                    </CardContent>
-                </Card>
+                <p class="italic">" Всем привет. Являюсь Мастером спорта по велоспорту (мтб), Чемпионом России
+                            и многократным победителем и призером Первенств России, всероссийских и международных соревнований,
+                            в прошлом член Сборной команды России. Расскажу и научу вас всем тонкостям и навыкам мтб и шоссе"</p>
             </div>
         </section>
 

@@ -62,6 +62,7 @@ function submit(): void {
             <div>
                 <DateRangePicker
                     :is-date-disabled="isBooked"
+                    :booked-dates="props.booked_dates"
                     v-model="dateRange"
                     placeholderText="даты брони"
                 />

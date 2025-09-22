@@ -1,7 +1,7 @@
 <script lang="ts" setup="">
 import { usePage } from '@inertiajs/vue3';
 import { PhoneCall } from 'lucide-vue-next';
-import { formatPhone } from '../../helpers/helpers';
+import { formatPhone } from '../../helpers';
 
 const page = usePage();
 const { instagramLink, vkLink, phoneNumber } = page.props;

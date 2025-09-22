@@ -25,7 +25,7 @@ defineOptions({
     inheritAttrs: false,
 });
 
-const { class: className, errorMessage, fieldName, placeholder, type } = defineProps<Props>();
+const { class: className, errorMessage, fieldName, placeholder } = defineProps<Props>();
 </script>
 
 <template>

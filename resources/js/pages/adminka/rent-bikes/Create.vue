@@ -1,5 +1,5 @@
 <script lang="ts" setup="">
-import BikeForm from '@/pages/adminka/rent-bikes/BikeForm.vue';
+import BikeForm from '@/pages/adminka/rent-bikes/components/BikeForm.vue';
 </script>
 
 <template>

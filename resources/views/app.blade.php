@@ -80,8 +80,10 @@
   </noscript>
   <!-- /Yandex.Metrika counter -->
 </head>
+
 <body class="font-sans antialiased min-h-screen flex flex-col">
 
 @inertia
+
 </body>
 </html>
