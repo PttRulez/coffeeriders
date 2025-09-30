@@ -42,7 +42,6 @@ function isBooked(day: DateValue): boolean {
 function submit(): void {
     form.starts_at = dateRange.value.start?.toString() ?? '';
     form.ends_at = dateRange.value.end?.toString() ?? '';
-    console.log('Submitting form-elements:', form.data());
 
     form.post(route('rent-bikes.booking.store', { bike: props.bike_id }), {
         onSuccess: () => emit('success'),

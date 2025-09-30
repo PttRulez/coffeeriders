@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 use Log;
 use Telegram\Bot\Api;
 use function route;
@@ -59,6 +60,6 @@ class BikeBookingController extends Controller
             return back()->with('error', 'Ошибка запроса к банку');
         }
         
-        return redirect($payment['PaymentURL']);
+        return Inertia::location($payment['PaymentURL']);
     }
 }
