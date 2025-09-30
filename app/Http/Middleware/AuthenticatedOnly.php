@@ -2,21 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class AuthenticatedOnly
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
+
+class AuthenticatedOnly  extends Middleware
 {
-    /**
-     * Handle an incoming request.
-     */
-    public function handle(Request $request, Closure $next)
+    protected function redirectTo($request): ?string
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        return $next($request);
+        return $request->expectsJson() ? null : route('login');
     }
 }

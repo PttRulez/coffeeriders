@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue';
-import FormInput from '@/components/form/FormInput.vue';
+import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
+import FormInput from '@/components/form-elements/FormInput.vue';
+import { Button } from '@/components/shadecn/button';
 import { Card } from '@/components/shadecn/card';
 import { Head, useForm } from '@inertiajs/vue3';
-import { Button } from '@/components/shadecn/button';
 import { LoaderCircle } from 'lucide-vue-next';
-import FormCheckBox from '@/components/form/FormCheckBox.vue';
 
 const form = useForm({
     email: '',
@@ -52,7 +51,12 @@ const submit = () => {
 
         <div class="text-center text-sm text-muted-foreground">
             Нет аккаунта?
-            <TextLink :href="route('register')" :tabindex="5">Регистрация</TextLink>
+            <Link :href="route('register')" :tabindex="5" class="text-blue-400">Регистрация </Link>
+        </div>
+        <div class="text-center text-sm">
+            <Link :href="route('password.request')" :tabindex="5" class="text-blue-400"
+                >Восстановить пароль
+            </Link>
         </div>
     </Card>
 </template>

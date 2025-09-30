@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CarouselAutoplay from '@/components/CarouselAutoplay.vue';
-import ActionButton from '@/components/ActionButton.vue';
+import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
+import ActionButton from '@/components/shared/ActionButton.vue';
 import { Separator } from '@/components/shadecn/separator';
 
 const bannerImages = [
@@ -91,7 +91,7 @@ const teamImages = [
                     />
                     <div class="text-lg!">
                         <p class="text-center text-lg! font-bold">Игорь Петров</p>
-                        <p class="text-center text-lg!">МС по шоссейному велоспорту</p>
+                        <p class="text-center text-lg!">МС по велоспорту</p>
                     </div>
                 </div>
             </div>

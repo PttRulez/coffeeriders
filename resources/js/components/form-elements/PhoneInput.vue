@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import FormInput from '@/components/form/FormInput.vue'
+import FormInput from '@/components/form-elements/FormInput.vue'
 
 const model = defineModel<string>({ default: '' })
 

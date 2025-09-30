@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
+import InputError from '@/components/form-elements/InputError.vue';
 import { Button } from '@/components/shadecn/button';
 import { Input } from '@/components/shadecn/input';
 import { Label } from '@/components/shadecn/label';

@@ -1,7 +1,7 @@
 <script lang="ts" setup="">
 import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
 import { Head } from '@inertiajs/vue3';
-import ActionButton from '@/components/ActionButton.vue';
+import ActionButton from '@/components/shared/ActionButton.vue';
 </script>
 
 <template>

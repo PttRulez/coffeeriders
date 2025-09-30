@@ -3,7 +3,7 @@ import AppContent from '@/layout/components/AppContent.vue';
 import AppFooter from '@/layout/components/AppFooter.vue';
 import AppHeader from '@/layout/components/AppHeader.vue';
 import type { BreadcrumbItemType } from '@/types';
-import FlashToaster from '@/components/FlashToaster.vue';
+import FlashToaster from '@/components/shared/FlashToaster.vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];

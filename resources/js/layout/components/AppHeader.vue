@@ -120,6 +120,11 @@ const navItems = computed((): NavItem[] =>
                   show: true,
               },
               {
+                  title: 'Мой аккаунт',
+                  href: route('user-account.index'),
+                  show: !!auth.user,
+              },
+              {
                   title: 'Войти',
                   href: route('login'),
                   show: !auth.user,

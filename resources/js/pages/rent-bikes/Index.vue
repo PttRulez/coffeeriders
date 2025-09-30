@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BikeCard from '@/components/BikeCard.vue';
+import BikeCard from '@/components/rent-bikes/BikeCard.vue';
 import {
     Accordion,
     AccordionContent,

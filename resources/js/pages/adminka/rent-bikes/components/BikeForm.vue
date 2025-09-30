@@ -1,9 +1,9 @@
 <script lang="ts" setup="">
-import ErrorBag from '@/components/form/ErrorBag.vue';
-import FormInput from '@/components/form/FormInput.vue';
-import FormSelect, { SelectOption } from '@/components/form/FormSelect.vue';
-import InputError from '@/components/InputError.vue';
-import MarkdownEditor from '@/components/MarkdownEditor.vue';
+import ErrorBag from '@/components/form-elements/ErrorBag.vue';
+import FormInput from '@/components/form-elements/FormInput.vue';
+import FormSelect, { SelectOption } from '@/components/form-elements/FormSelect.vue';
+import InputError from '@/components/form-elements/InputError.vue';
+import MarkdownEditor from '@/components/shared/MarkdownEditor.vue';
 import { Button } from '@/components/shadecn/button';
 import { Textarea } from '@/components/shadecn/textarea';
 import { useTypedForm } from '@/composables/useTypedForm';

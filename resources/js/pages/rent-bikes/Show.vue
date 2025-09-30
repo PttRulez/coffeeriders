@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CarouselThumbs from '@/components/CarouselThumbs.vue';
-import Modal from '@/components/Modal.vue';
+import CarouselThumbs from '@/components/shared/CarouselThumbs.vue';
+import Modal from '@/components/shared/Modal.vue';
 import BookingForm from '@/components/rent-bikes/BookingForm.vue';
 import { Button } from '@/components/shadecn/button';
 import { Bike } from '@/types/rent-bikes';
@@ -15,6 +15,7 @@ const bookingDialogOpen = ref(false);
 function onSuccess() {
     bookingDialogOpen.value = false;
 }
+
 </script>
 
 <template>
@@ -33,6 +34,7 @@ function onSuccess() {
                 <BookingForm
                     :bike_id="bike.id"
                     :booked_dates="bike.booked_dates"
+                    :predoplata="bike.predoplata"
                     @success="onSuccess"
                 />
             </Modal>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
+import InputError from '@/components/form-elements/InputError.vue';
 
 interface Props {
     errors: (string | undefined)[];

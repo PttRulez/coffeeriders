@@ -127,5 +127,4 @@ return [
     'telegram_link' => env('APP_TG', ''),
     'instagram_link' => env('APP_INSTAGRAM', ''),
     'vk_link' => env('APP_VK', ''),
-
 ];

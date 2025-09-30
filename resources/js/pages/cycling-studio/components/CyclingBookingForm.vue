@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import DatePicker from '@/components/DatePicker.vue';
-import HourPicker from '@/components/HourPicker.vue';
+import DatePicker from '@/components/shared/DatePicker.vue';
+import HourPicker from '@/components/shared/HourPicker.vue';
 import { Button } from '@/components/shadecn/button';
 import { Label } from '@/components/shadecn/label';
 import { RadioGroup, RadioGroupItem } from '@/components/shadecn/radio-group';

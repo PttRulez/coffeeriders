@@ -13,6 +13,7 @@ export interface Bike {
     id: number;
     images: any[];
     name: string;
+    predoplata: number;
     prices: BikePrice[];
     short_description: string;
     title_img: string;

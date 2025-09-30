@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TextLink from '@/components/TextLink.vue';
-import FormInput from '@/components/form/FormInput.vue';
-import PhoneInput from '@/components/form/PhoneInput.vue';
+import FormInput from '@/components/form-elements/FormInput.vue';
+import PhoneInput from '@/components/form-elements/PhoneInput.vue';
 import { Button } from '@/components/shadecn/button';
 import { Card } from '@/components/shadecn/card';
 import { Head, useForm } from '@inertiajs/vue3';

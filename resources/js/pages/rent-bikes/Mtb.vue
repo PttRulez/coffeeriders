@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Bike } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import BikeCard from '@/components/BikeCard.vue';
+import BikeCard from '@/components/rent-bikes/BikeCard.vue';
 
 type Props = {
     bikes: Bike[];

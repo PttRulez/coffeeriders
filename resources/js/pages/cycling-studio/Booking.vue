@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import CyclingBookingForm from '@/components/cycling-studio/CyclingBookingForm.vue';
+import CyclingBookingForm from '@/pages/cycling-studio/components/CyclingBookingForm.vue';
 import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
 import { usePage } from '@inertiajs/vue3';
-import ActionButton from '@/components/ActionButton.vue';
+import ActionButton from '@/components/shared/ActionButton.vue';
 
 const page = usePage();
 </script>

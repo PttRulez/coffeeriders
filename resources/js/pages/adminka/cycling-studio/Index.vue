@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import DatePicker from '@/components/DatePicker.vue';
-import Modal from '@/components/Modal.vue';
-import FormInput from '@/components/form/FormInput.vue';
+import DatePicker from '@/components/shared/DatePicker.vue';
+import Modal from '@/components/shared/Modal.vue';
+import FormInput from '@/components/form-elements/FormInput.vue';
 import { Button } from '@/components/shadecn/button';
 import {
     Table,

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import DateRangePicker from '@/components/DateRangePicker.vue';
-import FormInput from '@/components/form/FormInput.vue';
-import PhoneInput from '@/components/form/PhoneInput.vue';
-import InputError from '@/components/InputError.vue';
+import DateRangePicker from '@/components/shared/DateRangePicker.vue';
+import FormInput from '@/components/form-elements/FormInput.vue';
+import PhoneInput from '@/components/form-elements/PhoneInput.vue';
+import InputError from '@/components/form-elements/InputError.vue';
 import { Button } from '@/components/shadecn/button';
 import { useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
@@ -13,6 +13,7 @@ import { today } from '@internationalized/date';
 type Props = {
     bike_id: number;
     booked_dates: Array<string>;
+    predoplata: number;
 };
 const props = defineProps<Props>();
 const emit = defineEmits<{
@@ -41,7 +42,7 @@ function isBooked(day: DateValue): boolean {
 function submit(): void {
     form.starts_at = dateRange.value.start?.toString() ?? '';
     form.ends_at = dateRange.value.end?.toString() ?? '';
-    console.log('Submitting form:', form.data());
+    console.log('Submitting form-elements:', form.data());
 
     form.post(route('rent-bikes.booking.store', { bike: props.bike_id }), {
         onSuccess: () => emit('success'),
@@ -95,7 +96,7 @@ function submit(): void {
 
         <Button type="submit" class="mt-2 w-full" :disabled="form.processing">
             <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-            Забронировать
+            Предоплата {{ props.predoplata }} руб.
         </Button>
     </form>
 </template>

@@ -1,4 +1,4 @@
-<!-- components/form/HourPicker.vue -->
+<!-- components/form-elements/HourPicker.vue -->
 <script setup lang="ts">
 import {
   Select,
