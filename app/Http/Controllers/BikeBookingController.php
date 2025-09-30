@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Log;
 use Telegram\Bot\Api;
+use function back;
 use function route;
 
 class BikeBookingController extends Controller
@@ -39,6 +40,10 @@ class BikeBookingController extends Controller
             'status' => BookingStatusEnum::Booked->value,
             'telegram_username' => $data['telegram_username'] ?? null,
         ]);
+        
+        $adminTelegram->sendProkatBookingNotification($booking);
+        
+        return back()->with('success', 'Бронирование создано');
         
         $bike = Bike::findOrFail($data['bike_id']);
         $oneDayPrice = min(array_column($bike->prices, 'price'));

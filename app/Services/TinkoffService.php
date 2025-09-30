@@ -36,11 +36,11 @@ class TinkoffService
         
         if ($response->successful()) {
             Log::channel('payments')->info('Tinkoff successful initPayment response', [
-                '$response' => $response,
+                '$response' => $response->json(),
                 'token_valid' => $this->checkToken($response->json()),
             ]);
         } else {
-             Log::channel('payments')->info('Tinkoff failed initPayment response', [
+            Log::channel('payments')->info('Tinkoff failed initPayment response', [
                 '$response' => $response,
             ]);
         }
@@ -64,7 +64,15 @@ class TinkoffService
             return false;
         }
         
+        
+        
         $calculated = $this->generateToken($params);
+        
+        Log::channel('payments')->info('Tinkoff checkToken', [
+            '$params' => $params,
+            'calculated_token' => $calculated,
+        ]);
+        
         return hash_equals($calculated, $params['Token']);
     }
 }
