@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/shadecn/button';
 import AuthLayout from '@/layout/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
