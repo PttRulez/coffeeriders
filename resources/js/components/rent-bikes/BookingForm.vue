@@ -95,8 +95,9 @@ function submit(): void {
 
         <Button type="submit" class="mt-2 w-full" :disabled="form.processing">
             <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-            Предоплата {{ props.predoplata }} руб.
+            Забронировать
         </Button>
+
     </form>
 </template>
 
