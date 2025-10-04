@@ -26,6 +26,7 @@ export interface BikeBooking {
     customer_name: string;
     ends_at: string;
     id: number;
+    paid_money: number;
     phone: string;
     starts_at: string;
     telegram_username: string;

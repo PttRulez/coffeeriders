@@ -41,7 +41,7 @@ const submit = () => {
                 :error-message="form.errors.email"
             />
 
-            <p class="text-sm!">Нужно как минимум что-то одно (телефон или телега), а лучще оба.</p>
+            <p class="text-sm!">Нужно как минимум что-то одно (телефон или телега), а лучше оба.</p>
             <FormInput
                 field-name="telegram_username"
                 placeholder="telegram"

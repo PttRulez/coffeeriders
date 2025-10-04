@@ -40,6 +40,7 @@ const deleteBooking = (id: number) => {
             <TableRow>
                 <TableHead v-if="showBikeName">велик</TableHead>
                 <TableHead>даты</TableHead>
+                <TableHead>бабки</TableHead>
                 <TableHead>имя</TableHead>
                 <TableHead>телефон</TableHead>
                 <TableHead>телеграм</TableHead>
@@ -60,6 +61,10 @@ const deleteBooking = (id: number) => {
                         <span class="hidden md:inline">-</span>
                         <span>{{ formatDate(booking.ends_at) }}</span>
                     </div>
+                </TableCell>
+
+                <TableCell class="font-medium">
+                    {{ booking.paid_money }}
                 </TableCell>
 
                 <TableCell class="font-medium">

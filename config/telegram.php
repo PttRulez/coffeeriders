@@ -37,6 +37,9 @@ return [
         'studio' => [
             'token' => env('TELEGRAM_ADMIN_STUDIO_BOT_TOKEN'),
         ],
+        'admin' => [
+            'token' => env('TELEGRAM_ADMIN_BOT_TOKEN'),
+        ],
     ],
     'admin_chat_id' => env('TELEGRAM_ADMIN_CHAT_ID'),
     

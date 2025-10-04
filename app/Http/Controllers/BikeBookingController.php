@@ -7,16 +7,11 @@ use App\Enums\BookingStatusEnum;
 use App\Http\Requests\CreateBikeBookingRequest;
 use App\Models\Bike;
 use App\Models\BikeBooking;
-use App\Services\AdminTelegram;
+use App\Services\AdminTelegram\AdminTelegram;
 use App\Services\TinkoffService;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Log;
-use Telegram\Bot\Api;
 use function back;
 use function route;
 
@@ -43,9 +38,8 @@ class BikeBookingController extends Controller
         
         $adminTelegram->sendProkatBookingNotification($booking);
         
-        return back()->with('success', 'Бронирование создано');
-        
         $bike = Bike::findOrFail($data['bike_id']);
+        
         $oneDayPrice = min(array_column($bike->prices, 'price'));
         
         $dto = new TinkoffInitPaymentDto(
@@ -53,6 +47,7 @@ class BikeBookingController extends Controller
             failUrl: route('failed-payment'),
             orderId: 'bike_booking_id_' . $booking->id,
             successUrl: route('success-payment'),
+            notificationUrl: route('tinkoff.handle-bike-booking-notification', ['bikeBooking' => $booking->id]),
         );
         
         $payment = app(TinkoffService::class)->initPayment($dto);

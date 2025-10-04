@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\AdminTelegram;
 
 use App\Models\BikeBooking;
 use App\Models\CyclingActivity;
+use App\Services\AdminTelegram\Dto\FeedBackFormDto;
+use App\Services\FeedBackDto;
 use Carbon\Carbon;
 use Telegram\Bot\Api;
-use Telegram\Bot\Laravel\Facades\Telegram;
 use function route;
 
 class AdminTelegram
 {
+    protected Api $adminBot;
     protected Api $prokatBot;
     protected Api $studioBot;
     
@@ -18,6 +20,7 @@ class AdminTelegram
     {
         $this->prokatBot = new Api(config('telegram.bots.prokat.token'));
         $this->studioBot = new Api(config('telegram.bots.studio.token'));
+        $this->adminBot = new Api(config('telegram.bots.admin.token'));
     }
     
     public function sendMessage(string $text, ?int $chatId = null): void
@@ -71,6 +74,19 @@ class AdminTelegram
             . "📱 Telegram: {$telegram}\n";
         
         $this->studioBot->sendMessage([
+            'chat_id' => config('telegram.admin_chat_id'),
+            'text' => $text,
+        ]);
+    }
+    
+    public function sendFeedbackFormNotification(FeedBackFormDto $dto): void
+    {
+        $text = "🟢 Новое сообщение (Форма обратной связи)\n\n"
+            . "👤 Имя: {$dto->name}\n"
+            . "📞 Телефон: {$dto->phone}\n"
+            . "✉️ Сообщение:\n{$dto->message}\n";
+        
+        $this->adminBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
             'text' => $text,
         ]);

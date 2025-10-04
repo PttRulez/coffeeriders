@@ -15,3 +15,5 @@ Route::post('/telegram-auth', function (Request $request) {
 
     return response()->json(['status' => 'ok', 'user_id' => $userId]);
 });
+
+require __DIR__ . '/webhooks.php';

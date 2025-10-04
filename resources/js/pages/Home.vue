@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
-import ActionButton from '@/components/shared/ActionButton.vue';
+import { Button } from '@/components/shadecn/button';
 import { Separator } from '@/components/shadecn/separator';
+import ActionButton from '@/components/shared/ActionButton.vue';
+import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
+import FeedbackForm from '@/components/shared/FeedbackForm.vue';
+import Modal from '@/components/shared/Modal.vue';
+import { ref } from 'vue';
 
 const bannerImages = [
     {
@@ -46,6 +50,7 @@ const teamImages = [
     },
 ];
 
+const isOpenJoinTeam = ref(false);
 </script>
 
 <template>
@@ -81,7 +86,7 @@ const teamImages = [
             <h2>Наши тренеры</h2>
 
             <!--      Игорь          -->
-            <div class="flex gap-5 max-md:flex-col-reverse justify-between  items-center">
+            <div class="flex items-center justify-between gap-5 max-md:flex-col-reverse">
                 <p class="italic">"1500 ватт - это только начало интервала"</p>
                 <div class="flex flex-col items-center gap-2">
                     <img
@@ -97,7 +102,7 @@ const teamImages = [
             </div>
 
             <!--      Егор          -->
-            <div class="flex gap-5 max-md:flex-col items-center">
+            <div class="flex items-center gap-5 max-md:flex-col">
                 <div class="flex flex-col items-center gap-2 md:gap-10">
                     <img
                         class="max-w-[240px] rounded-full"
@@ -109,9 +114,12 @@ const teamImages = [
                         <p class="text-center text-lg!">МС по велоспорту</p>
                     </div>
                 </div>
-                <p class="italic">" Всем привет. Являюсь Мастером спорта по велоспорту (мтб), Чемпионом России
-                            и многократным победителем и призером Первенств России, всероссийских и международных соревнований,
-                            в прошлом член Сборной команды России. Расскажу и научу вас всем тонкостям и навыкам мтб и шоссе"</p>
+                <p class="italic">
+                    " Всем привет. Являюсь Мастером спорта по велоспорту (мтб), Чемпионом России и
+                    многократным победителем и призером Первенств России, всероссийских и
+                    международных соревнований, в прошлом член Сборной команды России. Расскажу и
+                    научу вас всем тонкостям и навыкам мтб и шоссе"
+                </p>
             </div>
         </section>
 
@@ -121,8 +129,18 @@ const teamImages = [
             <h2>Вступайте в команду</h2>
 
             <div class="flex gap-10 max-md:flex-col">
-                <div class="md:max-w-[50%]">
+                <div class="md:max-w-[50%] flex flex-col items-center gap-5">
                     <CarouselAutoplay :images="teamImages" :hideArrows="true" />
+
+                    <Modal v-model:open="isOpenJoinTeam" title="Напишите сообщение и мы свяжемся с вами">
+                        <template #trigger>
+                            <Button class="p-6 text-lg md:p-8 md:text-2xl"
+                                >Вступить в команду</Button
+                            >
+                        </template>
+
+                        <FeedbackForm @success="isOpenJoinTeam=false"/>
+                    </Modal>
                 </div>
                 <div class="flex flex-col gap-5">
                     <p>

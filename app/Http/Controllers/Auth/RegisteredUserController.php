@@ -34,7 +34,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
             'telegram_username' => ['nullable', 'string', 'max:64', 'required_without:phone'],
-            'phone' => ['nullable', 'string', 'max:32', 'required_without:telegram_username'],
+            'phone' => ['nullable', 'regex:/^\+7\d{10}$/', 'max:32', 'required_without:telegram_username'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ],
             [

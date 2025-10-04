@@ -20,7 +20,6 @@ class TinkoffService
     public function initPayment(TinkoffInitPaymentDto $dto): array
     {
         $payload = $dto->toArray();
-        $payload['NotificationURL'] = route('tinkoff.handle-notification-from-bank');
         $payload['TerminalKey'] = config('services.tinkoff.terminal_key');
         $payload['Token'] = $this->generateToken($payload);
         
@@ -63,8 +62,6 @@ class TinkoffService
         if (!isset($params['Token'])) {
             return false;
         }
-        
-        
         
         $calculated = $this->generateToken($params);
         

@@ -30,10 +30,6 @@ interface Props {
     breadcrumbs?: BreadcrumbItem[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => [],
-});
-
 const page = usePage();
 
 const activeItemStyles = computed(

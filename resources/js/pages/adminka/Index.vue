@@ -23,5 +23,13 @@
                 </li>
             </ul>
         </li>
+         <li>
+            Администрирование
+            <ul class="pl-5">
+                <li class="text-blue-400">
+                    <Link :href="route('adminka.users.index')">Юзеры</Link>
+                </li>
+            </ul>
+        </li>
     </ul>
 </template>

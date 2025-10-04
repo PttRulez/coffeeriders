@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Tinkoff\TinkoffWebhookStatus;
+use App\Models\BikeBooking;
 use App\Services\TinkoffService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,28 +16,19 @@ class TinkoffPaymentController extends Controller
     {
     }
     
-    public function initRentBikePayment(Request $request, TinkoffService $tinkoff)
-    {
-        $orderId = uniqid();
-        $amount = $request->input('amount');
-        
-        $payment = $tinkoff->initPayment($orderId, $amount, "Оплата аренды велосипеда №{$orderId}");
-        
-        if (!empty($payment['PaymentURL'])) {
-            return redirect($payment['PaymentURL']);
-        }
-        
-        return back()->withErrors('Ошибка создания платежа');
-    }
-    
-    public function handleNotificationFromBank(Request $request)
+    public function handleBikeBookingNotificationFromBank(BikeBooking $bikeBooking, Request $request)
     {
         $data = $request->all();
         
         Log::channel('payments')->info('Tinkoff callback', [
             'data' => $data,
+            '$bikeBooking->id' => $bikeBooking->id,
             'token_valid' => $this->tinkoffService->checkToken($data),
         ]);
+        
+        if ($data['Status'] == TinkoffWebhookStatus::CONFIRMED->value && $request->get('Amount') > 0) {
+            $bikeBooking->increment('paid_money', $request->get('Amount') / 100);
+        }
         
         return response('OK', 200)
             ->header('Content-Type', 'text/plain');

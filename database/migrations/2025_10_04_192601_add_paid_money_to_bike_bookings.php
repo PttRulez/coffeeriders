@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bike_bookings', function (Blueprint $table) {
-            //
+            $table->unsignedInteger('paid_money')->default(0);
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bike_bookings', function (Blueprint $table) {
-            //
+            $table->dropColumn('paid_money');
         });
     }
 };

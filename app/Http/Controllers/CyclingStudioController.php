@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CyclingActivity;
 use App\Models\CyclingStation;
-use App\Services\AdminTelegram;
+use App\Services\AdminTelegram\AdminTelegram;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

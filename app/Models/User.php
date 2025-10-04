@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'paid_cycling_count',
         'phone',
         'telegram_username',
     ];
@@ -58,5 +60,10 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+    
+    public function cyclingActivities(): HasMany
+    {
+        return $this->hasMany(CyclingActivity::class);
     }
 }
