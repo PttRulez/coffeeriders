@@ -1,4 +1,5 @@
 <script lang="ts" setup="">
+import { Button } from '@/components/shadecn/button';
 import {
     Dialog,
     DialogContent,
@@ -6,20 +7,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/shadecn/dialog';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/shadecn/table';
+import { Input } from '@/components/shadecn/input';
+import DataTable from '@/components/shared/DataTable.vue';
 import { User } from '@/types';
-import { ColumnDef, FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
+import { router, useForm } from '@inertiajs/vue3';
+import { ColumnDef } from '@tanstack/vue-table';
+import { XCircle } from 'lucide-vue-next';
 import { h, ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import { Input } from '@/components/shadecn/input'
-import { Button } from '@/components/shadecn/button'
 
 type Props = {
     users: User[];
@@ -27,18 +21,17 @@ type Props = {
 const props = defineProps<Props>();
 
 // состояние модалки с кол-вом тренировок
-const isOpen = ref(false)
-const selectedUser = ref<User | null>(null)
-const formValue = ref<number>(0)
-
+const isOpen = ref(false);
+const selectedUser = ref<User | null>(null);
+const formValue = ref<number>(0);
 
 const openModal = (user: User) => {
-  selectedUser.value = user
-  formValue.value = user.paid_cycling_count
-  isOpen.value = true
-}
+    selectedUser.value = user;
+    formValue.value = user.paid_cycling_count;
+    isOpen.value = true;
+};
 
-const form = useForm({ paid_cycling_count: 0 })
+const form = useForm({ paid_cycling_count: 0 });
 
 const columns: ColumnDef<User>[] = [
     {
@@ -70,67 +63,66 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'telegram_username',
         header: 'телеграм',
     },
+    {
+        accessorKey: 'is_coffeerider',
+        header: () => h('div', { class: 'text-center w-full' }, 'Кофейник'),
+        cell: ({ row }) => {
+            const id = row.original.id;
+            console.log(row.original.id);
+            const isCoffeerider = row.getValue('is_coffeerider');
+
+            const toggle = () => {
+                router.put(
+                    route('adminka.users.update-is-coffeerider', { user: id }),
+                    { is_coffeerider: !isCoffeerider },
+                    {
+                        preserveScroll: true,
+                        preserveState: true,
+                        onSuccess: () => console.log('Updated successfully!'),
+                        onError: (e) => console.error('Error updating:', e),
+                    },
+                );
+            };
+
+            return h(
+                'div',
+                {
+                    class: 'flex items-center justify-center h-full cursor-pointer',
+                    onClick: toggle,
+                },
+                [
+                    isCoffeerider
+                        ? h('img', {
+                              src: '/img/coffee-riders-logo.jpg',
+                              class: 'h-8 w-auto object-contain',
+                          })
+                        : h(XCircle, {
+                              class: 'text-red-500 w-5 h-5',
+                          }),
+                ],
+            );
+        },
+    },
 ];
 
 const save = () => {
-  if (!selectedUser.value) return
-  form.paid_cycling_count = formValue.value
-  form.put(route('adminka.adminka.users.update-cycling-activities-count', selectedUser.value.id), {
-    onSuccess: () => {
-      isOpen.value = false
-    },
-  })
-}
-
-const table = useVueTable({
-    get data() {
-        return props.users;
-    },
-    get columns() {
-        return columns;
-    },
-    getCoreRowModel: getCoreRowModel(),
-});
+    if (!selectedUser.value) return;
+    form.paid_cycling_count = formValue.value;
+    form.put(
+        route('adminka.users.update-cycling-activities-count', selectedUser.value.id),
+        {
+            onSuccess: () => {
+                isOpen.value = false;
+            },
+        },
+    );
+};
 </script>
 
 <template>
-    <h1>Все Юзеры ёпта</h1>
-    <Table class="table-auto">
-        <TableHeader>
-            <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-                <TableHead v-for="header in headerGroup.headers" :key="header.id">
-                    <FlexRender
-                        v-if="!header.isPlaceholder"
-                        :render="header.column.columnDef.header"
-                        :props="header.getContext()"
-                    />
-                </TableHead>
-            </TableRow>
-        </TableHeader>
-        <TableBody>
-            <template v-if="table.getRowModel().rows?.length">
-                <TableRow
-                    v-for="row in table.getRowModel().rows"
-                    :key="row.id"
-                    :data-state="row.getIsSelected() ? 'selected' : undefined"
-                >
-                    <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-                        <FlexRender
-                            :render="cell.column.columnDef.cell"
-                            :props="cell.getContext()"
-                        />
-                    </TableCell>
-                </TableRow>
-            </template>
-            <template v-else>
-                <TableRow>
-                    <TableCell :colspan="columns.length" class="h-24 text-center">
-                        No results.
-                    </TableCell>
-                </TableRow>
-            </template>
-        </TableBody>
-    </Table>
+    <h1 class="mb-10">Все Юзеры ёпта</h1>
+
+    <DataTable :columns="columns" :data="props.users" />
 
     <!-- Модалка с кол-вом тренировок -->
     <Dialog v-model:open="isOpen">

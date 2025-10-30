@@ -4,11 +4,11 @@ import { Button } from '@/components/shadecn/button';
 type Props = {
     href: string;
     text?: string;
-}
+};
 
 const props = withDefaults(defineProps<Props>(), {
-    text: "Подробнее"
-})
+    text: 'Подробнее',
+});
 
 </script>
 

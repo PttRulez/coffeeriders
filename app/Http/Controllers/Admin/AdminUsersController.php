@@ -13,7 +13,7 @@ class AdminUsersController extends Controller
     public function index(): Response
     {
         return Inertia::render('adminka/users/Index', [
-            'users' => User::select(['id', 'name', 'email', 'paid_cycling_count', 'phone', 'telegram_username'])->get()
+            'users' => User::select(['id', 'name', 'email', 'paid_cycling_count', 'phone', 'telegram_username', 'is_coffeerider'])->get()
         ]);
     }
     
@@ -26,5 +26,16 @@ class AdminUsersController extends Controller
         $user->update($validated);
         
         return back()->with('success', 'Количество тренировок обновлено ');
+    }
+    
+    public function updateIsCoffeeRider(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'is_coffeerider' => ['required', 'boolean'],
+        ]);
+       
+        $user->update($validated);
+        
+        return back()->with('success', 'Заапдейчено');
     }
 }

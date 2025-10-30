@@ -62,6 +62,7 @@ function formatDate(val: DateValue): string {
       <Calendar
         v-model="internalDate"
         @update:model-value="handleSelect"
+        :week-starts-on="1"
       />
     </PopoverContent>
   </Popover>

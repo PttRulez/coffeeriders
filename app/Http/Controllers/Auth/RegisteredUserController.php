@@ -44,8 +44,9 @@ class RegisteredUserController extends Controller
                 'email.unique' => 'Такой email уже зарегистрирован.',
                 'telegram_username.required_without' => 'Укажите Telegram или телефон.',
                 'phone.required_without' => 'Укажите телефон или Telegram.',
-                'password.required' => 'Придумайте пароль.',
                 'password.confirmed' => 'Пароли не совпадают.',
+                'password.min' => 'Пароль минимум 8 символов.',
+                'password.required' => 'Придумайте пароль.',
             ]);
         
         $user = User::create([

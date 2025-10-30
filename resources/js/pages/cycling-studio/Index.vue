@@ -1,7 +1,7 @@
 <script lang="ts" setup="">
 import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
-import { Head } from '@inertiajs/vue3';
 import ActionButton from '@/components/shared/ActionButton.vue';
+import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -17,17 +17,19 @@ import ActionButton from '@/components/shared/ActionButton.vue';
 
         <img src="/img/pages/studio/zwift-studio.jpg" />
 
-        <div class="flex max-md:flex-col max-md:px-10 justify-center gap-5">
-            <Card class="md:w-[240px]">
-                <CardContent class="text-xl font-bold text-center">
-                    <p>Разовое занятие</p>
-                    <p>(2 часа)</p>
-                </CardContent>
-                <CardFooter><p class="w-full text-center">1 500 руб</p></CardFooter>
-            </Card>
+        <div class="flex justify-center gap-5 max-md:flex-col max-md:px-10">
+            <Link :href="route('cycling-studio.booking')">
+                <Card class="md:w-[240px] cursor-pointer">
+                    <CardContent class="text-center text-xl font-bold">
+                        <p>Разовое занятие</p>
+                        <p>(2 часа)</p>
+                    </CardContent>
+                    <CardFooter><p class="w-full text-center">1 500 руб</p></CardFooter>
+                </Card>
+            </Link>
 
             <Card class="md:w-[240px]">
-                <CardContent class="text-xl font-bold text-center">
+                <CardContent class="text-center text-xl font-bold">
                     <p>4 занятия</p>
                     <br />
                 </CardContent>
@@ -35,7 +37,7 @@ import ActionButton from '@/components/shared/ActionButton.vue';
             </Card>
 
             <Card class="md:w-[240px]">
-                <CardContent class="text-xl font-bold text-center">
+                <CardContent class="text-center text-xl font-bold">
                     <p>10 занятий</p>
                     <br />
                 </CardContent>
@@ -43,7 +45,7 @@ import ActionButton from '@/components/shared/ActionButton.vue';
             </Card>
 
             <Card class="md:w-[240px]">
-                <CardContent class="text-xl font-bold text-center">
+                <CardContent class="text-center text-xl font-bold">
                     <p>Безлимит на месяц</p>
                     <br />
                 </CardContent>
@@ -51,8 +53,8 @@ import ActionButton from '@/components/shared/ActionButton.vue';
             </Card>
         </div>
         <div class="flex justify-center">
-        <ActionButton :href="route('cycling-studio.booking')" text="Забронировать" />
-            </div>
+            <ActionButton :href="route('cycling-studio.booking')" text="Забронировать" />
+        </div>
         <p>
             Наша велостудия — это больше, чем просто тренировки. Это сообщество единомышленников,
             объединённых любовью к активному образу жизни. Позвоните нам или оставьте заявку на

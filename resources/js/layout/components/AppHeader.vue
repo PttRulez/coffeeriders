@@ -76,9 +76,9 @@ const navItems = computed((): NavItem[] =>
                   ],
               },
               {
-                  title: 'Сайт',
-                  href: route('home'),
-                  show: true,
+                  title: 'Админка',
+                  href: route('adminka.index'),
+                  show: auth.user?.role === Role.Admin,
               },
           ]
         : [

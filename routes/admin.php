@@ -24,6 +24,8 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
         [AdminBikeController::class, 'destroyImage'])->name('rent-bikes.images.destroy');
     
     Route::get('users', [AdminUsersController::class, 'index'])->name('users.index');
-    Route::put('/adminka/users/{user}', [AdminUsersController::class, 'updateCyclingActivitiesCount'])
-        ->name('adminka.users.update-cycling-activities-count');
+    Route::put('/adminka/users/{user}/cycling-activities-count', [AdminUsersController::class, 'updateCyclingActivitiesCount'])
+        ->name('users.update-cycling-activities-count');
+    Route::put('/adminka/users/{user}/is-coffeerider', [AdminUsersController::class, 'updateIsCoffeeRider'])
+        ->name('users.update-is-coffeerider');
 });
