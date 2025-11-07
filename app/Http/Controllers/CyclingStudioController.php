@@ -125,6 +125,7 @@ class CyclingStudioController extends Controller
             // Списываем занятие только если без оплаты и если он есть у юзера на счету
             if ($request->user()->paid_cycling_count > 0) {
                 $request->user()->decrement('paid_cycling_count');
+                $activity->update(['is_paid' => true]);
             }
             
             return redirect()
