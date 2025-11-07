@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Tinkoff\TinkoffWebhookStatus;
 use App\Models\BikeBooking;
+use App\Models\CyclingActivity;
 use App\Models\CyclingOrder;
 use App\Services\TinkoffService;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class TinkoffPaymentController extends Controller
     {
         $data = $request->all();
         
-        Log::channel('payments')->info('Tinkoff callback', [
+        Log::channel('payments')->info('Tinkoff bike booking callback', [
             'data' => $data,
             '$bikeBooking->id' => $bikeBooking->id,
             'token_valid' => $this->tinkoffService->checkToken($data),
@@ -35,11 +36,32 @@ class TinkoffPaymentController extends Controller
             ->header('Content-Type', 'text/plain');
     }
     
-    public function handleCyclingNotificationFromBank(Request $request)
+    public function handleCyclingActivityNotificationFromBank(Request $request)
     {
        $data = $request->all();
         
-        Log::channel('payments')->info('Tinkoff callback', [
+        Log::channel('payments')->info('Tinkoff cycling studio activity callback', [
+            'data' => $data,
+            'token_valid' => $this->tinkoffService->checkToken($data),
+        ]);
+        
+        if ($data['Status'] == TinkoffWebhookStatus::CONFIRMED->value && $request->get('Amount') > 0) {
+            $orderId = str_replace('cycling_activity_', '', $request->input('OrderId'));
+            $cyclingActivity = CyclingActivity::with('user')->find($orderId);
+            $cyclingActivity->update([
+                'is_paid' => true,
+            ]);
+        }
+        
+        return response('OK', 200)
+            ->header('Content-Type', 'text/plain');
+    }
+    
+    public function handleCyclingOrderNotificationFromBank(Request $request)
+    {
+       $data = $request->all();
+        
+        Log::channel('payments')->info('Tinkoff cycling studio order callback', [
             'data' => $data,
             'token_valid' => $this->tinkoffService->checkToken($data),
         ]);

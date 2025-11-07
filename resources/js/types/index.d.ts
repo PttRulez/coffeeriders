@@ -34,6 +34,7 @@ export interface User {
     email: string;
     email_verified_at: string | null;
     id: number;
+    is_coffeerider: boolean;
     name: string;
     paid_cycling_count: number;
     phone: string;

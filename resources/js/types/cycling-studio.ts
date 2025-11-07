@@ -4,6 +4,7 @@ export type CyclingActivity = {
     cycling_station: CyclingStation;
     distance: number;
     id: number;
+    is_paid: boolean;
     starts_at: string;
     ends_at: string;
     note?: string;

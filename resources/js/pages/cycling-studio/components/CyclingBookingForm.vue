@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import DatePicker from '@/components/shared/DatePicker.vue';
-import HourPicker from '@/components/shared/HourPicker.vue';
+import InputError from '@/components/form-elements/InputError.vue';
 import { Button } from '@/components/shadecn/button';
 import { Label } from '@/components/shadecn/label';
 import { RadioGroup, RadioGroupItem } from '@/components/shadecn/radio-group';
+import DatePicker from '@/components/shared/DatePicker.vue';
+import HourPicker from '@/components/shared/HourPicker.vue';
 import { useTypedForm } from '@/composables/useTypedForm';
+import { dateValueToIso } from '@/helpers';
 import { usePage } from '@inertiajs/vue3';
-import axios from 'axios';
-import { ref, watch } from 'vue';
 import type { DateValue } from '@internationalized/date';
 import { today } from '@internationalized/date';
-import { dateValueToIso } from '@/helpers';
-import InputError from '@/components/form-elements/InputError.vue';
+import axios from 'axios';
+import { ref, watch } from 'vue';
 
 const bikes = ref<
     | {
@@ -24,6 +24,7 @@ const bikes = ref<
 
 type BookingForm = {
     cycling_station_id: number | null;
+    pay: boolean;
     starts_at: string | null;
     user_id: number;
 };
@@ -31,32 +32,43 @@ const page = usePage();
 const { user } = page.props.auth;
 const form = useTypedForm<BookingForm>({
     cycling_station_id: null,
-    user_id: user.id,
+    pay: false,
     starts_at: null,
+    user_id: user.id,
 });
 
-const selectedDate = ref<DateValue | null>(today("Europe/Moscow"));
+const selectedDate = ref<DateValue | null>(today('Europe/Moscow'));
 const selectedTime = ref<string>('');
 
 watch([selectedDate, selectedTime], async ([date, time]) => {
-  if (date && time) {
-    const isoDate = dateValueToIso(date as DateValue);
-    const datetime = `${isoDate}T${time}:00`;
-    form.starts_at = datetime;
+    if (date && time) {
+        const isoDate = dateValueToIso(date as DateValue);
+        const datetime = `${isoDate}T${time}:00`;
+        form.starts_at = datetime;
 
-    try {
-      const { data } = await axios.post(route('cycling-studio.bike-check'), {
-        datetime,
-      });
-      bikes.value = data.stations;
-    } catch (e) {
-      console.error('Ошибка при запросе:', e);
+        try {
+            const { data } = await axios.post(route('cycling-studio.bike-check'), {
+                datetime,
+            });
+            bikes.value = data.stations;
+        } catch (e) {
+            console.error('Ошибка при запросе:', e);
+        }
     }
-  }
 });
 
 const submit = () => {
     form.post(route('cycling-studio.booking.store'));
+};
+
+const submitWithPayment = () => {
+    form.pay = true;
+    submit();
+};
+
+const submitWithoutPayment = () => {
+    form.pay = false;
+    submit();
 };
 </script>
 
@@ -70,7 +82,13 @@ const submit = () => {
         <section class="flex gap-5 max-md:flex-col">
             <DatePicker v-model="selectedDate" placeholder="Дата занятия" />
 
-            <HourPicker v-if="selectedDate" v-model="selectedTime" :minHour="7" :maxHour="20" class="w-full! bg-red-300"/>
+            <HourPicker
+                v-if="selectedDate"
+                v-model="selectedTime"
+                :minHour="7"
+                :maxHour="20"
+                class="w-full! bg-red-300"
+            />
         </section>
         <InputError class="text-xs!" :message="form.errors.starts_at" />
 
@@ -87,7 +105,25 @@ const submit = () => {
             </div>
         </RadioGroup>
 
-        <Button type="submit" class="mx-auto w-fit" v-if="user?.paid_cycling_count > 0"> Забронировать и списать (осталось {{user?.paid_cycling_count}})</Button>
-        <Button type="submit" class="mx-auto w-fit" v-else> Забронировать</Button>
+        <Button
+            type="button"
+            class="mx-auto w-fit"
+            v-if="user?.paid_cycling_count > 0"
+            @click="submitWithoutPayment"
+        >
+            Забронировать и списать (осталось {{ user?.paid_cycling_count }})</Button
+        >
+        <template v-else>
+            <Button type="button" class="mx-auto w-fit" @click="submitWithPayment"
+                >Забронировать и оплатить ({{ user.is_coffeerider ? '750' : '1500'}} руб.)</Button
+            >
+            <Button
+                type="button"
+                variant="outline"
+                class="mx-auto w-fit"
+                @click="submitWithoutPayment"
+                >Забронировать (оплата в студии)</Button
+            >
+        </template>
     </form>
 </template>

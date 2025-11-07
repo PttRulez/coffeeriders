@@ -17,7 +17,7 @@ import { CyclingActivity } from '@/types';
 import { router } from '@inertiajs/vue3';
 import type { DateValue } from '@internationalized/date';
 import { parseDate, today } from '@internationalized/date';
-import { Trash } from 'lucide-vue-next';
+import { Check, Trash, X } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 type Props = {
@@ -80,6 +80,7 @@ const submit = (id: number) => {
         <TableHeader>
             <TableRow>
                 <TableHead>время</TableHead>
+                <TableHead>оплачена</TableHead>
                 <TableHead>станок</TableHead>
                 <TableHead>имя</TableHead>
                 <TableHead>телефон</TableHead>
@@ -92,6 +93,11 @@ const submit = (id: number) => {
             <TableRow v-for="activity in props.activities" :key="activity.id">
                 <TableCell>
                     {{ dateTimeToTime(activity.starts_at) }}
+                </TableCell>
+
+                <TableCell>
+                    <Check v-if="activity.is_paid"/>
+                    <X v-else />
                 </TableCell>
 
                 <TableCell>
