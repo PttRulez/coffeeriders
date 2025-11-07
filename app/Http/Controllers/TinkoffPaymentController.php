@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Tinkoff\TinkoffWebhookStatus;
 use App\Models\BikeBooking;
+use App\Models\CyclingOrder;
 use App\Services\TinkoffService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +29,29 @@ class TinkoffPaymentController extends Controller
         
         if ($data['Status'] == TinkoffWebhookStatus::CONFIRMED->value && $request->get('Amount') > 0) {
             $bikeBooking->increment('paid_money', $request->get('Amount') / 100);
+        }
+        
+        return response('OK', 200)
+            ->header('Content-Type', 'text/plain');
+    }
+    
+    public function handleCyclingNotificationFromBank(Request $request)
+    {
+       $data = $request->all();
+        
+        Log::channel('payments')->info('Tinkoff callback', [
+            'data' => $data,
+            'token_valid' => $this->tinkoffService->checkToken($data),
+        ]);
+        
+        if ($data['Status'] == TinkoffWebhookStatus::CONFIRMED->value && $request->get('Amount') > 0) {
+            $orderId = str_replace('cycling_order_', '', $request->input('OrderId'));
+            $cyclingOrder = CyclingOrder::with('user')->find($orderId);
+            $cyclingOrder->update([
+                'amount_paid' => $request->get('Amount') / 100,
+            ]);
+            
+            $cyclingOrder->user->increment('paid_cycling_count', $cyclingOrder->quantity);
         }
         
         return response('OK', 200)

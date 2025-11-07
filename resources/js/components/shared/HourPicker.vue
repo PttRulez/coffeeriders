@@ -35,7 +35,7 @@ const hours = computed(() =>
 
 <template>
   <Select :modelValue="props.modelValue" @update:modelValue="emit('update:modelValue', $event)">
-    <SelectTrigger class="w-[180px] p-6 max-w-fit">
+    <SelectTrigger class="p-6 w-full">
       <SelectValue placeholder="Выберите время" />
     </SelectTrigger>
 

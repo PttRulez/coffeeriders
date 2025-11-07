@@ -11,7 +11,8 @@ use App\Services\AdminTelegram\AdminTelegram;
 use App\Services\TinkoffService;
 use Carbon\Carbon;
 use Inertia\Inertia;
-use Log;
+use Illuminate\Support\Facades\Log;
+
 use function back;
 use function route;
 
@@ -20,11 +21,11 @@ class BikeBookingController extends Controller
     public function store(CreateBikeBookingRequest $request, AdminTelegram $adminTelegram, TinkoffService $tinkoff): mixed
     {
         $data = $request->validated();
-        
+
         if (Carbon::parse($data['starts_at'])->isBefore(today())) {
             return response()->json(['message' => 'Дата начала не может быть в прошлом'], 422);
         }
-        
+
         $booking = BikeBooking::create([
             'bike_id' => $data['bike_id'],
             'comment' => $data['comment'] ?? null,
@@ -35,13 +36,13 @@ class BikeBookingController extends Controller
             'status' => BookingStatusEnum::Booked->value,
             'telegram_username' => $data['telegram_username'] ?? null,
         ]);
-        
+
         $adminTelegram->sendProkatBookingNotification($booking);
-        
+
         $bike = Bike::findOrFail($data['bike_id']);
-        
+
         $oneDayPrice = min(array_column($bike->prices, 'price'));
-        
+
         $dto = new TinkoffInitPaymentDto(
             amount: $oneDayPrice / 2,
             failUrl: route('failed-payment'),
@@ -49,9 +50,9 @@ class BikeBookingController extends Controller
             successUrl: route('success-payment'),
             notificationUrl: route('tinkoff.handle-bike-booking-notification', ['bikeBooking' => $booking->id]),
         );
-        
+
         $payment = app(TinkoffService::class)->initPayment($dto);
-        
+
         if (empty($payment['PaymentURL'])) {
             Log::channel('payments')->error('BikeBookingController.store Ошибка инициализации платежа в Tinkoff', [
                 'booking_id' => $booking->id,
@@ -59,7 +60,7 @@ class BikeBookingController extends Controller
             ]);
             return back()->with('error', 'Ошибка запроса к банку');
         }
-        
+
         return Inertia::location($payment['PaymentURL']);
     }
 }

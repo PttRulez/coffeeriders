@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CyclingActivity::class);
     }
+    
+    public function cyclingOrders(): HasMany
+    {
+        return $this->hasMany(CyclingOrder::class);
+    }
 }

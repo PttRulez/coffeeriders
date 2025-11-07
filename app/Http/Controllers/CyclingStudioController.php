@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\TinkoffInitPaymentDto;
 use App\Models\CyclingActivity;
+use App\Models\CyclingOrder;
 use App\Models\CyclingStation;
 use App\Services\AdminTelegram\AdminTelegram;
+use App\Services\TinkoffService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -25,6 +29,37 @@ class CyclingStudioController extends Controller
         return Inertia::render('cycling-studio/Booking');
     }
     
+    public function buyActivities(Request $request): mixed
+    {
+        $quantity = $request->input('quantity');
+        $price = match ($quantity) {
+            4 => 5000,
+            10 => 10000,
+        };
+        
+        $cyclingOrder = $request->user()->cyclingOrders()->create(['quantity' => $quantity]);
+        
+        $dto = new TinkoffInitPaymentDto(
+            amount: $price,
+            failUrl: route('failed-payment'),
+            orderId: 'cycling_order_' . $cyclingOrder->id,
+            successUrl: route('success-payment'),
+            notificationUrl: route('tinkoff.handle-cycling-studio-notification'),
+        );
+        
+        $payment = app(TinkoffService::class)->initPayment($dto);
+        
+         if (empty($payment['PaymentURL'])) {
+            Log::channel('payments')->error('CyclingStudioController.buyActivities Ошибка инициализации платежа в Tinkoff', [
+                'cycling_order_id' => $cyclingOrder->id,
+                'response' => $payment,
+            ]);
+            return back()->with('error', 'Ошибка запроса к банку');
+        }
+
+        return Inertia::location($payment['PaymentURL']);
+    }
+    
     public function storeBooking(Request $request, AdminTelegram $adminTelegram): RedirectResponse
     {
         $validated = $request->validate([
@@ -38,6 +73,7 @@ class CyclingStudioController extends Controller
         $startsAt = Carbon::parse($validated['starts_at']);
         $endsAt = (clone $startsAt)->addHours(2);
         
+        //  На всякий случай проверяем есть ли другие бронирования пересекающиеся по времени
         $hasConflict = CyclingActivity::where('cycling_station_id', $validated['cycling_station_id'])
             ->where(function ($q) use ($startsAt, $endsAt) {
                 $q->where('starts_at', '<', $endsAt)
@@ -51,12 +87,17 @@ class CyclingStudioController extends Controller
             ]);
         }
         
+        
         $activity = CyclingActivity::create([
             'user_id' => auth()->user()->id,
             'cycling_station_id' => $validated['cycling_station_id'],
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
         ]);
+        
+        if ($request->user()->paid_cycling_count > 0) {
+            $request->user()->decrement('paid_cycling_count');
+        }
         
         $adminTelegram->sendStudioBookingNotification($activity);
         

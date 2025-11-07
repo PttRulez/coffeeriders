@@ -11,6 +11,7 @@ import { ref, watch } from 'vue';
 import type { DateValue } from '@internationalized/date';
 import { today } from '@internationalized/date';
 import { dateValueToIso } from '@/helpers';
+import InputError from '@/components/form-elements/InputError.vue';
 
 const bikes = ref<
     | {
@@ -28,7 +29,6 @@ type BookingForm = {
 };
 const page = usePage();
 const { user } = page.props.auth;
-
 const form = useTypedForm<BookingForm>({
     cycling_station_id: null,
     user_id: user.id,
@@ -70,8 +70,9 @@ const submit = () => {
         <section class="flex gap-5 max-md:flex-col">
             <DatePicker v-model="selectedDate" placeholder="Дата занятия" />
 
-            <HourPicker v-if="selectedDate" v-model="selectedTime" :minHour="7" :maxHour="20" />
+            <HourPicker v-if="selectedDate" v-model="selectedTime" :minHour="7" :maxHour="20" class="w-full! bg-red-300"/>
         </section>
+        <InputError class="text-xs!" :message="form.errors.starts_at" />
 
         <RadioGroup
             v-if="bikes?.length"
@@ -86,6 +87,7 @@ const submit = () => {
             </div>
         </RadioGroup>
 
-        <Button type="submit" class="mx-auto w-fit"> Забронировать</Button>
+        <Button type="submit" class="mx-auto w-fit" v-if="user?.paid_cycling_count > 0"> Забронировать и списать (осталось {{user?.paid_cycling_count}})</Button>
+        <Button type="submit" class="mx-auto w-fit" v-else> Забронировать</Button>
     </form>
 </template>

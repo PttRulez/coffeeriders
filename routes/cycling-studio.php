@@ -9,6 +9,8 @@ Route::get('/cycling-studio/booking', [CyclingStudioController::class, 'booking'
 Route::middleware(['authed'])->group(function () {
     Route::post('/cycling-studio/booking', [CyclingStudioController::class, 'storeBooking'])
         ->name('cycling-studio.booking.store');
+    Route::post('/cycling-studio/buy-activities', [CyclingStudioController::class, 'buyActivities'])
+        ->name('cycling-studio.buy-activities');
 
     Route::post('/cycling-studio/bike-check', [CyclingStudioController::class, 'bikeCheck'])
         ->name('cycling-studio.bike-check');

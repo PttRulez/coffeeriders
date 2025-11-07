@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SelectRootEmits, SelectRootProps } from 'reka-ui'
 import { SelectRoot, useForwardPropsEmits } from 'reka-ui'
+import { useAttrs } from 'vue';
 
 const props = defineProps<SelectRootProps>()
 const emits = defineEmits<SelectRootEmits>()

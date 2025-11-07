@@ -8,7 +8,7 @@ import {
 } from '@/components/shadecn/dialog'
 
 const props = defineProps<{
-  open: boolean
+  open?: boolean
   title?: string
 }>()
 
