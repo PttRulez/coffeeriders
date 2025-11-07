@@ -3,8 +3,7 @@ import { Button } from '@/components/shadecn/button';
 import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
 import ActionButton from '@/components/shared/ActionButton.vue';
 import Modal from '@/components/shared/Modal.vue';
-import { Head } from '@inertiajs/vue3';
-import axios from 'axios';
+import { Head, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
 import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
@@ -33,6 +32,8 @@ const buy = (quantity: number) => {
         }
     );
 };
+
+const { user } = usePage().props.auth;
 
 const bannerImages = [
     {
@@ -66,7 +67,7 @@ const bannerImages = [
                         <p>Разовое занятие</p>
                         <p>(2 часа)</p>
                     </CardContent>
-                    <CardFooter><p class="w-full text-center">1 500 руб</p></CardFooter>
+                    <CardFooter><p class="w-full text-center">{{ user.is_coffeerider ? '750': '1 500'  }} руб</p></CardFooter>
                 </Card>
             </Link>
 
