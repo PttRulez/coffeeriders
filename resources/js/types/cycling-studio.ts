@@ -1,6 +1,7 @@
 import { User } from '@/types/index';
 
 export type CyclingActivity = {
+    coupon_usage: CouponUsage;
     cycling_station: CyclingStation;
     distance: number;
     id: number;
@@ -9,6 +10,12 @@ export type CyclingActivity = {
     ends_at: string;
     note?: string;
     user: User;
+}
+
+type CouponUsage = {
+    applied_discount: number;
+    coupon_code: string;
+    final_price: number;
 }
 
 type CyclingStation = {

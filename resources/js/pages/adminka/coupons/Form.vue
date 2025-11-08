@@ -3,6 +3,7 @@ import DatePicker from '@/components/shared/DatePicker.vue';
 import { dateValueToIso } from '@/helpers';
 import { Link, useForm } from '@inertiajs/vue3';
 import type { DateValue } from '@internationalized/date';
+import { parseDate } from '@internationalized/date';
 import { computed, ref, watch } from 'vue';
 
 import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
@@ -27,8 +28,12 @@ const form = useForm({
 });
 
 // DatePickers
-const selectedStart = ref<DateValue | null>(props.item?.starts_at ?? null);
-const selectedEnd = ref<DateValue | null>(props.item?.ends_at ?? null);
+const selectedStart = ref<DateValue | null>(
+    props.item?.starts_at ? parseDate(props.item?.starts_at) : null,
+);
+const selectedEnd = ref<DateValue | null>(
+    props.item?.ends_at ? parseDate(props.item?.ends_at) : null,
+);
 
 watch(selectedStart, (val) => {
     form.starts_at = val ? dateValueToIso(val as DateValue) : '';

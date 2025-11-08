@@ -10,23 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Coupon extends Model
 {
-    protected $fillable = [
-        'code',
-        'description',
-        'discount_type',
-        'discount_value',
-        'service_type',
-        'is_active',
-        'starts_at',
-        'ends_at',
-        'max_uses',
-        'max_uses_per_user',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'starts_at' => 'datetime',
-        'ends_at'   => 'datetime',
+        'starts_at' => 'date:Y-m-d',
+        'ends_at'   => 'date:Y-m-d',
         'service_type' => ServiceType::class,
     ];
 
