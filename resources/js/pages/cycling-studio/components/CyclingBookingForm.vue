@@ -165,7 +165,7 @@ const submitWithoutPayment = () => {
         >
         <template v-else>
             <section class="flex flex-col gap-2">
-                <div class="flex items-end gap-3 max-md:flex-col">
+                <div class="flex items-end gap-3 max-md:flex-col" v-if="!user.is_coffeerider">
                     <div class="flex flex-1 flex-col gap-2 w-full">
                         <Label for="coupon">Купон</Label>
                         <input
