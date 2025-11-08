@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Dto\TinkoffInitPaymentDto;
+use App\Enums\ServiceType;
 use App\Models\CyclingActivity;
 use App\Models\CyclingOrder;
 use App\Models\CyclingStation;
 use App\Services\AdminTelegram\AdminTelegram;
+use App\Services\CouponService;
+use App\Services\PricingService;
 use App\Services\TinkoffService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -24,9 +27,18 @@ class CyclingStudioController extends Controller
         return Inertia::render('cycling-studio/Index');
     }
     
-    public function booking(): Response
+    public function booking(PricingService $pricing): Response
     {
-        return Inertia::render('cycling-studio/Booking');
+        $user = auth()->user();
+        $service = ServiceType::Cycling;
+        
+        return Inertia::render('cycling-studio/Booking', [
+            'pricing' => [
+                'service' => $service->value,
+                'base_price' => $pricing->basePrice($user, $service),
+                'final_price' => $pricing->basePrice($user, $service), // пока без купона
+            ],
+        ]);
     }
     
     public function buyActivities(Request $request): mixed
@@ -60,12 +72,16 @@ class CyclingStudioController extends Controller
         return Inertia::location($payment['PaymentURL']);
     }
     
-    public function storeBooking(Request $request, AdminTelegram $adminTelegram): mixed
+    public function storeBooking(Request        $request,
+                                 AdminTelegram  $adminTelegram,
+                                 PricingService $pricing,
+                                 CouponService  $couponService): mixed
     {
         $validated = $request->validate([
             'cycling_station_id' => ['required', 'exists:cycling_stations,id'],
             'starts_at' => ['required', 'date'],
             'pay' => ['boolean'],
+            'coupon_code' => ['nullable', 'string'],
         ], [
             'cycling_station_id.required' => 'Выберите станцию.',
             'starts_at.required' => 'Укажите время начала.',
@@ -98,12 +114,35 @@ class CyclingStudioController extends Controller
         
         $adminTelegram->sendStudioBookingNotification($activity);
         
-        $price = $request->user()->is_coffeerider ? 750 : 1500;
+        // Базовая цена считается на бэке
+        $service = ServiceType::Cycling;
+        $basePrice = $pricing->basePrice($request->user(), $service);
+        $finalPrice = $basePrice;
         
-        if ($validated['pay']) {
-            // Инициализируем платеж у тинька и редиректим туда
+        // Применяем купон
+        if (!empty($validated['pay']) && filled($validated['coupon_code'])) {
+            $res = $couponService->apply(
+                $validated['coupon_code'],
+                $request->user(),
+                $service,
+                $basePrice,
+                $activity
+            );
+            
+            if (!$res['ok']) {
+                throw ValidationException::withMessages([
+                    'coupon_code' => $res['message'] ?? 'Купон недействителен',
+                ]);
+            }
+            
+            $finalPrice = $res['new_price'];
+        }
+        
+        // Оплата в тиньке
+        if (!empty($validated['pay'])) {
+            // Инициализируем платеж у банка по ИТОГОВОЙ цене
             $dto = new TinkoffInitPaymentDto(
-                amount: $price,
+                amount: $finalPrice,
                 failUrl: route('failed-payment'),
                 orderId: 'cycling_activity_' . $activity->id,
                 successUrl: route('success-payment'),
@@ -113,7 +152,7 @@ class CyclingStudioController extends Controller
             $payment = app(TinkoffService::class)->initPayment($dto);
             
             if (empty($payment['PaymentURL'])) {
-                Log::channel('payments')->error('CyclingStudioController.storeBooking Ошибка инициализации платежа в Tinkoff', [
+                Log::channel('payments')->error('CyclingStudioController.storeBooking: Ошибка инициализации платежа в Tinkoff', [
                     'cycling_activity_id' => $activity->id,
                     'response' => $payment,
                 ]);
@@ -121,17 +160,17 @@ class CyclingStudioController extends Controller
             }
             
             return Inertia::location($payment['PaymentURL']);
-        } else {
-            // Списываем занятие только если без оплаты и если он есть у юзера на счету
-            if ($request->user()->paid_cycling_count > 0) {
-                $request->user()->decrement('paid_cycling_count');
-                $activity->update(['is_paid' => true]);
-            }
-            
-            return redirect()
-                ->route('cycling-studio.index')
-                ->with('success', 'Занятие успешно забронировано.');
         }
+        
+        // Оффлайн: списываем предоплаченные занятия, купон НЕ применяем
+        if ($request->user()->paid_cycling_count > 0) {
+            $request->user()->decrement('paid_cycling_count');
+            $activity->update(['is_paid' => true]);
+        }
+        
+        return redirect()
+            ->route('cycling-studio.index')
+            ->with('success', 'Занятие успешно забронировано.');
     }
     
     public function bikeCheck(Request $request): JsonResponse

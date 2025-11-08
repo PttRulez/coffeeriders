@@ -29,6 +29,9 @@
                 <li class="text-blue-400">
                     <Link :href="route('adminka.users.index')">Юзеры</Link>
                 </li>
+                <li class="text-blue-400">
+                    <Link :href="route('adminka.coupons.index')">Купоны</Link>
+                </li>
             </ul>
         </li>
     </ul>

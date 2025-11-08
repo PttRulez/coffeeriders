@@ -72,6 +72,8 @@ const submit = (id: number) => {
         }
     );
 };
+
+console.log(props.activities);
 </script>
 
 <template>
@@ -85,6 +87,9 @@ const submit = (id: number) => {
                 <TableHead>имя</TableHead>
                 <TableHead>телефон</TableHead>
                 <TableHead>телеграм</TableHead>
+                <TableHead>купон</TableHead>
+                <TableHead>скидка</TableHead>
+                <TableHead>цена</TableHead>
                 <TableHead>дистанция</TableHead>
                 <TableHead></TableHead>
             </TableRow>
@@ -122,6 +127,18 @@ const submit = (id: number) => {
                     >
                         {{ activity.user.telegram_username }}
                     </a>
+                </TableCell>
+
+                <TableCell>
+                    {{ activity.coupon_usage?.coupon_code }}
+                </TableCell>
+
+                <TableCell>
+                    {{ activity.coupon_usage?.applied_discount }}
+                </TableCell>
+
+                <TableCell>
+                    {{ activity.coupon_usage?.final_price }}
                 </TableCell>
 
                 <TableCell class="cursor-pointer">

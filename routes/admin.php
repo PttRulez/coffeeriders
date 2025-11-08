@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminBikeBookingController;
 use App\Http\Controllers\Admin\AdminBikeController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Admin\AdminCyclingController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +25,12 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
         [AdminBikeController::class, 'destroyImage'])->name('rent-bikes.images.destroy');
     
     Route::get('users', [AdminUsersController::class, 'index'])->name('users.index');
-    Route::put('/adminka/users/{user}/cycling-activities-count', [AdminUsersController::class, 'updateCyclingActivitiesCount'])
+    Route::put('/users/{user}/cycling-activities-count', [AdminUsersController::class, 'updateCyclingActivitiesCount'])
         ->name('users.update-cycling-activities-count');
-    Route::put('/adminka/users/{user}/is-coffeerider', [AdminUsersController::class, 'updateIsCoffeeRider'])
+    Route::put('/users/{user}/is-coffeerider', [AdminUsersController::class, 'updateIsCoffeeRider'])
         ->name('users.update-is-coffeerider');
+    
+    Route::resource('coupons', AdminCouponController::class)->except(['show']);
+    Route::patch('coupons/{coupon}/toggle-active', [AdminCouponController::class, 'toggleActive'])
+            ->name('coupons.toggle-active');
 });

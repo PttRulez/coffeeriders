@@ -7,11 +7,13 @@ import DatePicker from '@/components/shared/DatePicker.vue';
 import HourPicker from '@/components/shared/HourPicker.vue';
 import { useTypedForm } from '@/composables/useTypedForm';
 import { dateValueToIso } from '@/helpers';
+import { AppPageProps } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import type { DateValue } from '@internationalized/date';
 import { today } from '@internationalized/date';
 import axios from 'axios';
 import { ref, watch } from 'vue';
+import { toast } from 'vue-sonner';
 
 const bikes = ref<
     | {
@@ -23,23 +25,70 @@ const bikes = ref<
 >(null);
 
 type BookingForm = {
+    coupon_code?: string | null;
     cycling_station_id: number | null;
     pay: boolean;
     starts_at: string | null;
     user_id: number;
 };
-const page = usePage();
+
+// ---- пропсы
+const page = usePage<
+    AppPageProps & {
+        pricing: { service: 'cycling' | 'bike_rent'; base_price: number; final_price: number };
+    }
+>();
 const { user } = page.props.auth;
+const service = page.props.pricing.service;
+const finalPrice = ref<number>(page.props.pricing.final_price);
+
+// ---- купон (локальное состояние)
+const couponCode = ref('');
+const loadingCoupon = ref(false);
+
+// ---- превью купона: сервер сам считает final_price
+const applyCoupon = async () => {
+    if (!couponCode.value) return;
+    loadingCoupon.value = true;
+
+    try {
+        const { data } = await axios.post(route('pricing.preview'), {
+            service,
+            code: couponCode.value,
+        });
+
+        finalPrice.value = data.final_price;
+        form.coupon_code = couponCode.value;
+
+        form.clearErrors('coupon_code');
+
+        toast.success(`Купон применён — скидка ${data.discount} руб.`);
+    } catch (e: any) {
+        console.log(e);
+        const msg = e?.response?.data?.message ?? 'Купон недействителен';
+
+        form.setError?.('coupon_code', msg);
+
+        form.coupon_code = null;
+        finalPrice.value = page.props.pricing.base_price;
+
+        toast.error(msg);
+    } finally {
+        loadingCoupon.value = false;
+    }
+};
+
 const form = useTypedForm<BookingForm>({
     cycling_station_id: null,
+    coupon_code: null,
     pay: false,
     starts_at: null,
     user_id: user.id,
 });
 
+// Даты
 const selectedDate = ref<DateValue | null>(today('Europe/Moscow'));
 const selectedTime = ref<string>('');
-
 watch([selectedDate, selectedTime], async ([date, time]) => {
     if (date && time) {
         const isoDate = dateValueToIso(date as DateValue);
@@ -57,6 +106,7 @@ watch([selectedDate, selectedTime], async ([date, time]) => {
     }
 });
 
+// Сабмиты
 const submit = () => {
     form.post(route('cycling-studio.booking.store'));
 };
@@ -114,16 +164,44 @@ const submitWithoutPayment = () => {
             Забронировать и списать (осталось {{ user?.paid_cycling_count }})</Button
         >
         <template v-else>
-            <Button type="button" class="mx-auto w-fit" @click="submitWithPayment"
-                >Забронировать и оплатить ({{ user.is_coffeerider ? '750' : '1500'}} руб.)</Button
-            >
+            <section class="flex flex-col gap-2">
+                <div class="flex items-end gap-3 max-md:flex-col">
+                    <div class="flex flex-1 flex-col gap-2 w-full">
+                        <Label for="coupon">Купон</Label>
+                        <input
+                            id="coupon"
+                            v-model="couponCode"
+                            type="text"
+                            class="h-10 rounded-md border px-3"
+                            placeholder="промокод"
+                            :disabled="loadingCoupon"
+                        />
+                    </div>
+
+                    <Button
+                        type="button"
+                        class="h-10"
+                        :disabled="loadingCoupon || !couponCode"
+                        @click="applyCoupon"
+                    >
+                        {{ loadingCoupon ? 'Проверяем…' : 'Применить' }}
+                    </Button>
+                </div>
+
+                <InputError class="text-xs" :message="form.errors.coupon_code" />
+            </section>
+
+            <Button type="button" class="mx-auto w-fit" @click="submitWithPayment">
+                Забронировать и оплатить ({{ finalPrice }} руб.)
+            </Button>
             <Button
                 type="button"
                 variant="outline"
                 class="mx-auto w-fit"
                 @click="submitWithoutPayment"
-                >Забронировать (оплата в студии)</Button
             >
+                Забронировать (оплата в студии)
+            </Button>
         </template>
     </form>
 </template>

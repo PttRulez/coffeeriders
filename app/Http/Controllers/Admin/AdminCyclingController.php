@@ -26,7 +26,7 @@ class AdminCyclingController extends Controller
         }
         
         return Inertia::render('adminka/cycling-studio/Index', [
-            'activities' => CyclingActivity::with(['cyclingStation', 'user'])
+            'activities' => CyclingActivity::with(['couponUsage', 'cyclingStation', 'user'])
                 ->whereDate('starts_at', $date)
                 ->orderBy('starts_at')
                 ->get(),
