@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import DatePicker from '@/components/shared/DatePicker.vue';
-import Modal from '@/components/shared/Modal.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
 import { Button } from '@/components/shadecn/button';
 import {
@@ -9,8 +7,10 @@ import {
     TableCell,
     TableHead,
     TableHeader,
-    TableRow
+    TableRow,
 } from '@/components/shadecn/table';
+import DatePicker from '@/components/shared/DatePicker.vue';
+import Modal from '@/components/shared/Modal.vue';
 import { useQuery } from '@/composables/useQuery';
 import { dateTimeToTime, dateValueToIso } from '@/helpers';
 import { CyclingActivity } from '@/types';
@@ -24,12 +24,15 @@ type Props = {
     activities: CyclingActivity[];
 };
 const props = defineProps<Props>();
-const openDistanceModals = ref<Record<number, boolean>>(Object.fromEntries(props.activities.map(a => [a.id, false])));
-const distances = ref<Record<number, number>>(Object.fromEntries(props.activities.map(a => [a.id, a.distance])));
+const openDistanceModals = ref<Record<number, boolean>>(
+    Object.fromEntries(props.activities.map((a) => [a.id, false])),
+);
+const distances = ref<Record<number, number>>(
+    Object.fromEntries(props.activities.map((a) => [a.id, a.distance])),
+);
 
 const query = useQuery();
 const queryDate = query.get('date');
-
 
 const date = ref<DateValue>(
     (() => {
@@ -38,7 +41,7 @@ const date = ref<DateValue>(
         } catch {
             return today('Europe/Moscow');
         }
-    })()
+    })(),
 );
 
 const reloadActivities = (val: DateValue | null) => {
@@ -46,7 +49,7 @@ const reloadActivities = (val: DateValue | null) => {
     router.get(
         route('adminka.cycling-studio.index'),
         { date: dateValueToIso(val) },
-        { preserveState: true, preserveScroll: true }
+        { preserveState: true, preserveScroll: true },
     );
 };
 
@@ -54,7 +57,7 @@ const deleteActivity = (id: number) => {
     router.delete(route('adminka.cycling-studio.activities.destroy', id), {
         onSuccess: () => {
             router.reload({ only: ['activities'] });
-        }
+        },
     });
 };
 
@@ -62,14 +65,14 @@ const submit = (id: number) => {
     router.put(
         route('adminka.cycling-studio.activities.update', id),
         {
-            distance: distances.value[id]
+            distance: distances.value[id],
         },
         {
             onSuccess: () => {
                 openDistanceModals.value[id] = false;
                 router.reload({ only: ['activities'] });
-            }
-        }
+            },
+        },
     );
 };
 
@@ -101,8 +104,12 @@ console.log(props.activities);
                 </TableCell>
 
                 <TableCell>
-                    <Check v-if="activity.is_paid"/>
-                    <X v-else />
+                    <Check
+                        v-if="activity.is_paid"
+                        class="inline-block font-bold text-green-500"
+                        :stroke-width="3"
+                    />
+                    <X v-else class="inline-block text-red-500" :stroke-width="3" />
                 </TableCell>
 
                 <TableCell>
