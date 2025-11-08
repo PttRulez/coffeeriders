@@ -22,11 +22,16 @@ const cyclingCount =  computed(() => page.props.auth.user.paid_cycling_count);
 <template>
     <h1 class="mb-10">Личный кабинет</h1>
 
-    <Tabs class="mx-auto md:max-w-2xl" default-value="profile">
+    <Tabs class="mx-auto md:max-w-2xl" default-value="cycling-activities">
         <TabsList class="mx-auto mb-5">
-            <TabsTrigger value="profile"> Профиль</TabsTrigger>
             <TabsTrigger value="cycling-activities"> Студия</TabsTrigger>
+            <TabsTrigger value="profile"> Профиль</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="cycling-activities">
+            <h2 class="mb-5">У вас осталось оплаченных тренировок: {{ cyclingCount }} шт.</h2>
+            <StudioActivities :activities="props.activities" />
+        </TabsContent>
         <TabsContent value="profile" class="mx-auto flex gap-5 max-md:flex-col">
             <Card class="p-5">
                 <NewPasswordForm />
@@ -35,10 +40,6 @@ const cyclingCount =  computed(() => page.props.auth.user.paid_cycling_count);
             <Card class="p-5">
                 <ProfileForm />
             </Card>
-        </TabsContent>
-        <TabsContent value="cycling-activities">
-            <h2 class="mb-5">У вас осталось оплаченных тренировок: {{ cyclingCount }} шт.</h2>
-            <StudioActivities :activities="props.activities" />
         </TabsContent>
     </Tabs>
 </template>
