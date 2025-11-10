@@ -22,9 +22,12 @@ use Inertia\Response;
 
 class CyclingStudioController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request, PricingService $pricing): Response
     {
-        return Inertia::render('cycling-studio/Index');
+        $user    = $request->user();
+        return Inertia::render('cycling-studio/Index', [
+            'price' => $user->hasCyclingActivitiesLeft() > 0 ? 0 : $pricing->baseCyclingPrice($user),
+        ]);
     }
     
     public function booking(PricingService $pricing): Response
@@ -34,9 +37,8 @@ class CyclingStudioController extends Controller
         
         return Inertia::render('cycling-studio/Booking', [
             'pricing' => [
-                'service' => $service->value,
-                'base_price' => $pricing->basePrice($user, $service),
-                'final_price' => $pricing->basePrice($user, $service), // пока без купона
+                'base_price' => $pricing->baseCyclingPrice($user),
+                'final_price' => $pricing->baseCyclingPrice($user), // пока без купона
             ],
         ]);
     }
@@ -116,7 +118,7 @@ class CyclingStudioController extends Controller
         
         // Базовая цена считается на бэке
         $service = ServiceType::Cycling;
-        $basePrice = $pricing->basePrice($request->user(), $service);
+        $basePrice = $pricing->baseCyclingPrice($request->user());
         $finalPrice = $basePrice;
         
         // Применяем купон

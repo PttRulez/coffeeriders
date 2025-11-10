@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CyclingOrder::class);
     }
+    
+    public function hasCyclingActivitiesLeft():bool
+    {
+        return $this->paid_cycling_count > 0;
+    }
 }

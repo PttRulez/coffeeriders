@@ -19,7 +19,7 @@ class PricingController extends Controller
         $user    = $request->user();
         $service = ServiceType::from($data['service']);
 
-        $base = $pricing->basePrice($user, $service);
+        $base = $pricing->baseCyclingPrice($user);
         $res  = $coupons->preview($data['code'], $user, $service, $base);
 
         if (!$res['ok']) {

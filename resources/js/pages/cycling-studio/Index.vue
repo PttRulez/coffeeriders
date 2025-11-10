@@ -2,17 +2,18 @@
 import { Button } from '@/components/shadecn/button';
 import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
 import ActionButton from '@/components/shared/ActionButton.vue';
+import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
 import Modal from '@/components/shared/Modal.vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
-import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
-import { router } from '@inertiajs/vue3';
 
 const buying = ref(false);
 const isOpenBuyFour = ref(false);
 const isOpenBuyTen = ref(false);
-
+const props = defineProps<{
+    price: number;
+}>();
 const buy = (quantity: number) => {
     buying.value = true;
 
@@ -29,7 +30,7 @@ const buy = (quantity: number) => {
             onError: (errors) => {
                 console.error('Ошибка при создании платежа:', errors);
             },
-        }
+        },
     );
 };
 
@@ -67,7 +68,14 @@ const bannerImages = [
                         <p>Разовое занятие</p>
                         <p>(2 часа)</p>
                     </CardContent>
-                    <CardFooter><p class="w-full text-center">{{ user.is_coffeerider ? '750': '1 500'  }} руб</p></CardFooter>
+                    <CardFooter class="place-content-center">
+                            <Button class="max-w-[90%] p-6 text-center text-wrap text-xl">
+                                <template v-if="props.price">{{ props.price }} руб.</template>
+                                <template v-else>Забронировать</template>
+                            </Button>
+                        <Link :href="route('cycling-studio.booking')" v-if="props.price">
+                        </Link>
+                    </CardFooter>
                 </Card>
             </Link>
 
@@ -78,7 +86,9 @@ const bannerImages = [
                             <p>4 занятия</p>
                             <br />
                         </CardContent>
-                        <CardFooter><p class="w-full text-center">5 000 руб</p></CardFooter>
+                        <CardFooter class="place-content-center">
+                            <Button class="p-6 text-center text-xl"> 5000 руб </Button>
+                        </CardFooter>
                     </Card>
                 </template>
 
@@ -95,7 +105,9 @@ const bannerImages = [
                             <p>10 занятий</p>
                             <br />
                         </CardContent>
-                        <CardFooter><p class="w-full text-center">10 000 руб</p></CardFooter>
+                        <CardFooter class="place-content-center">
+                            <Button class="p-6 text-center text-xl"> 10 000 руб </Button>
+                        </CardFooter>
                     </Card>
                 </template>
 

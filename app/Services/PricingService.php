@@ -7,11 +7,8 @@ use App\Models\User;
 
 class PricingService
 {
-    public function basePrice(User | null $user, ServiceType $service): int
+    public function baseCyclingPrice(User | null $user): int
     {
-        return match ($service) {
-            ServiceType::Cycling  => $user?->is_coffeerider ? 750 : 1500,
-            ServiceType::BikeRent => 2000, // задам примерную базовую цену для аренды
-        };
+        return $user?->is_coffeerider ? 750 : 1500;
     }
 }
