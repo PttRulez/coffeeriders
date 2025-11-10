@@ -26,7 +26,7 @@ class CyclingStudioController extends Controller
     {
         $user    = $request->user();
         return Inertia::render('cycling-studio/Index', [
-            'price' => $user->hasCyclingActivitiesLeft() > 0 ? 0 : $pricing->baseCyclingPrice($user),
+            'price' => $user?->hasCyclingActivitiesLeft() > 0 ? 0 : $pricing->baseCyclingPrice($user),
         ]);
     }
     
