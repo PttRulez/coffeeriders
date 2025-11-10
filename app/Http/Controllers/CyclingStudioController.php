@@ -162,7 +162,7 @@ class CyclingStudioController extends Controller
             return Inertia::location($payment['PaymentURL']);
         }
         
-        // Оффлайн: списываем предоплаченные занятия, купон НЕ применяем
+        // Списываем предоплаченные занятия, купон НЕ применяем
         if ($request->user()->paid_cycling_count > 0) {
             $request->user()->decrement('paid_cycling_count');
             $activity->update(['is_paid' => true]);
