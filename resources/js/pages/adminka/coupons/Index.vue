@@ -49,24 +49,13 @@ const toggleActive = async (couponId: number) => {
     }
 };
 
-// const deletingId = ref<number | null>(null);
+console.log(props.items);
 
-// const destroyItem = async (id: number) => {
-//     if (!confirm('Удалить купон?')) return;
-//     deletingId.value = id;
-//
-//     try {
-//         await router.delete(route('adminka.coupons.destroy', id), {
-//             preserveScroll: true,
-//             onFinish: () => (deletingId.value = null),
-//         });
-//     } catch {
-//         deletingId.value = null;
-//     }
-// };
-
-const fmtDate = (s: string | null) =>
-    s ? new Date(s).toLocaleString('ru-RU', { hour12: false }) : '—';
+const fmtDate = (str: string | null): string => {
+    if (!str) return '';
+    const d = new Date(str);
+    return d.toLocaleDateString('ru-RU');
+};
 
 const discountLabel = (t: 'percent' | 'fixed', v: number) => (t === 'percent' ? `${v}%` : `${v} ₽`);
 

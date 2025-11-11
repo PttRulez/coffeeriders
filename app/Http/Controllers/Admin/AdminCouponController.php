@@ -12,14 +12,14 @@ use Inertia\Response;
 
 class AdminCouponController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
-        $coupons = \App\Models\Coupon::query()
+        $coupons = Coupon::query()
             ->withCount(['usages as total_usages'])
             ->latest('id')
-            ->get(); // без пагинации и фильтров
-        
-        return \Inertia\Inertia::render('adminka/coupons/Index', [
+            ->get();
+       
+        return Inertia::render('adminka/coupons/Index', [
             'items' => $coupons,
         ]);
     }
