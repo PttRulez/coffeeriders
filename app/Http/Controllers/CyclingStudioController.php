@@ -37,6 +37,7 @@ class CyclingStudioController extends Controller
         
         return Inertia::render('cycling-studio/Booking', [
             'pricing' => [
+                'service' => $service,
                 'base_price' => $pricing->baseCyclingPrice($user),
                 'final_price' => $pricing->baseCyclingPrice($user), // пока без купона
             ],
