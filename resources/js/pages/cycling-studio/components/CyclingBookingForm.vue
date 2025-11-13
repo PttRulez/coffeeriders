@@ -15,8 +15,7 @@ import axios from 'axios';
 import { ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 
-const bikes = ref<
-    | {
+const bikes = ref<{
           id: number;
           is_zwift_bike: boolean;
           name: string;
@@ -199,6 +198,7 @@ const submitWithoutPayment = () => {
                 variant="outline"
                 class="mx-auto w-fit"
                 @click="submitWithoutPayment"
+                v-if="!couponCode"
             >
                 Забронировать (оплата в студии)
             </Button>
