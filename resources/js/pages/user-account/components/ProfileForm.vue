@@ -3,7 +3,7 @@ import FormInput from '@/components/form-elements/FormInput.vue';
 import PhoneInput from '@/components/form-elements/PhoneInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { Button } from '@/components/shadecn/button';
+import { Button } from '@/components/ui/button';
 
 const page = usePage();
 const { auth } = page.props;

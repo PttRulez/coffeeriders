@@ -5,7 +5,7 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from '@/components/shadecn/accordion';
+} from '@/components/ui/accordion';
 import { BikeCategory } from '@/types/enums';
 import { Bike } from '@/types/rent-bikes';
 import { Head } from '@inertiajs/vue3';

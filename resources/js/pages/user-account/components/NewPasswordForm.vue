@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FormInput from '@/components/form-elements/FormInput.vue';
-import { Button } from '@/components/shadecn/button';
+import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 

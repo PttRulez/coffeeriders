@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import AppHeaderLayout from '@/layout/app/AppHeaderLayout.vue';
+import Layout from '@/layout/header-layout/Layout.vue';
 import type { BreadcrumbItemType } from '@/types';
+import FlashToaster from '@/components/shared/FlashToaster.vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -12,7 +13,8 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-    <AppHeaderLayout :breadcrumbs="breadcrumbs">
+    <Layout :breadcrumbs="breadcrumbs">
+        <FlashToaster />
         <slot />
-    </AppHeaderLayout>
+    </Layout>
 </template>

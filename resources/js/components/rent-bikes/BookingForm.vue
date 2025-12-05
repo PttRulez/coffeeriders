@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import DateRangePicker from '@/components/shared/DateRangePicker.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
-import PhoneInput from '@/components/form-elements/PhoneInput.vue';
+import FormTextArea from '@/components/form-elements/FormTextArea.vue';
 import InputError from '@/components/form-elements/InputError.vue';
-import { Button } from '@/components/shadecn/button';
+import PhoneInput from '@/components/form-elements/PhoneInput.vue';
+import DateRangePicker from '@/components/shared/DateRangePicker.vue';
+import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/vue3';
+import { today } from '@internationalized/date';
 import { LoaderCircle } from 'lucide-vue-next';
 import { DateRange, DateValue } from 'reka-ui';
 import { Ref, ref } from 'vue';
-import { today } from '@internationalized/date';
 
 type Props = {
     bike_id: number;
@@ -32,11 +33,10 @@ const form = useForm({
     ends_at: '',
 });
 
-
 function isBooked(day: DateValue): boolean {
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const todayDate = today(timeZone);
-    return props.booked_dates.includes(day.toString()) || (day.compare(todayDate) < 0);
+    return props.booked_dates.includes(day.toString()) || day.compare(todayDate) < 0;
 }
 
 function submit(): void {
@@ -83,21 +83,19 @@ function submit(): void {
                 v-model="form.phone"
                 :error-message="form.errors.phone"
             />
-        </div>
 
-        <FormInput
-            class="md:col-span-2"
-            field-name="comment"
-            placeholder="комментарий"
-            v-model="form.comment"
-            multiline
-        />
+            <FormTextArea
+                wrapperClass="md:col-span-2"
+                field-name="comment"
+                placeholder="комментарий"
+                v-model="form.comment"
+            />
+        </div>
 
         <Button type="submit" class="mt-2 w-full" :disabled="form.processing">
             <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
             Оплатить {{ props.predoplata }} руб.
         </Button>
-
     </form>
 </template>
 

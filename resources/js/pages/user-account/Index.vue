@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Card } from '@/components/shadecn/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shadecn/tabs';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import NewPasswordForm from '@/pages/user-account/components/NewPasswordForm.vue';
 import ProfileForm from '@/pages/user-account/components/ProfileForm.vue';
 import StudioActivities from '@/pages/user-account/components/StudioActivities.vue';

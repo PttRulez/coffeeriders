@@ -30,6 +30,7 @@
       }
   </style>
 
+  {{--  FAVICON --}}
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
   <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/shadecn/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from '@/components/shadecn/carousel';
+} from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { cn } from '@/lib/utils';
 import type { HTMLAttributes } from 'vue'

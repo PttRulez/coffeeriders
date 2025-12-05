@@ -21,6 +21,6 @@ class AdminBikeBookingController extends Controller
     {
         $bikeBooking->delete();
         
-         return redirect()->back();
+        return back()->with('success', 'Бронь удалена');
     }
 }

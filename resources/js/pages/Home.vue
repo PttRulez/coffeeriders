@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Button } from '@/components/shadecn/button';
-import { Separator } from '@/components/shadecn/separator';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import ActionButton from '@/components/shared/ActionButton.vue';
 import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
 import FeedbackForm from '@/components/shared/FeedbackForm.vue';

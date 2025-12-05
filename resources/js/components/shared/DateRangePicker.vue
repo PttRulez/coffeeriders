@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/shadecn/popover';
-import { Button } from '@/components/shadecn/button';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 import { Calendar as CalendarIcon } from 'lucide-vue-next';
 import { cn } from '@/lib/utils';
-import { RangeCalendar } from '@/components/shadecn/range-calendar';
+import { RangeCalendar } from '@/components/ui/range-calendar';
 import { DateRange, DateValue } from 'reka-ui';
 import { Matcher, toDate } from 'reka-ui/date';
 import { DateFormatter, today } from '@internationalized/date';

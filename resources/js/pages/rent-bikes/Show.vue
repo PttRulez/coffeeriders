@@ -2,7 +2,7 @@
 import CarouselThumbs from '@/components/shared/CarouselThumbs.vue';
 import Modal from '@/components/shared/Modal.vue';
 import BookingForm from '@/components/rent-bikes/BookingForm.vue';
-import { Button } from '@/components/shadecn/button';
+import { Button } from '@/components/ui/button';
 import { Bike } from '@/types/rent-bikes';
 import { ref } from 'vue';
 

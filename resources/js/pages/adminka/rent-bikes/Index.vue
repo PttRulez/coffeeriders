@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Button } from '@/components/shadecn/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shadecn/table';
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Bike } from '@/types/rent-bikes';
 import { SquarePen } from 'lucide-vue-next';
 

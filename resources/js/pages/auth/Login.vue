@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
-import { Button } from '@/components/shadecn/button';
-import { Card } from '@/components/shadecn/card';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 

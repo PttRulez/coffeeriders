@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import InputError from '@/components/form-elements/InputError.vue';
-import { Button } from '@/components/shadecn/button';
-import { Label } from '@/components/shadecn/label';
-import { RadioGroup, RadioGroupItem } from '@/components/shadecn/radio-group';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DatePicker from '@/components/shared/DatePicker.vue';
 import HourPicker from '@/components/shared/HourPicker.vue';
 import { useTypedForm } from '@/composables/useTypedForm';
@@ -12,10 +12,11 @@ import { usePage } from '@inertiajs/vue3';
 import type { DateValue } from '@internationalized/date';
 import { today } from '@internationalized/date';
 import axios from 'axios';
-import { ref, watch } from 'vue';
+import { type Ref, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 
-const bikes = ref<{
+const bikes = ref<
+    | {
           id: number;
           is_zwift_bike: boolean;
           name: string;
@@ -86,7 +87,9 @@ const form = useTypedForm<BookingForm>({
 });
 
 // Даты
-const selectedDate = ref<DateValue | null>(today('Europe/Moscow'));
+const selectedDate = ref<DateValue | null>(
+    today('Europe/Moscow') as DateValue,
+) as Ref<DateValue | null>;
 const selectedTime = ref<string>('');
 watch([selectedDate, selectedTime], async ([date, time]) => {
     if (date && time) {
@@ -146,7 +149,7 @@ const submitWithoutPayment = () => {
             v-model="form.cycling_station_id"
             :orientation="'vertical'"
         >
-            <div v-for="bike in bikes" class="flex items-center space-x-2">
+            <div v-for="bike in bikes" class="flex items-center space-x-2" :key="bike.id">
                 <RadioGroupItem :id="`bike_${bike.id}`" :value="bike.id" />
                 <Label :for="`bike_${bike.id}`"
                     >{{ bike.name }} ({{ bike.is_zwift_bike ? 'zwift байк' : 'шоссер' }})</Label
@@ -165,7 +168,7 @@ const submitWithoutPayment = () => {
         <template v-else>
             <section class="flex flex-col gap-2">
                 <div class="flex items-end gap-3 max-md:flex-col" v-if="!user.is_coffeerider">
-                    <div class="flex flex-1 flex-col gap-2 w-full">
+                    <div class="flex w-full flex-1 flex-col gap-2">
                         <Label for="coupon">Купон</Label>
                         <input
                             id="coupon"

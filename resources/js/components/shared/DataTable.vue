@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TData, TValue">
-import { Button } from '@/components/shadecn/button';
+import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -7,7 +7,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/shadecn/table';
+} from '@/components/ui/table';
 import type { ColumnDef } from '@tanstack/vue-table';
 import {
     FlexRender,

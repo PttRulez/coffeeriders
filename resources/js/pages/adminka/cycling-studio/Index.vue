@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FormInput from '@/components/form-elements/FormInput.vue';
-import { Button } from '@/components/shadecn/button';
+import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -8,7 +8,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/shadecn/table';
+} from '@/components/ui/table';
 import DatePicker from '@/components/shared/DatePicker.vue';
 import Modal from '@/components/shared/Modal.vue';
 import { useQuery } from '@/composables/useQuery';
@@ -129,7 +129,7 @@ console.log(props.activities);
                     <a
                         v-if="activity.user.telegram_username"
                         :href="`https://t.me/${activity.user.telegram_username}`"
-                        class="flex items-center text-blue-400"
+                        class="text-blue-400 hover:underline"
                         target="_blank"
                     >
                         {{ activity.user.telegram_username }}

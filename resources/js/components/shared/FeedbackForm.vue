@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import FormInput from '@/components/form-elements/FormInput.vue';
 import PhoneInput from '@/components/form-elements/PhoneInput.vue';
-import { Card } from '@/components/shadecn/card';
+import { Card } from '@/components/ui/card';
 import { useForm } from '@inertiajs/vue3';
-import { Textarea } from '@/components/shadecn/textarea';
-import { Button } from '@/components/shadecn/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
 const emit = defineEmits<{
     (e: 'success'): void;

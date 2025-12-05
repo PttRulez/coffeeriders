@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from '@/components/shadecn/button';
+import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layout/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';

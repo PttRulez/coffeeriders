@@ -30,10 +30,12 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): mixed
     {
+        $telegramRule = new TelegramUsername();
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
-            'telegram_username' => ['nullable', 'string', 'max:64', 'required_without:phone'],
+            'telegram_username' => ['nullable', 'string', 'max:255', 'required_without:phone', $telegramRule],
             'phone' => ['nullable', 'regex:/^\+7\d{10}$/', 'max:32', 'required_without:telegram_username'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ],
@@ -49,10 +51,15 @@ class RegisteredUserController extends Controller
                 'password.required' => 'Придумайте пароль.',
             ]);
         
+        // Получаем извлечённый никнейм из правила валидации
+        $telegramUsername = $request->telegram_username
+            ? $telegramRule->getExtractedUsername()
+            : null;
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'telegram_username' => $request->telegram_username,
+            'telegram_username' => $telegramUsername,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);

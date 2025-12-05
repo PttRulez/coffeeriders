@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Checkbox } from '@/components/shadecn/checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
 
 type Props = {
     fieldName: string;

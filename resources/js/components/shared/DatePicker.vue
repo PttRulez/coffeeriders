@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { Calendar } from '@/components/shadecn/calendar'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from '@/components/shadecn/popover'
-import { Button } from '@/components/shadecn/button'
+} from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
 import type { DateValue } from '@internationalized/date'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
 

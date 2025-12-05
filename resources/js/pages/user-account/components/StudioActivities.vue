@@ -6,7 +6,7 @@ import {
     TableHead,
     TableHeader,
     TableRow
-} from '@/components/shadecn/table';
+} from '@/components/ui/table';
 import { dateTimePrettify } from '../../../helpers';
 import { CyclingActivity } from '@/types';
 

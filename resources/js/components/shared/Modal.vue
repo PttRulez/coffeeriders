@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/shadecn/dialog'
+} from '@/components/ui/dialog'
 
 const props = defineProps<{
   open?: boolean

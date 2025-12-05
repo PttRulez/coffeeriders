@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import InputError from '@/components/form-elements/InputError.vue';
-import { Input } from '@/components/shadecn/input';
-import { Label } from '@/components/shadecn/label';
-import { Textarea } from '@/components/shadecn/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 const model = defineModel<any>();
@@ -12,7 +11,6 @@ type Props = {
     errorMessage?: string;
     fieldName: string;
     label?: string;
-    multiline?: boolean;
     placeholder?: string;
     type?: string;
 };
@@ -20,34 +18,38 @@ type Props = {
 defineOptions({
     inheritAttrs: false,
 });
+
 const props = withDefaults(defineProps<Props>(), {
-    multiline: false,
+    type: 'text',
 });
 </script>
 
 <template>
     <div class="grid gap-2">
         <div v-if="props.label" class="flex items-center justify-between">
-            <Label :for="props.fieldName" class="text-lg">{{ props.label }}</Label>
+            <Label :for="props.fieldName" class="text-lg">
+                {{ props.label }}
+            </Label>
 
             <slot name="additionToLabel" />
         </div>
-        <component
-            :is="props.multiline ? Textarea : Input"
-            :class="cn({'p-6 text-xl': true, [props.class]: !! props.class, 'py-2': props.multiline})"
+
+        <Input
             v-model="model"
             :id="props.fieldName"
-            :type="props.type ?? 'text'"
-            v-bind="$attrs"
+            :name="props.fieldName"
+            :type="props.type"
+            :class="cn('p-6 text-xl', props.class)"
             :placeholder="props.placeholder"
             autocomplete="off"
+            v-bind="$attrs"
         />
+
         <InputError class="text-xs!" :message="props.errorMessage" />
     </div>
 </template>
 
 <style scoped>
-/* use deep selector if necessary */
 :deep(input[type='number'])::-webkit-outer-spin-button,
 :deep(input[type='number'])::-webkit-inner-spin-button {
     -webkit-appearance: none;

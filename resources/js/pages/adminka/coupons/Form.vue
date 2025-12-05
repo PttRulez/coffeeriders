@@ -9,8 +9,8 @@ import { computed, ref, watch } from 'vue';
 import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
 import FormSelect from '@/components/form-elements/FormSelect.vue';
-import { Button } from '@/components/shadecn/button';
-import { Label } from '@/components/shadecn/label';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 const props = defineProps<{ item: any | null }>();
 const isEdit = computed(() => Boolean(props.item?.id));

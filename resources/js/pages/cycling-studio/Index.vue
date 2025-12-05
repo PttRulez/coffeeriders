@@ -1,10 +1,10 @@
 <script lang="ts" setup="">
-import { Button } from '@/components/shadecn/button';
-import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import ActionButton from '@/components/shared/ActionButton.vue';
 import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
 import Modal from '@/components/shared/Modal.vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -33,8 +33,6 @@ const buy = (quantity: number) => {
         },
     );
 };
-
-const { user } = usePage().props.auth;
 
 const bannerImages = [
     {
@@ -69,12 +67,11 @@ const bannerImages = [
                         <p>(2 часа)</p>
                     </CardContent>
                     <CardFooter class="place-content-center">
-                            <Button class="max-w-[90%] p-6 text-center text-wrap text-xl">
-                                <template v-if="props.price">{{ props.price }} руб.</template>
-                                <template v-else>Забронировать</template>
-                            </Button>
-                        <Link :href="route('cycling-studio.booking')" v-if="props.price">
-                        </Link>
+                        <Button class="max-w-[90%] p-6 text-center text-xl text-wrap">
+                            <template v-if="props.price">{{ props.price }} руб.</template>
+                            <template v-else>Забронировать</template>
+                        </Button>
+                        <Link :href="route('cycling-studio.booking')" v-if="props.price"> </Link>
                     </CardFooter>
                 </Card>
             </Link>

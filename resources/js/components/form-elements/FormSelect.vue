@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import InputError from '@/components/form-elements/InputError.vue';
-import { Label } from '@/components/shadecn/label';
-import { Select, SelectValue, SelectContent, SelectGroup , SelectItem, SelectTrigger } from '@/components/shadecn/select';
+import { Label } from '@/components/ui/label';
+import { Select, SelectValue, SelectContent, SelectGroup , SelectItem, SelectTrigger } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export interface SelectOption {

@@ -1,14 +1,14 @@
 <script lang="ts" setup="">
-import { Button } from '@/components/shadecn/button';
+import DataTable from '@/components/shared/DataTable.vue';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@/components/shadecn/dialog';
-import { Input } from '@/components/shadecn/input';
-import DataTable from '@/components/shared/DataTable.vue';
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { User } from '@/types';
 import { router, useForm } from '@inertiajs/vue3';
 import { ColumnDef } from '@tanstack/vue-table';
@@ -62,6 +62,16 @@ const columns: ColumnDef<User>[] = [
     {
         accessorKey: 'telegram_username',
         header: 'телеграм',
+        cell: ({ row }) =>
+            h(
+                'a',
+                {
+                    class: 'text-blue-400 hover:underline',
+                    href: `https://t.me/${row.getValue('telegram_username')}`,
+                    target: "_blank"
+                },
+                row.getValue('telegram_username'),
+            ),
     },
     {
         accessorKey: 'is_coffeerider',
@@ -108,14 +118,11 @@ const columns: ColumnDef<User>[] = [
 const save = () => {
     if (!selectedUser.value) return;
     form.paid_cycling_count = formValue.value;
-    form.put(
-        route('adminka.users.update-cycling-activities-count', selectedUser.value.id),
-        {
-            onSuccess: () => {
-                isOpen.value = false;
-            },
+    form.put(route('adminka.users.update-cycling-activities-count', selectedUser.value.id), {
+        onSuccess: () => {
+            isOpen.value = false;
         },
-    );
+    });
 };
 </script>
 

@@ -6,7 +6,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/shadecn/table';
+} from '@/components/ui/table';
 import { BikeBooking } from '@/types/rent-bikes';
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -81,7 +81,7 @@ const deleteBooking = (id: number) => {
                     <a
                         v-if="booking.telegram_username"
                         :href="`https://t.me/${booking.telegram_username}`"
-                        class="flex items-center"
+                        class="text-blue-400 hover:underline"
                         target="_blank"
                     >
                         {{ booking.telegram_username }}

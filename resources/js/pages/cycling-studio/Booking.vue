@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import CyclingBookingForm from '@/pages/cycling-studio/components/CyclingBookingForm.vue';
-import { Card, CardContent, CardFooter } from '@/components/shadecn/card';
-import { usePage } from '@inertiajs/vue3';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import ActionButton from '@/components/shared/ActionButton.vue';
-import { computed } from 'vue';
+import CyclingBookingForm from '@/pages/cycling-studio/components/CyclingBookingForm.vue';
+import { usePage } from '@inertiajs/vue3';
 
 const page = usePage();
 </script>
 
 <template>
     <CyclingBookingForm v-if="page.props.auth.user" />
-    <Card v-else class="max-w-[520px] mx-auto">
+    <Card v-else class="mx-auto max-w-[520px]">
         <CardContent>
-            <p class="text-center">Только авторизованные пользователи могут забронировать занятие</p>
+            <p class="text-center">
+                Только авторизованные пользователи могут забронировать занятие
+            </p>
         </CardContent>
-        <CardFooter class="gap-5 justify-center">
+        <CardFooter class="justify-center gap-5">
             <ActionButton as-child :href="route('login')" text="Логин" />
             <ActionButton as-child :href="route('register')" text="Регистрация" />
         </CardFooter>

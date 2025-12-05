@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/shadecn/card';
-import type { CarouselApi } from '@/components/shadecn/carousel';
+import { Card, CardContent } from '@/components/ui/card';
+import type { CarouselApi } from '@/components/ui/carousel';
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from '@/components/shadecn/carousel';
-import { UnwrapRefCarouselApi } from '@/components/shadecn/carousel/interface';
+} from '@/components/ui/carousel';
+import { UnwrapRefCarouselApi } from '@/components/ui/carousel/interface';
 import { watchOnce } from '@vueuse/core';
 import { ref } from 'vue';
 

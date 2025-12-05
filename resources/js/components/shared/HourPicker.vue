@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectItem,
   SelectValue,
-} from '@/components/shadecn/select'
+} from '@/components/ui/select'
 import { computed } from 'vue'
 
 type Props = {

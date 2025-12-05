@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 
 // shadcn-ui
-import { Badge } from '@/components/shadecn/badge';
+import { Badge } from '@/components/ui/badge';
 import {
     Table,
     TableBody,
@@ -10,7 +10,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/shadecn/table';
+} from '@/components/ui/table';
 
 // lucide icons
 import axios from 'axios';
