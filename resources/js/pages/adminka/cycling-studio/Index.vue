@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import FormInput from '@/components/form-elements/FormInput.vue';
+import DatePicker from '@/components/shared/DatePicker.vue';
+import Modal from '@/components/shared/Modal.vue';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -9,8 +11,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import DatePicker from '@/components/shared/DatePicker.vue';
-import Modal from '@/components/shared/Modal.vue';
 import { useQuery } from '@/composables/useQuery';
 import { dateTimeToTime, dateValueToIso } from '@/helpers';
 import { CyclingActivity } from '@/types';
@@ -54,7 +54,7 @@ const reloadActivities = (val: DateValue | null) => {
 };
 
 const deleteActivity = (id: number) => {
-    router.delete(route('adminka.cycling-studio.activities.destroy', id), {
+    router.delete(route('adminka.cycling-studio.destroy', id), {
         onSuccess: () => {
             router.reload({ only: ['activities'] });
         },
@@ -63,7 +63,7 @@ const deleteActivity = (id: number) => {
 
 const submit = (id: number) => {
     router.put(
-        route('adminka.cycling-studio.activities.update', id),
+        route('adminka.cycling-studio.update', id),
         {
             distance: distances.value[id],
         },
@@ -80,7 +80,12 @@ console.log(props.activities);
 </script>
 
 <template>
-    <DatePicker v-model="date" @update:model-value="reloadActivities" />
+    <div class="flex items-center gap-5">
+        <DatePicker v-model="date" @update:model-value="reloadActivities" />
+        <Button as-child
+            ><Link :href="route('adminka.cycling-studio.create')">Забукать</Link></Button
+        >
+    </div>
     <Table>
         <TableHeader>
             <TableRow>
@@ -100,7 +105,7 @@ console.log(props.activities);
         <TableBody>
             <TableRow v-for="activity in props.activities" :key="activity.id">
                 <TableCell>
-                    {{ dateTimeToTime(activity.starts_at) }}
+                    {{ `${dateTimeToTime(activity.starts_at)} - ${dateTimeToTime(activity.ends_at)}` }}
                 </TableCell>
 
                 <TableCell>

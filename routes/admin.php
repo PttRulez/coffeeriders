@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
     
-    Route::get('cycling-studio', [AdminCyclingController::class, 'index'])->name('cycling-studio.index');
-    Route::delete('cycling-studio/activities/{cyclingActivity}',
-        [AdminCyclingController::class, 'destroy'])->name('cycling-studio.activities.destroy');
-    Route::put('cycling-studio/activities/{cyclingActivity}',
-        [AdminCyclingController::class, 'update'])->name('cycling-studio.activities.update');
+    //    Cycling Studio
+    Route::resource('cycling-studio', AdminCyclingController::class)->except(['edit']);
+    
+    Route::post('/cycling-studio/bike-check', [AdminCyclingController::class, 'bikeCheck'])
+        ->name('cycling-studio.bike-check');
     
     Route::get('rent-bikes/bookings', [AdminBikeBookingController::class, 'index'])->name('rent-bikes.bookings');
     Route::delete('rent-bikes/bookings/{bikeBooking}',

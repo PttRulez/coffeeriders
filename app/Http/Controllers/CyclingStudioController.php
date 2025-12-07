@@ -33,11 +33,10 @@ class CyclingStudioController extends Controller
     public function booking(PricingService $pricing): Response
     {
         $user = auth()->user();
-        $service = ServiceType::Cycling;
         
         return Inertia::render('cycling-studio/Booking', [
             'pricing' => [
-                'service' => $service,
+                'service' => ServiceType::Cycling,
                 'base_price' => $pricing->baseCyclingPrice($user),
                 'final_price' => $pricing->baseCyclingPrice($user), // пока без купона
             ],
@@ -118,7 +117,6 @@ class CyclingStudioController extends Controller
         $adminTelegram->sendStudioBookingNotification($activity);
         
         // Базовая цена считается на бэке
-        $service = ServiceType::Cycling;
         $basePrice = $pricing->baseCyclingPrice($request->user());
         $finalPrice = $basePrice;
         
@@ -127,7 +125,7 @@ class CyclingStudioController extends Controller
             $res = $couponService->apply(
                 $validated['coupon_code'],
                 $request->user(),
-                $service,
+                ServiceType::Cycling,
                 $basePrice,
                 $activity
             );
@@ -183,10 +181,7 @@ class CyclingStudioController extends Controller
         
         $stations = CyclingStation::all();
         
-        $busyStationIds = CyclingActivity::where(function ($q) use ($start, $end) {
-            $q->where('starts_at', '<', $end)
-                ->where('ends_at', '>', $start);
-        })
+        $busyStationIds = CyclingActivity::overlaps($start, $end)
             ->pluck('cycling_station_id')
             ->unique();
         

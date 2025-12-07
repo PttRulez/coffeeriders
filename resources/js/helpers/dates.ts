@@ -8,7 +8,7 @@ export function dateValueToIso(val: DateValue): string {
 
 export function dateTimeToTime(datetime: string): string {
     const d = parse(datetime, "yyyy-MM-dd HH:mm:ss", new Date())
-    return format(d, "HH:mm")
+    return format(d, "H:mm")
 }
 
 export function dateTimePrettify(datetime: string): string {

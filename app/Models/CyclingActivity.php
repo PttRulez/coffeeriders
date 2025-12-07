@@ -39,4 +39,12 @@ class CyclingActivity extends Model
     {
         return $this->couponUsage?->applied_discount;
     }
+    
+    //    SCOPES:
+    public function scopeOverlaps($query, $start, $end) {
+        return $query->where(function ($q) use ($start, $end) {
+            $q->where('starts_at', '>=', $start)
+                ->where('ends_at', '<=', $end);
+        });
+    }
 }
