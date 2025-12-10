@@ -38,7 +38,7 @@ const { class: className, errorMessage, fieldName, placeholder } = defineProps<P
 
         <Select
             v-model="model" :class="cn('p-6 text-xl w-full bg-red-200', className)" v-bind="$attrs">
-            <SelectTrigger>
+            <SelectTrigger class="max-md:text-xl">
                 <SelectValue :placeholder="placeholder" />
             </SelectTrigger>
             <SelectContent>

@@ -13,6 +13,10 @@ class CouponService
 {
     public function preview(string $code, User $user, ServiceType $service, int $price): array
     {
+        if ($user->isCoffeeRider()) {
+            return ['ok' => false, 'message' => 'Купоны не работают для коферайдеров'];
+        }
+        
         $coupon = Coupon::active()
             ->service($service->value)
             ->where('code', trim($code))

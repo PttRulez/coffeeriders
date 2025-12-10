@@ -60,7 +60,7 @@ const bannerImages = [
         <CarouselAutoplay :images="bannerImages" :hideArrows="true" />
 
         <div class="flex justify-center gap-5 max-md:flex-col max-md:px-10">
-            <Link :href="route('cycling-studio.booking')">
+            <Link :href="route('cycling-studio.create')">
                 <Card class="cursor-pointer md:w-[240px]">
                     <CardContent class="text-center text-xl font-bold">
                         <p>Разовое занятие</p>
@@ -71,7 +71,7 @@ const bannerImages = [
                             <template v-if="props.price">{{ props.price }} руб.</template>
                             <template v-else>Забронировать</template>
                         </Button>
-                        <Link :href="route('cycling-studio.booking')" v-if="props.price"> </Link>
+                        <Link :href="route('cycling-studio.create')" v-if="props.price"> </Link>
                     </CardFooter>
                 </Card>
             </Link>
@@ -113,17 +113,9 @@ const bannerImages = [
                     Оплатить 10 000 руб
                 </Button>
             </Modal>
-
-            <Card class="md:w-[240px]">
-                <CardContent class="text-center text-xl font-bold">
-                    <p>Безлимит на месяц</p>
-                    <br />
-                </CardContent>
-                <CardFooter><p class="w-full text-center">12 000 руб</p></CardFooter>
-            </Card>
         </div>
         <div class="flex justify-center">
-            <ActionButton :href="route('cycling-studio.booking')" text="Забронировать" />
+            <ActionButton :href="route('cycling-studio.create')" text="Забронировать" />
         </div>
         <p>
             Наша велостудия — это больше, чем просто тренировки. Это сообщество единомышленников,

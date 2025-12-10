@@ -24,7 +24,8 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
     Route::delete('bikes/{bike}/images/{image}',
         [AdminBikeController::class, 'destroyImage'])->name('rent-bikes.images.destroy');
     
-    Route::get('users', [AdminUsersController::class, 'index'])->name('users.index');
+    Route::resource('users', AdminUsersController::class)->only(['index', 'edit', 'update']);
+    
     Route::put('/users/{user}/cycling-activities-count', [AdminUsersController::class, 'updateCyclingActivitiesCount'])
         ->name('users.update-cycling-activities-count');
     Route::put('/users/{user}/is-coffeerider', [AdminUsersController::class, 'updateIsCoffeeRider'])
@@ -32,5 +33,5 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
     
     Route::resource('coupons', AdminCouponController::class)->except(['show']);
     Route::patch('coupons/{coupon}/toggle-active', [AdminCouponController::class, 'toggleActive'])
-            ->name('coupons.toggle-active');
+        ->name('coupons.toggle-active');
 });

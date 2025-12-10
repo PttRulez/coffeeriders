@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\Pedals;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CyclingActivityResource;
 use Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,10 +21,10 @@ class UserAccountController extends Controller
     public function index(): Response
     {
         return Inertia::render('user-account/Index', [
-            'activities' => Auth::user()
+            'activities' => CyclingActivityResource::collection(Auth::user()
                 ->cyclingActivities()
                 ->orderByDesc('starts_at')
-                ->get()
+                ->get())->resolve(),
         ]);
     }
     
@@ -48,7 +51,9 @@ class UserAccountController extends Controller
                 'email',
                 Rule::unique('users')->ignore($user->id),
             ],
+            'height' => ['sometimes', 'integer'],
             'name' => ['required', 'string', 'max:255'],
+            'pedals' => ['required', new Enum(Pedals::class)],
             'phone' => [
                 'nullable',
                 'regex:/^\+7\d{10}$/',
@@ -57,6 +62,7 @@ class UserAccountController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'telegram_username' => ['nullable', 'string', 'max:50'],
+            'weight' => ['sometimes', 'integer'],
         ],
             [
                 'name.required' => 'Пожалуйста, укажите ваше имя.',

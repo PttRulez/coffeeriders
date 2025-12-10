@@ -8,3 +8,8 @@ export enum BikeCategory {
     Gravel = 'gravel',
     MTB = 'mtb',
 }
+
+export enum Pedals {
+    Shimano = 'shimano',
+    Look = 'look'
+}

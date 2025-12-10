@@ -33,10 +33,10 @@ const form = useForm({
     ends_at: '',
 });
 
-function isBooked(day: DateValue): boolean {
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const todayDate = today(timeZone);
-    return props.booked_dates.includes(day.toString()) || day.compare(todayDate) < 0;
+function isDisabledDate(day: DateValue): boolean {
+    const booked = props.booked_dates.includes(day.toString());
+    const isInPast = day.compare(today('Europe/Moscow')) < 0;
+    return booked || isInPast;
 }
 
 function submit(): void {
@@ -61,7 +61,7 @@ function submit(): void {
 
             <div>
                 <DateRangePicker
-                    :is-date-disabled="isBooked"
+                    :is-date-disabled="isDisabledDate"
                     :booked-dates="props.booked_dates"
                     v-model="dateRange"
                     placeholderText="даты брони"

@@ -1,8 +1,12 @@
 import { User } from '@/types/index';
 
 export type CyclingActivity = {
+    can: {
+        update: boolean
+    };
     coupon_usage: CouponUsage;
-    cycling_station: CyclingStation;
+    cycling_station?: CyclingStation;
+    cycling_station_id: number;
     distance: number;
     id: number;
     is_paid: boolean;

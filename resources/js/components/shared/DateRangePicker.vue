@@ -93,7 +93,8 @@ const isDateDisabled = (day: DateValue): boolean => {
                 v-model="model"
                 v-model:placeholder="placeholder"
                 :is-date-disabled="isDateDisabled"
-                :week-starts-on="1"
+                weekday-format="short"
+                locale="ru-RU"
                 initial-focus
                 :hideTimeZone="false"
             />

@@ -5,7 +5,6 @@ namespace App\Services\AdminTelegram;
 use App\Models\BikeBooking;
 use App\Models\CyclingActivity;
 use App\Services\AdminTelegram\Dto\FeedBackFormDto;
-use App\Services\FeedBackDto;
 use Carbon\Carbon;
 use Telegram\Bot\Api;
 use function route;
@@ -57,7 +56,7 @@ class AdminTelegram
         ]);
     }
     
-    public function sendStudioBookingNotification(CyclingActivity $cyclingActivity): void
+    public function sendStudioBookingStoreNotification(CyclingActivity $cyclingActivity, ?bool $paid = false, ?string $couponCode = null): void
     {
         $cyclingActivity->loadMissing('user');
         
@@ -71,7 +70,59 @@ class AdminTelegram
             . "👤 {$cyclingActivity->user->name}\n"
             . "📅 {$startsAt}\n"
             . "📞 {$cyclingActivity->user->phone}\n"
-            . "📱 Telegram: {$telegram}\n";
+            . "📱 Telegram: {$telegram}\n"
+            . "{$cyclingActivity->user->height} см, {$cyclingActivity->user->weight} кг, {$cyclingActivity->user->pedals}\n"
+            . ($paid ? "Оплата на сайте\n" : "Оплата в студии\n")
+            . ($couponCode ? 'Купон: ' . $couponCode : '');
+        
+        $this->studioBot->sendMessage([
+            'chat_id' => config('telegram.admin_chat_id'),
+            'text' => $text,
+        ]);
+    }
+    
+    public function sendStudioBookingUpdatedNotification(CyclingActivity $cyclingActivity): void
+    {
+        $cyclingActivity->loadMissing('user');
+        
+        $telegram = $cyclingActivity->user->telegram_username
+            ? '@' . ltrim($cyclingActivity->user->telegram_username, '@')
+            : '—';
+        
+        $original = Carbon::parse($cyclingActivity->getOriginal('starts_at'))->translatedFormat('d F H:i');
+        $updated = Carbon::parse($cyclingActivity->starts_at)->translatedFormat('d F H:i');
+        
+        $text = "🟢 Изменение времени бронирования (Студия)\n\n" .
+            "👤 {$cyclingActivity->user->name}\n" .
+            "📞 {$cyclingActivity->user->phone}\n" .
+            "📱 Telegram: {$telegram}\n\n" .
+            "⏱ Время изменено:\n" .
+            "с {$original}\n" .
+            "на {$updated}" .
+            "{$cyclingActivity->user->height} см, {$cyclingActivity->user->weight} кг, {$cyclingActivity->user->pedals}";
+        
+        $this->studioBot->sendMessage([
+            'chat_id' => config('telegram.admin_chat_id'),
+            'text' => $text,
+        ]);
+    }
+    
+    public function sendStudioBookingDeletedNotification(CyclingActivity $cyclingActivity): void
+    {
+        $cyclingActivity->loadMissing('user');
+        
+        $telegram = $cyclingActivity->user->telegram_username
+            ? '@' . ltrim($cyclingActivity->user->telegram_username, '@')
+            : '—';
+        
+        $startsAt = Carbon::parse($cyclingActivity->getOriginal('starts_at'))->translatedFormat('d F H:i');
+        $updated = Carbon::parse($cyclingActivity->starts_at)->translatedFormat('d F H:i');
+        
+        $text = "😭 Удалено бронирование (Студия)\n\n" .
+            "👤 {$cyclingActivity->user->name}\n" .
+            "📞 {$cyclingActivity->user->phone}\n" .
+            "📱 Telegram: {$telegram}\n\n" .
+            "⏱ {$startsAt}";
         
         $this->studioBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),

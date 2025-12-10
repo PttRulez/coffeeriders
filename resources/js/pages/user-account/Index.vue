@@ -12,12 +12,9 @@ type Props = {
     activities: CyclingActivity[];
 };
 const props = defineProps<Props>();
-
 const page = usePage();
-const cyclingCount =  computed(() => page.props.auth.user.paid_cycling_count);
+const cyclingCount = computed(() => page.props.auth.user.paid_cycling_count);
 </script>
-
-
 
 <template>
     <h1 class="mb-10">Личный кабинет</h1>
@@ -29,16 +26,16 @@ const cyclingCount =  computed(() => page.props.auth.user.paid_cycling_count);
         </TabsList>
 
         <TabsContent value="cycling-activities">
-            <h2 class="mb-5">У вас осталось оплаченных тренировок: {{ cyclingCount }} шт.</h2>
+            <h2 class="mb-5">Баланс тренировок (абонементы): {{ cyclingCount }} шт.</h2>
             <StudioActivities :activities="props.activities" />
         </TabsContent>
-        <TabsContent value="profile" class="mx-auto flex gap-5 max-md:flex-col">
+        <TabsContent value="profile" class="mx-auto flex items-start gap-5 max-md:flex-col">
             <Card class="p-5">
-                <NewPasswordForm />
+                <ProfileForm />
             </Card>
 
             <Card class="p-5">
-                <ProfileForm />
+                <NewPasswordForm />
             </Card>
         </TabsContent>
     </Tabs>

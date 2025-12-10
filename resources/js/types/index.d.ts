@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-vue-next';
 import type { Config } from 'ziggy-js';
-import { Role } from '@/types/enums';
+import { Pedals, Role } from '@/types/enums';
 
 export interface Auth {
     user: User;
@@ -33,14 +33,17 @@ export interface User {
     created_at: string;
     email: string;
     email_verified_at: string | null;
+    height: number;
     id: number;
     is_coffeerider: boolean;
     name: string;
     paid_cycling_count: number;
+    pedals: Pedals;
     phone: string;
     role: Role;
     telegram_username: string;
     updated_at: string;
+    weight: number;
 }
 
 

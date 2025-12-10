@@ -10,9 +10,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { User } from '@/types';
-import { router, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { ColumnDef } from '@tanstack/vue-table';
-import { XCircle } from 'lucide-vue-next';
+import { Pencil, XCircle } from 'lucide-vue-next';
 import { h, ref } from 'vue';
 
 type Props = {
@@ -68,7 +68,7 @@ const columns: ColumnDef<User>[] = [
                 {
                     class: 'text-blue-400 hover:underline',
                     href: `https://t.me/${row.getValue('telegram_username')}`,
-                    target: "_blank"
+                    target: '_blank',
                 },
                 row.getValue('telegram_username'),
             ),
@@ -112,6 +112,24 @@ const columns: ColumnDef<User>[] = [
                 ],
             );
         },
+    },
+    {
+        header: '',
+        id: 'actions',
+        cell: ({ row }) =>
+            h(
+                Link,
+                { href: route('adminka.users.edit', { user: row.original.id}) },
+                h(
+                    Pencil,
+                    {
+                        class: 'cursor-pointer',
+                        href: `https://t.me/${row.getValue('telegram_username')}`,
+                        target: '_blank',
+                    },
+                    row.getValue('telegram_username'),
+                ),
+            ),
     },
 ];
 

@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Pedals;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
 use Inertia\Response;
+use function to_route;
 
 class AdminUsersController extends Controller
 {
@@ -15,6 +19,26 @@ class AdminUsersController extends Controller
         return Inertia::render('adminka/users/Index', [
             'users' => User::select(['id', 'name', 'email', 'paid_cycling_count', 'phone', 'telegram_username', 'is_coffeerider'])->get()
         ]);
+    }
+    
+    public function edit(User $user): Response
+    {
+        return Inertia::render('adminka/users/Edit', [
+            'user' => $user
+        ]);
+    }
+    
+    public function update(Request $request, User $user): RedirectResponse
+    {
+        $validated = $request->validate([
+            'height' => ['sometimes', 'integer'],
+            'pedals' => ['required', new Enum(Pedals::class)],
+            'weight' => ['sometimes', 'integer'],
+        ]);
+        
+        $user->update($validated);
+        
+        return to_route('adminka.users.index')->with('success', 'Данные пользователя обновлены');
     }
     
     public function updateCyclingActivitiesCount(Request $request, User $user)
@@ -33,7 +57,7 @@ class AdminUsersController extends Controller
         $validated = $request->validate([
             'is_coffeerider' => ['required', 'boolean'],
         ]);
-       
+        
         $user->update($validated);
         
         return back()->with('success', 'Заапдейчено');

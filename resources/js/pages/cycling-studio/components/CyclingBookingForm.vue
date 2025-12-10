@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import InputError from '@/components/form-elements/InputError.vue';
+import DatePicker from '@/components/shared/DatePicker.vue';
+import HourPicker from '@/components/shared/HourPicker.vue';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import DatePicker from '@/components/shared/DatePicker.vue';
-import HourPicker from '@/components/shared/HourPicker.vue';
 import { useTypedForm } from '@/composables/useTypedForm';
 import { dateValueToIso } from '@/helpers';
 import { AppPageProps } from '@/types';
-import { usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import type { DateValue } from '@internationalized/date';
 import { today } from '@internationalized/date';
 import axios from 'axios';
@@ -41,6 +51,7 @@ const page = usePage<
 const { user } = page.props.auth;
 const service = page.props.pricing.service;
 const finalPrice = ref<number>(page.props.pricing.final_price);
+const hasBookedAlready = ref<boolean>(false);
 
 // ---- купон (локальное состояние)
 const couponCode = ref('');
@@ -91,6 +102,7 @@ const selectedDate = ref<DateValue | null>(
     today('Europe/Moscow') as DateValue,
 ) as Ref<DateValue | null>;
 const selectedTime = ref<string>('');
+
 watch([selectedDate, selectedTime], async ([date, time]) => {
     if (date && time) {
         const isoDate = dateValueToIso(date as DateValue);
@@ -102,15 +114,21 @@ watch([selectedDate, selectedTime], async ([date, time]) => {
                 datetime,
             });
             bikes.value = data.stations;
+            hasBookedAlready.value = data.has_booked_already.length > 0;
+            console.log(hasBookedAlready.value, data);
         } catch (e) {
             console.error('Ошибка при запросе:', e);
         }
     }
 });
 
+const disablePastDays = (date: DateValue) => {
+    return date.compare(today('Europe/Moscow')) < 0;
+};
+
 // Сабмиты
 const submit = () => {
-    form.post(route('cycling-studio.booking.store'));
+    form.post(route('cycling-studio.store'));
 };
 
 const submitWithPayment = () => {
@@ -132,7 +150,11 @@ const submitWithoutPayment = () => {
         <h1>Бронь занятия в студии</h1>
 
         <section class="flex gap-5 max-md:flex-col">
-            <DatePicker v-model="selectedDate" placeholder="Дата занятия" />
+            <DatePicker
+                v-model="selectedDate"
+                placeholder="Дата занятия"
+                :isDateDisabled="disablePastDays"
+            />
 
             <HourPicker
                 v-if="selectedDate"
@@ -207,4 +229,23 @@ const submitWithoutPayment = () => {
             </Button>
         </template>
     </form>
+
+    <AlertDialog :open="hasBookedAlready" @update:open="(val) => (hasBookedAlready = val)">
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Повторо брони</AlertDialogTitle>
+                <AlertDialogDescription>
+                    У вас уже есть бронь на это время. Вы хотите забронировать несколько станков?
+                    Ваши занятия вы можете редактировать и удалять в личном кабинете (не ранее чем
+                    за 6 часов до занятия).
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel>Закрыть</AlertDialogCancel>
+                <AlertDialogAction as-child>
+                    <Link :href="route('user-account.index')">Личный кабинет</Link>
+                </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
 </template>

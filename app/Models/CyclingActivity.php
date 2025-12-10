@@ -10,6 +10,11 @@ class CyclingActivity extends Model
 {
     protected $guarded = [];
     
+    protected $casts = [
+        'starts_at' => 'datetime:Y-m-d H:i',
+        'ends_at'   => 'datetime:Y-m-d H:i',
+    ];
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -43,8 +48,8 @@ class CyclingActivity extends Model
     //    SCOPES:
     public function scopeOverlaps($query, $start, $end) {
         return $query->where(function ($q) use ($start, $end) {
-            $q->where('starts_at', '>=', $start)
-                ->where('ends_at', '<=', $end);
+            $q->where('ends_at', '>', $start)
+                ->where('starts_at', '<', $end);
         });
     }
 }

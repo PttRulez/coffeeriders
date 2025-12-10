@@ -20,14 +20,12 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'is_coffeerider',
+    protected $guarded = [
         'password',
-        'paid_cycling_count',
-        'phone',
-        'telegram_username',
+        'created_at',
+        'updated_at',
+        'remember_token',
+        'email_verified_at',
     ];
     
     /**
@@ -73,8 +71,13 @@ class User extends Authenticatable
         return $this->hasMany(CyclingOrder::class);
     }
     
-    public function hasCyclingActivitiesLeft():bool
+    public function hasCyclingActivitiesLeft(): bool
     {
         return $this->paid_cycling_count > 0;
+    }
+    
+    public function isCoffeeRider(): bool
+    {
+        return $this->is_coffeerider;
     }
 }

@@ -105,7 +105,7 @@ console.log(props.activities);
         <TableBody>
             <TableRow v-for="activity in props.activities" :key="activity.id">
                 <TableCell>
-                    {{ `${dateTimeToTime(activity.starts_at)} - ${dateTimeToTime(activity.ends_at)}` }}
+                    {{ `${dateTimeToTime(activity.starts_at, 'H:mm')} - ${dateTimeToTime(activity.ends_at, 'H:mm')}` }}
                 </TableCell>
 
                 <TableCell>
@@ -118,8 +118,8 @@ console.log(props.activities);
                 </TableCell>
 
                 <TableCell>
-                    {{ activity.cycling_station.name }}
-                    ({{ activity.cycling_station.is_zwift_bike ? 'Zwift' : 'Шоссер' }})
+                    {{ activity.cycling_station?.name }}
+                    ({{ activity.cycling_station?.is_zwift_bike ? 'Zwift' : 'Шоссер' }})
                 </TableCell>
 
                 <TableCell>

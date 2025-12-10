@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -24,60 +25,35 @@ class CyclingStudioController extends Controller
 {
     public function index(Request $request, PricingService $pricing): Response
     {
-        $user    = $request->user();
+        $user = $request->user();
         return Inertia::render('cycling-studio/Index', [
             'price' => $user?->hasCyclingActivitiesLeft() > 0 ? 0 : $pricing->baseCyclingPrice($user),
         ]);
     }
     
-    public function booking(PricingService $pricing): Response
+    public function edit(CyclingActivity $activity): Response
     {
-        $user = auth()->user();
+        Gate::authorize('update', $activity);
         
-        return Inertia::render('cycling-studio/Booking', [
-            'pricing' => [
-                'service' => ServiceType::Cycling,
-                'base_price' => $pricing->baseCyclingPrice($user),
-                'final_price' => $pricing->baseCyclingPrice($user), // пока без купона
-            ],
+        $stations = CyclingStation::all();
+        
+        $busyStationIds = CyclingActivity::query()->where(function ($q) use ($activity) {
+            $q->where('ends_at', '>', $activity->starts_at)
+                ->where('starts_at', '<', $activity->ends_at)
+                ->where('id', '<>', $activity->id);
+        })->pluck('cycling_station_id')
+            ->unique();
+        
+        return Inertia::render('cycling-studio/Edit', [
+            'activity' => $activity,
+            'stations' => $stations->whereNotIn('id', $busyStationIds)->values()
         ]);
     }
     
-    public function buyActivities(Request $request): mixed
-    {
-        $quantity = $request->input('quantity');
-        $price = match ($quantity) {
-            4 => 5000,
-            10 => 10000,
-        };
-        
-        $cyclingOrder = $request->user()->cyclingOrders()->create(['quantity' => $quantity]);
-        
-        $dto = new TinkoffInitPaymentDto(
-            amount: $price,
-            failUrl: route('failed-payment'),
-            orderId: 'cycling_order_' . $cyclingOrder->id,
-            successUrl: route('success-payment'),
-            notificationUrl: route('tinkoff.handle-cycling-order-notification'),
-        );
-        
-        $payment = app(TinkoffService::class)->initPayment($dto);
-        
-        if (empty($payment['PaymentURL'])) {
-            Log::channel('payments')->error('CyclingStudioController.buyActivities Ошибка инициализации платежа в Tinkoff', [
-                'cycling_order_id' => $cyclingOrder->id,
-                'response' => $payment,
-            ]);
-            return back()->with('error', 'Ошибка запроса к банку');
-        }
-        
-        return Inertia::location($payment['PaymentURL']);
-    }
-    
-    public function storeBooking(Request        $request,
-                                 AdminTelegram  $adminTelegram,
-                                 PricingService $pricing,
-                                 CouponService  $couponService): mixed
+    public function store(Request        $request,
+                          AdminTelegram  $adminTelegram,
+                          PricingService $pricing,
+                          CouponService  $couponService): mixed
     {
         $validated = $request->validate([
             'cycling_station_id' => ['required', 'exists:cycling_stations,id'],
@@ -114,7 +90,7 @@ class CyclingStudioController extends Controller
         ]);
         
         
-        $adminTelegram->sendStudioBookingNotification($activity);
+        $adminTelegram->sendStudioBookingStoreNotification($activity, $validated['pay'], $validated['coupon_code']);
         
         // Базовая цена считается на бэке
         $basePrice = $pricing->baseCyclingPrice($request->user());
@@ -169,9 +145,113 @@ class CyclingStudioController extends Controller
             $activity->update(['is_paid' => true]);
         }
         
-        return redirect()
-            ->route('cycling-studio.index')
+        return to_route('user-account.index')
             ->with('success', 'Занятие успешно забронировано.');
+    }
+    
+    public function create(PricingService $pricing): Response
+    {
+        $user = auth()->user();
+        
+        return Inertia::render('cycling-studio/Create', [
+            'pricing' => [
+                'service' => ServiceType::Cycling,
+                'base_price' => $pricing->baseCyclingPrice($user),
+                'final_price' => $pricing->baseCyclingPrice($user),
+            ],
+        ]);
+    }
+    
+    public function update(Request         $request,
+                           CyclingActivity $activity,
+                           AdminTelegram   $adminTelegram): mixed
+    {
+        Gate::authorize('update', $activity);
+        
+        $validated = $request->validate([
+            'cycling_station_id' => ['required', 'exists:cycling_stations,id'],
+            'starts_at' => ['required', 'date'],
+        ], [
+            'cycling_station_id.required' => 'Выберите станцию.',
+            'starts_at.required' => 'Укажите время начала.',
+        ]);
+        
+        $startsAt = Carbon::parse($validated['starts_at']);
+        $endsAt = (clone $startsAt)->addHours(2);
+        
+//        if ($activity->starts_at->lte(now()->addHours(6))) {
+//            throw ValidationException::withMessages([
+//                'starts_at' => 'Бронь можно изменить не позднее чем за 6 часов до начала занятия.',
+//            ]);
+//        }
+        
+        //  На всякий случай проверяем есть ли другие бронирования пересекающиеся по времени
+        $hasConflict = CyclingActivity::where('cycling_station_id', $validated['cycling_station_id'])
+            ->where(function ($q) use ($startsAt, $endsAt, $activity) {
+                $q->where('starts_at', '<', $endsAt)
+                    ->where('ends_at', '>', $startsAt)
+                    ->where('id', '<>', $activity->id);
+            })
+            ->exists();
+        
+        if ($hasConflict) {
+            throw ValidationException::withMessages([
+                'starts_at' => 'Станция уже занята в выбранный интервал.',
+            ]);
+        }
+        
+        $activity->cycling_station_id = $validated['cycling_station_id'];
+        $activity->starts_at = $startsAt;
+        
+        if ($activity->isDirty('starts_at')) {
+            $adminTelegram->sendStudioBookingUpdatedNotification($activity);
+        }
+        
+        $activity->starts_at =$startsAt;
+        
+        $activity->save();
+        return to_route('user-account.index')
+            ->with('success', 'Сохранено');
+    }
+    
+    public function destroy(CyclingActivity $activity, AdminTelegram  $adminTelegram): RedirectResponse
+    {
+        $activity->delete();
+        
+        $adminTelegram->sendStudioBookingDeletedNotification($activity);
+        
+        return back()->with('success', 'Тренировка удалена');
+    }
+    
+    public function buyActivities(Request $request): mixed
+    {
+        $quantity = $request->input('quantity');
+        $price = match ($quantity) {
+            4 => 5000,
+            10 => 10000,
+        };
+        
+        $cyclingOrder = $request->user()->cyclingOrders()->create(['quantity' => $quantity]);
+        
+        $dto = new TinkoffInitPaymentDto(
+            amount: $price,
+            failUrl: route('failed-payment'),
+            orderId: 'cycling_order_' . $cyclingOrder->id,
+            successUrl: route('success-payment'),
+            notificationUrl: route('tinkoff.handle-cycling-order-notification'),
+        );
+        
+        $payment = app(TinkoffService::class)->initPayment($dto);
+        
+        if (empty($payment['PaymentURL'])) {
+            Log::channel('payments')->error('CyclingStudioController.buyActivities Ошибка инициализации платежа в Tinkoff', [
+                'cycling_order_id' => $cyclingOrder->id,
+                'response' => $payment,
+            ]);
+            return back()->with('error', 'Ошибка запроса к банку');
+        }
+        
+        return Inertia::location($payment['PaymentURL']);
     }
     
     public function bikeCheck(Request $request): JsonResponse
@@ -185,10 +265,13 @@ class CyclingStudioController extends Controller
             ->pluck('cycling_station_id')
             ->unique();
         
+        $hasBookedAlready = $request->user()->cyclingActivities->where('starts_at', '=', $start)->values();
+        
         $freeStations = $stations->whereNotIn('id', $busyStationIds);
         
         return response()->json([
             'stations' => $freeStations->values(),
+            'has_booked_already' => $hasBookedAlready
         ]);
     }
 }
