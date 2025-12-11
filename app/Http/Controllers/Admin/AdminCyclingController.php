@@ -89,20 +89,20 @@ class AdminCyclingController extends Controller
         return Inertia::render('adminka/cycling-studio/Create');
     }
     
-    public function update(Request $request, CyclingActivity $cyclingActivity): RedirectResponse
+    public function update(Request $request, CyclingActivity $activity): RedirectResponse
     {
         $data = $request->validate([
             'distance' => 'required|numeric|min:0',
         ]);
         
-        $cyclingActivity->update($data);
+        $activity->update($data);
         
         return back()->with('success', 'Дистанция обновлена');
     }
     
-    public function destroy(CyclingActivity $cyclingActivity): RedirectResponse
+    public function destroy(CyclingActivity $activity): RedirectResponse
     {
-        $cyclingActivity->delete();
+        $activity->delete();
         
         return back()->with('success', 'Тренировка удалена');
     }

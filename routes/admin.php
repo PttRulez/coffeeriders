@@ -12,7 +12,7 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
     Route::get('/', [AdminController::class, 'index'])->name('index');
     
     //    Cycling Studio
-    Route::resource('cycling-studio', AdminCyclingController::class)->except(['edit']);
+    Route::resource('cycling-studio', AdminCyclingController::class)->except(['edit'])->parameters(['cycling-studio' => 'activity']);
     
     Route::post('/cycling-studio/bike-check', [AdminCyclingController::class, 'bikeCheck'])
         ->name('cycling-studio.bike-check');

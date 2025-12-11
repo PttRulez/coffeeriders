@@ -21,7 +21,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $guarded = [
-        'password',
         'created_at',
         'updated_at',
         'remember_token',
