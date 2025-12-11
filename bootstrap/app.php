@@ -9,6 +9,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -32,6 +33,15 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
+            return response()->view('errors.404', status: 404);
+
+            /*
+            return Inertia::render('ErrorPage', [
+                'status' => 404,
+            ])->toResponse($request)->setStatusCode(404);
+            */
+        });
         $exceptions->respond(function (Response $response) {
             if ($response->getStatusCode() === 419) {
                 return back()->with('error', 'Сессия истекла. Обновите страницу и отправьте форму ещё раз.');
