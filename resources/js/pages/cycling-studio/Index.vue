@@ -122,7 +122,7 @@ const bannerImages = [
             <ActionButton :href="route('cycling-studio.create')" text="Забронировать" />
         </div>
 
-        <RacesCard :races="props.races" v-if="props.races.length > 0" class="mx-auto bg-amber-200"/>
+        <RacesCard :races="props.races" v-if="props.races.length > 0" class="mx-auto"/>
 
         <p>
             Наша велостудия — это больше, чем просто тренировки. Это сообщество единомышленников,

@@ -14,7 +14,7 @@ const formatDate = (dateString: string) => {
 </script>
 
 <template>
-    <Card v-for="race in races" :key="race.id" class="w-fit" v-bind="$attrs">
+    <Card v-for="race in races" :key="race.id" class="w-fit bg-amber-200" v-bind="$attrs">
         <CardTitle>Ближайшие гонки</CardTitle>
         <CardContent class="space-y-3 pt-4">
             <div>
