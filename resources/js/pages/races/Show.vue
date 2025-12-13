@@ -55,10 +55,6 @@ const register = (cluster: RaceCluster) => {
 
         <p class="text-lg">{{ formatDate(race.date) }}</p>
 
-        <div v-if="race.description" class="mt-5">
-            <article class="prose prose-sm max-w-none" v-html="race.description"></article>
-        </div>
-
         <div class="mt-8">
             <h2 class="mb-4 text-xl font-semibold">Стартовые группы</h2>
 
@@ -75,7 +71,9 @@ const register = (cluster: RaceCluster) => {
                             Свободных мест:
                             <span
                                 :class="
-                                    getAvailableSlots(cluster) > 0 ? 'text-green-600' : 'text-red-600'
+                                    getAvailableSlots(cluster) > 0
+                                        ? 'text-green-600'
+                                        : 'text-red-600'
                                 "
                             >
                                 {{ getAvailableSlots(cluster) }} / 4
@@ -103,6 +101,10 @@ const register = (cluster: RaceCluster) => {
                     </CardFooter>
                 </Card>
             </div>
+        </div>
+
+        <div v-if="race.description" class="mt-5">
+            <article class="prose prose-sm max-w-none" v-html="race.description"></article>
         </div>
     </div>
 </template>
