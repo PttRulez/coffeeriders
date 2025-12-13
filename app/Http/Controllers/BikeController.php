@@ -5,28 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BikeResource;
 use App\Models\Bike;
 use App\Services\BikeRentService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class BikeController extends Controller
 {
     public function __construct(private readonly BikeRentService $bikeRentService){}
-    
+
     public function index(): Response
     {
         return Inertia::render('rent-bikes/Index', [
             'bikes' => $this->bikeRentService->getAllBikes()
         ]);
     }
-    
+
     public function category(string $categoryName): Response
     {
         return Inertia::render('rent-bikes/' . ucfirst($categoryName), [
             'bikes' => $this->bikeRentService->getByCategoryName($categoryName)->toArray()
         ]);
     }
-    
+
     public function show(Bike $bike): Response
     {
         return Inertia::render('rent-bikes/Show', [

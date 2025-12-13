@@ -24,6 +24,11 @@ class CyclingActivity extends Model
     {
         return $this->belongsTo(CyclingStation::class);
     }
+
+    public function raceCluster(): BelongsTo
+    {
+        return $this->belongsTo(RaceCluster::class);
+    }
     
     public function couponUsage(): MorphOne
     {

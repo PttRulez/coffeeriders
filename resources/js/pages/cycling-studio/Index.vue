@@ -1,9 +1,11 @@
 <script lang="ts" setup="">
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import ActionButton from '@/components/shared/ActionButton.vue';
 import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
 import Modal from '@/components/shared/Modal.vue';
+import RacesCard from '@/components/shared/RacesCard.vue';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Race } from '@/types/races';
 import { Head, router } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
@@ -13,6 +15,7 @@ const isOpenBuyFour = ref(false);
 const isOpenBuyTen = ref(false);
 const props = defineProps<{
     price: number;
+    races: Race[];
 }>();
 const buy = (quantity: number) => {
     buying.value = true;
@@ -59,7 +62,7 @@ const bannerImages = [
 
         <CarouselAutoplay :images="bannerImages" :hideArrows="true" />
 
-        <div class="flex justify-center gap-5 max-md:flex-col max-md:px-10">
+        <div class="flex justify-center items-stretch gap-5 max-md:flex-col max-md:px-10">
             <Link :href="route('cycling-studio.create')">
                 <Card class="cursor-pointer md:w-[240px]">
                     <CardContent class="text-center text-xl font-bold">
@@ -114,9 +117,13 @@ const bannerImages = [
                 </Button>
             </Modal>
         </div>
+
         <div class="flex justify-center">
             <ActionButton :href="route('cycling-studio.create')" text="Забронировать" />
         </div>
+
+        <RacesCard :races="props.races" v-if="props.races.length > 0" class="mx-auto bg-amber-200"/>
+
         <p>
             Наша велостудия — это больше, чем просто тренировки. Это сообщество единомышленников,
             объединённых любовью к активному образу жизни. Позвоните нам или оставьте заявку на

@@ -45,11 +45,14 @@ function formatDate(val: DateValue): string {
 <template>
     <Popover v-model:open="open">
         <PopoverTrigger as-child>
-            <Button variant="outline" class="justify-start p-6 text-left font-normal">
+            <Button
+                variant="outline"
+                class="justify-start p-6 text-left font-normal md:text-xl"
+            >
                 <span v-if="props.modelValue">
                     {{ formatDate(props.modelValue) }}
                 </span>
-                <span v-else class="text-muted-foreground">
+                <span v-else class="pl-2 text-muted-foreground">
                     {{ placeholder ?? 'Выберите дату' }}
                 </span>
                 <CalendarIcon class="ms-auto h-4 w-4 opacity-50" />

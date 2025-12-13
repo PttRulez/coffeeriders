@@ -8,6 +8,7 @@ use App\Models\CyclingActivity;
 use App\Models\CyclingOrder;
 use App\Services\TinkoffService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,34 +18,34 @@ class TinkoffPaymentController extends Controller
     public function __construct(private TinkoffService $tinkoffService)
     {
     }
-    
-    public function handleBikeBookingNotificationFromBank(BikeBooking $bikeBooking, Request $request)
+
+    public function handleBikeBookingNotificationFromBank(BikeBooking $bikeBooking, Request $request): HttpResponse
     {
         $data = $request->all();
-        
+
         Log::channel('payments')->info('Tinkoff bike booking callback', [
             'data' => $data,
             '$bikeBooking->id' => $bikeBooking->id,
             'token_valid' => $this->tinkoffService->checkToken($data),
         ]);
-        
+
         if ($data['Status'] == TinkoffWebhookStatus::CONFIRMED->value && $request->get('Amount') > 0) {
             $bikeBooking->increment('paid_money', $request->get('Amount') / 100);
         }
-        
+
         return response('OK', 200)
             ->header('Content-Type', 'text/plain');
     }
-    
-    public function handleCyclingActivityNotificationFromBank(Request $request)
+
+    public function handleCyclingActivityNotificationFromBank(Request $request): HttpResponse
     {
        $data = $request->all();
-        
+
         Log::channel('payments')->info('Tinkoff cycling studio activity callback', [
             'data' => $data,
             'token_valid' => $this->tinkoffService->checkToken($data),
         ]);
-        
+
         if ($data['Status'] == TinkoffWebhookStatus::CONFIRMED->value && $request->get('Amount') > 0) {
             $orderId = str_replace('cycling_activity_', '', $request->input('OrderId'));
             $cyclingActivity = CyclingActivity::with('user')->find($orderId);
@@ -52,49 +53,49 @@ class TinkoffPaymentController extends Controller
                 'is_paid' => true,
             ]);
         }
-        
+
         return response('OK', 200)
             ->header('Content-Type', 'text/plain');
     }
-    
-    public function handleCyclingOrderNotificationFromBank(Request $request)
+
+    public function handleCyclingOrderNotificationFromBank(Request $request): HttpResponse
     {
        $data = $request->all();
-        
+
         Log::channel('payments')->info('Tinkoff cycling studio order callback', [
             'data' => $data,
             'token_valid' => $this->tinkoffService->checkToken($data),
         ]);
-        
+
         if ($data['Status'] == TinkoffWebhookStatus::CONFIRMED->value && $request->get('Amount') > 0) {
             $orderId = str_replace('cycling_order_', '', $request->input('OrderId'));
             $cyclingOrder = CyclingOrder::with('user')->find($orderId);
             $cyclingOrder->update([
                 'amount_paid' => $request->get('Amount') / 100,
             ]);
-            
+
             $cyclingOrder->user->increment('paid_cycling_count', $cyclingOrder->quantity);
         }
-        
+
         return response('OK', 200)
             ->header('Content-Type', 'text/plain');
     }
-    
+
     public function successPayment(Request $request): Response
     {
         Log::channel('payments')->info('Tinkoff redirected user to successPayment', [
             'request' => $request->all(),
         ]);
-        
+
         return Inertia::render('SuccessPayment');
     }
-    
+
     public function failedPayment(Request $request): Response
     {
        Log::channel('payments')->error('Tinkoff redirected user to failedPayment', [
             'request' => $request->all(),
         ]);
-        
+
         return Inertia::render('FailedPayment');
     }
 }

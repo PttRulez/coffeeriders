@@ -5,7 +5,11 @@ import ActionButton from '@/components/shared/ActionButton.vue';
 import CarouselAutoplay from '@/components/shared/CarouselAutoplay.vue';
 import FeedbackForm from '@/components/shared/FeedbackForm.vue';
 import Modal from '@/components/shared/Modal.vue';
+import RacesCard from '@/components/shared/RacesCard.vue';
+import { Race } from '@/types/races';
 import { ref } from 'vue';
+
+const { races } = defineProps<{ races: Race[] }>();
 
 const bannerImages = [
     {
@@ -64,6 +68,8 @@ const isOpenJoinTeam = ref(false);
 
     <div class="space-y-10">
         <CarouselAutoplay :images="bannerImages" :hideArrows="true" />
+
+        <RacesCard :races="races" />
 
         <section class="items-center gap-10 md:flex md:flex-row-reverse">
             <div class="min-w-[30%] space-y-5">

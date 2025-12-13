@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
     <div class="grid gap-2">
         <div v-if="props.label" class="flex items-center justify-between">
-            <Label :for="props.fieldName" class="text-lg">
+            <Label :for="props.fieldName" class="md:text-lg">
                 {{ props.label }}
             </Label>
 
@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
             :id="props.fieldName"
             :name="props.fieldName"
             :type="props.type"
-            :class="cn('p-6 text-xl', props.class)"
+            :class="cn('p-6 md:text-xl', props.class)"
             :placeholder="props.placeholder"
             autocomplete="off"
             v-bind="$attrs"

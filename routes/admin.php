@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminBikeController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Admin\AdminCyclingController;
+use App\Http\Controllers\Admin\AdminRaceController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,6 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
     Route::resource('coupons', AdminCouponController::class)->except(['show']);
     Route::patch('coupons/{coupon}/toggle-active', [AdminCouponController::class, 'toggleActive'])
         ->name('coupons.toggle-active');
+
+    Route::resource('races', AdminRaceController::class);
 });

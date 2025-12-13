@@ -4,6 +4,8 @@ namespace App\Services\AdminTelegram;
 
 use App\Models\BikeBooking;
 use App\Models\CyclingActivity;
+use App\Models\Race;
+use App\Models\RaceCluster;
 use App\Services\AdminTelegram\Dto\FeedBackFormDto;
 use Carbon\Carbon;
 use Telegram\Bot\Api;
@@ -136,11 +138,33 @@ class AdminTelegram
             . "👤 Имя: {$dto->name}\n"
             . "📞 Телефон: {$dto->phone}\n"
             . "✉️ Сообщение:\n{$dto->message}\n";
-        
+
         $this->adminBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
             'text' => $text,
         ]);
     }
-    
+
+    public function sendRaceRegistrationNotification(CyclingActivity $activity, Race $race, RaceCluster $cluster): void
+    {
+        $activity->loadMissing('user');
+
+        $telegram = $activity->user->telegram_username
+            ? '@' . ltrim($activity->user->telegram_username, '@')
+            : '—';
+
+        $text = "🏁 Регистрация на гонку\n\n"
+            . "🏆 Гонка: {$race->name}\n"
+            . "🚀 Группа: {$cluster->name}\n\n"
+            . "👤 {$activity->user->name}\n"
+            . "📞 {$activity->user->phone}\n"
+            . "📱 Telegram: {$telegram}\n"
+            . "{$activity->user->height} см, {$activity->user->weight} кг, {$activity->user->pedals}";
+
+        $this->studioBot->sendMessage([
+            'chat_id' => config('telegram.admin_chat_id'),
+            'text' => $text,
+        ]);
+    }
+
 }

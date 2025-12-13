@@ -21,6 +21,9 @@
                 <li class="text-blue-400">
                     <Link :href="route('adminka.cycling-studio.index')">Бронь</Link>
                 </li>
+                <li class="text-blue-400">
+                    <Link :href="route('adminka.races.index')">Гонки</Link>
+                </li>
             </ul>
         </li>
          <li>
