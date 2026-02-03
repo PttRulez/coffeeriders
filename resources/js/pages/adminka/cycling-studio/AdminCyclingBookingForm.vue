@@ -101,7 +101,7 @@ const onBikeSelect = (checked: boolean, bikeId: number) => {
                 v-if="selectedDate && selectedStartTime"
                 v-model="selectedEndTime"
                 :minHour="parseInt(selectedStartTime) + 1"
-                :maxHour="20"
+                :maxHour="22"
                 class="w-full! bg-red-300"
                 placeholer="Конец"
             />
