@@ -70,7 +70,7 @@ class AdminBikeController extends Controller
                         continue;
                     }
                     
-                    $url = $imgService->save($file);
+                    $url = $imgService->save($file, dir: 'rent-bikes');
                     
                     $bike->images()->create([
                         'url' => $url,

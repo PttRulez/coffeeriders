@@ -3,7 +3,7 @@ import ErrorBag from '@/components/form-elements/ErrorBag.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
 import FormSelect, { SelectOption } from '@/components/form-elements/FormSelect.vue';
 import InputError from '@/components/form-elements/InputError.vue';
-import MarkdownEditor from '@/components/shared/MarkdownEditor.vue';
+import MarkdownEditor from '@/components/shared/MarkdownEditor/MarkdownEditor.vue';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTypedForm } from '@/composables/useTypedForm';

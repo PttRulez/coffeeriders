@@ -29,4 +29,11 @@ class ImageService
         
         return Storage::url($path);
     }
+
+    public function delete(string $url): bool
+    {
+        $path = str_replace('/storage/', '', $url);
+
+        return Storage::disk('public')->delete($path);
+    }
 }

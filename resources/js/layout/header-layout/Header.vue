@@ -111,6 +111,11 @@ const navItems = computed((): NavItem[] =>
                   show: true,
               },
               {
+                  title: 'Блог',
+                  href: route('blog.index'),
+                  show: true,
+              },
+              {
                   title: 'Контакты',
                   href: route('contacts'),
                   show: true,

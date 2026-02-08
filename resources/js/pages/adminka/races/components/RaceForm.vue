@@ -3,7 +3,7 @@ import ErrorBag from '@/components/form-elements/ErrorBag.vue';
 import FormDatePicker from '@/components/form-elements/FormDatePicker.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
 import InputError from '@/components/form-elements/InputError.vue';
-import MarkdownEditor from '@/components/shared/MarkdownEditor.vue';
+import MarkdownEditor from '@/components/shared/MarkdownEditor/MarkdownEditor.vue';
 import { Button } from '@/components/ui/button';
 import { useTypedForm } from '@/composables/useTypedForm';
 import { Race, RaceCluster } from '@/types/races';

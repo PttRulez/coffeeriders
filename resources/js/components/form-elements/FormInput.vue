@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
             :id="props.fieldName"
             :name="props.fieldName"
             :type="props.type"
-            :class="cn('p-6 md:text-xl', props.class)"
+            :class="cn('p-6 md:text-xl text-base [&[type=file]]:cursor-pointer', props.class)"
             :placeholder="props.placeholder"
             autocomplete="off"
             v-bind="$attrs"

@@ -16,6 +16,7 @@ Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'i
 Route::post('/pricing-preview', [PricingController::class, 'preview'])->name('pricing.preview');
 
 require __DIR__ . '/admin.php';
+require __DIR__ . '/blog.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/cycling-studio.php';
 require __DIR__ . '/races.php';
