@@ -132,21 +132,22 @@
     }
 }
 
-/* tiptap-extension-resize-image stores positioning in a non-standard
-   `containerstyle` HTML attribute. These rules apply the styles when
-   the saved HTML is rendered outside the editor (v-html). */
-.prose img[containerstyle*="margin: 0 auto"] {
+/* tiptap-extension-resize-image: apply positioning from `containerstyle` attr */
+.prose img[containerstyle*="margin: 0 auto"],
+.prose img[containerstyle*="margin: 0px auto"] {
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-.prose img[containerstyle*="float: right"] {
+.prose img[containerstyle*="float: right"],
+.prose img[containerstyle*="float:right"] {
     float: right;
     padding-left: 8px;
 }
 
-.prose img[containerstyle*="float: left"] {
+.prose img[containerstyle*="float: left"],
+.prose img[containerstyle*="float:left"] {
     float: left;
     padding-right: 8px;
 }
