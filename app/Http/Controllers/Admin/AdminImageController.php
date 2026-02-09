@@ -25,8 +25,8 @@ class AdminImageController extends Controller
     public function upload(Request $request, ImageService $imageService)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
-            'dir' => 'sometimes|string',
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif,webp',
+            'dir' => 'sometimes|string|max:50',
         ], [
             'image.required' => 'Необходимо выбрать изображение',
             'image.image' => 'Файл должен быть изображением',
