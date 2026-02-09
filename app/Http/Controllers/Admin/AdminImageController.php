@@ -26,12 +26,11 @@ class AdminImageController extends Controller
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
-            'dir' => 'sometimes|string|max:50',
+            'dir' => 'sometimes|string',
         ], [
             'image.required' => 'Необходимо выбрать изображение',
             'image.image' => 'Файл должен быть изображением',
             'image.mimes' => 'Допустимые форматы: jpeg, jpg, png, gif, webp',
-            'image.max' => 'Максимальный размер файла: 5MB',
         ]);
 
         try {
