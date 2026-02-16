@@ -26,7 +26,7 @@ const fmtDate = (str: string): string => {
     <Head :title="blog.title" />
 
     <div class="mx-auto max-w-3xl space-y-6">
-        <Link :href="route('blog.index')" class="text-sm text-muted-foreground hover:underline">
+        <Link :href="route('blog.index')" class="text-sm text-muted-foreground hover:underline mb-5">
             &larr; Назад к блогу
         </Link>
 

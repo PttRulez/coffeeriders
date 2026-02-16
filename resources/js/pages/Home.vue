@@ -172,7 +172,7 @@ const isOpenJoinTeam = ref(false);
         <section class="space-y-5">
             <h2>Велостудия</h2>
             <div class="flex flex-col items-center gap-5 md:float-left md:mr-10 md:max-w-[50%]">
-                <img src="/img/pages/studio/zwift-studio.jpg" />
+                <img src="/img/pages/studio/banner_1.jpg" />
                 <ActionButton :href="route('cycling-studio.index')" />
             </div>
             <p>
