@@ -69,7 +69,7 @@ const isOpenJoinTeam = ref(false);
     <div class="space-y-10">
         <CarouselAutoplay :images="bannerImages" :hideArrows="true" />
 
-        <RacesCard :races="races" class="mx-auto" v-if="races?.length > 0" />/>
+        <RacesCard :races="races" class="mx-auto" v-if="races?.length > 0" />
 
         <section class="items-center gap-10 md:flex md:flex-row-reverse">
             <div class="min-w-[30%] space-y-5">
