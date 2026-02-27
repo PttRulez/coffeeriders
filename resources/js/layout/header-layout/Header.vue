@@ -3,10 +3,8 @@ import TelegramIcon from '@/components/icons/TelegramIcon.vue';
 import { Button } from '@/components/ui/button';
 import {
     NavigationMenu,
-    NavigationMenuContent,
     NavigationMenuItem,
     NavigationMenuList,
-    NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import {
@@ -19,10 +17,11 @@ import {
 } from '@/components/ui/sheet';
 import AppLogo from '@/layout/components/AppLogo.vue';
 import AppLogoIcon from '@/layout/components/AppLogoIcon.vue';
+import { getNavItems } from '@/layout/header-layout/nav-items';
 import type { BreadcrumbItem, NavItem } from '@/types';
-import { BikeCategory, Role } from '@/types/enums';
+import { Role } from '@/types/enums';
 import { Link, usePage } from '@inertiajs/vue3';
-import { Bike, FolderKanban, Menu, PhoneCall } from 'lucide-vue-next';
+import { ChevronDown, Menu, PhoneCall } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { formatPhone } from '../../helpers';
 
@@ -40,107 +39,26 @@ const activeItemStyles = computed(
 );
 const { auth, phoneNumber, telegramLink } = page.props;
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
+const isAdmin = computed(() => auth.user?.role === Role.Admin);
+const isAuthenticated = computed(() => Boolean(auth.user));
+const isAdminPanel = computed(() => page.url.includes('adminka'));
 
-const navItems = computed((): NavItem[] =>
-    page.url.includes('adminka')
-        ? [
-              {
-                  title: 'Прокат',
-                  show: true,
-                  href: '',
-                  children: [
-                      {
-                          href: route('adminka.rent-bikes.index'),
-                          icon: Bike,
-                          title: 'Велики',
-                          show: true,
-                      },
-                      {
-                          title: 'Бронь',
-                          href: route('adminka.rent-bikes.bookings'),
-                          icon: FolderKanban,
-                          show: true,
-                      },
-                  ],
-              },
-              {
-                  title: 'Студия',
-                  show: true,
-                  href: '',
-                  children: [
-                      {
-                          href: route('adminka.cycling-studio.index'),
-                          title: 'Бронирования',
-                          show: true,
-                      },
-                  ],
-              },
-              {
-                  title: 'Админка',
-                  href: route('adminka.index'),
-                  show: auth.user?.role === Role.Admin,
-              },
-          ]
-        : [
-              {
-                  title: 'Аренда',
-                  href: route('rent-bikes.index'),
-                  icon: Bike,
-                  show: true,
-                  children: [
-                      {
-                          title: 'Шоссер',
-                          href: route('rent-bikes.category', BikeCategory.Road),
-                          show: true,
-                      },
-                      {
-                          title: 'Гравийные',
-                          href: route('rent-bikes.category', BikeCategory.Gravel),
-                          show: true,
-                      },
-                      {
-                          title: 'МТБ',
-                          href: route('rent-bikes.category', BikeCategory.MTB),
-                          show: true,
-                      },
-                  ],
-              },
-              {
-                  title: 'Студия',
-                  href: route('cycling-studio.index'),
-                  show: true,
-              },
-              {
-                  title: 'Блог',
-                  href: route('blog.index'),
-                  show: true,
-              },
-              {
-                  title: 'Контакты',
-                  href: route('contacts'),
-                  show: true,
-              },
-              {
-                  title: 'Мой аккаунт',
-                  href: route('user-account.index'),
-                  show: !!auth.user,
-              },
-              {
-                  title: 'Войти',
-                  href: route('login'),
-                  show: !auth.user,
-              },
-              {
-                  title: 'Регистрация',
-                  href: route('register'),
-                  show: !auth.user,
-              },
-              {
-                  title: 'Админка',
-                  href: route('adminka.index'),
-                  show: auth.user?.role === Role.Admin,
-              },
-          ],
+const mobileNavItems = computed((): NavItem[] =>
+    getNavItems({
+        device: 'mobile',
+        isAdmin: isAdmin.value,
+        isAuthenticated: isAuthenticated.value,
+        isAdminPanel: isAdminPanel.value,
+    }),
+);
+
+const desktopNavItems = computed((): NavItem[] =>
+    getNavItems({
+        device: 'desktop',
+        isAdmin: isAdmin.value,
+        isAuthenticated: isAuthenticated.value,
+        isAdminPanel: isAdminPanel.value,
+    }),
 );
 </script>
 
@@ -159,18 +77,18 @@ const navItems = computed((): NavItem[] =>
                     </SheetTrigger>
                     <SheetContent side="left" class="w-[300px] p-6">
                         <SheetTitle class="sr-only">Navigation Menu</SheetTitle>
-                        <SheetHeader class="flex justify-start text-left">
-                            <SheetClose as-child>
-                                <Link :href="route('home')">
-                                    <AppLogoIcon
-                                        class="size-6 fill-current text-black dark:text-white"
-                                    />
-                                </Link>
-                            </SheetClose>
-                        </SheetHeader>
-                        <div class="flex h-full flex-1 flex-col justify-between space-y-4 py-6">
-                            <nav class="-mx-3 space-y-1">
-                                <template v-for="item in navItems" :key="item.title">
+<!--                        <SheetHeader class="flex justify-start text-left ">-->
+<!--                            <SheetClose as-child>-->
+<!--                                <Link :href="route('home')">-->
+<!--                                    <AppLogoIcon-->
+<!--                                        class="fill-current text-black dark:text-white"-->
+<!--                                    />-->
+<!--                                </Link>-->
+<!--                            </SheetClose>-->
+<!--                        </SheetHeader>-->
+                        <div class="flex h-full min-h-0 flex-1 flex-col py-6">
+                            <nav class="-mx-3 min-h-0 flex-1 space-y-1 overflow-y-auto pr-1">
+                                <template v-for="item in mobileNavItems" :key="item.title">
                                     <SheetClose as-child>
                                         <Link
                                             v-if="item.show"
@@ -229,30 +147,36 @@ const navItems = computed((): NavItem[] =>
             <div class="hidden h-full lg:flex lg:flex-1">
                 <NavigationMenu class="ml-10 flex h-full items-stretch">
                     <NavigationMenuList class="flex h-full items-stretch space-x-2">
-                        <template v-for="(item, index) in navItems" :key="index">
+                        <template v-for="(item, index) in desktopNavItems" :key="index">
                             <NavigationMenuItem
                                 v-if="item.show"
                                 class="relative flex h-full items-center"
                             >
                                 <template v-if="item.children?.length">
-                                    <NavigationMenuTrigger
-                                        :class="[
-                                            navigationMenuTriggerStyle(),
-                                            activeItemStyles(item.href),
-                                            'h-9 px-3 text-xl',
-                                        ]"
+                                    <div
+                                        class="group/menu relative flex h-full items-center"
+                                        tabindex="0"
                                     >
-                                        <Link :href="item.href" class="flex">
+                                        <Link
+                                            :class="[
+                                                navigationMenuTriggerStyle(),
+                                                activeItemStyles(item.href),
+                                                'flex h-9 cursor-pointer items-center px-3 text-xl',
+                                            ]"
+                                            :href="item.href"
+                                        >
                                             <component
                                                 v-if="item.icon"
                                                 :is="item.icon"
                                                 class="mr-2 h-6"
                                             />
                                             {{ item.title }}
+                                            <ChevronDown class="ml-1 h-4 w-4" />
                                         </Link>
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent>
-                                        <ul>
+
+                                        <ul
+                                            class="invisible absolute top-full left-0 z-20 mt-1 min-w-full rounded-md border bg-popover p-1 opacity-0 shadow transition-all group-focus-within/menu:visible group-focus-within/menu:opacity-100 group-hover/menu:visible group-hover/menu:opacity-100"
+                                        >
                                             <li
                                                 v-for="subitem in item.children"
                                                 :key="subitem.title"
@@ -261,7 +185,7 @@ const navItems = computed((): NavItem[] =>
                                                     :class="[
                                                         navigationMenuTriggerStyle(),
                                                         activeItemStyles(subitem.href),
-                                                        'flex h-9 w-full! cursor-pointer px-3 text-xl',
+                                                        'flex h-9 w-full! cursor-pointer px-3 text-xl whitespace-nowrap',
                                                     ]"
                                                     :href="subitem.href"
                                                 >
@@ -274,7 +198,7 @@ const navItems = computed((): NavItem[] =>
                                                 </Link>
                                             </li>
                                         </ul>
-                                    </NavigationMenuContent>
+                                    </div>
                                 </template>
                                 <template v-else>
                                     <Link

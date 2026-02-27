@@ -23,3 +23,4 @@ require __DIR__ . '/races.php';
 require __DIR__ . '/rent-bikes.php';
 require __DIR__ . '/tinkoff.php';
 require __DIR__ . '/user-account.php';
+require __DIR__ . '/workshop.php';

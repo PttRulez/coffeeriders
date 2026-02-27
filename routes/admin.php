@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Admin\AdminCyclingController;
 use App\Http\Controllers\Admin\AdminImageController;
 use App\Http\Controllers\Admin\AdminRaceController;
+use App\Http\Controllers\Admin\AdminWorkshopCategoryController;
+use App\Http\Controllers\Admin\AdminWorkshopServiceController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +48,10 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
 
     //      RACES
     Route::resource('races', AdminRaceController::class);
+
+    //      WORKSHOP SERVICES
+    Route::resource('workshop-services', AdminWorkshopServiceController::class)->except(['show']);
+    Route::resource('workshop-categories', AdminWorkshopCategoryController::class)->except(['show']);
     
     // IMAGES
     Route::post('/upload-image', [AdminImageController::class, 'upload'])

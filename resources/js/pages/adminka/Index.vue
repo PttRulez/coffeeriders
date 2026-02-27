@@ -26,7 +26,18 @@
                 </li>
             </ul>
         </li>
-         <li>
+        <li>
+            Мастерская
+            <ul class="pl-5">
+                <li class="text-blue-400">
+                    <Link :href="route('adminka.workshop-categories.index')">Категории</Link>
+                </li>
+                <li class="text-blue-400">
+                    <Link :href="route('adminka.workshop-services.index')">Услуги</Link>
+                </li>
+            </ul>
+        </li>
+        <li>
             Администрирование
             <ul class="pl-5">
                 <li class="text-blue-400">
