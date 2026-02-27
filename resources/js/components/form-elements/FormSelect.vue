@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import InputError from '@/components/form-elements/InputError.vue';
 import { Label } from '@/components/ui/label';
-import { Select, SelectValue, SelectContent, SelectGroup , SelectItem, SelectTrigger } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export interface SelectOption {
@@ -29,7 +36,7 @@ const { class: className, errorMessage, fieldName, placeholder } = defineProps<P
 </script>
 
 <template>
-    <div class="grid gap-2 w-full">
+    <div class="grid w-full gap-2">
         <div v-if="label" class="flex items-center justify-between">
             <Label :for="fieldName" class="text-lg">{{ label }}</Label>
 
@@ -37,13 +44,22 @@ const { class: className, errorMessage, fieldName, placeholder } = defineProps<P
         </div>
 
         <Select
-            v-model="model" :class="cn('p-6 text-xl w-full bg-red-200', className)" v-bind="$attrs">
+            v-model="model"
+            :class="cn('w-full bg-red-200 p-6 text-xl', className)"
+            v-bind="$attrs"
+        >
             <SelectTrigger class="max-md:text-xl">
-                <SelectValue :placeholder="placeholder" />
+                <SelectValue :placeholder="placeholder" class="text-xl" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectItem v-for="option in options" :key="option.label" :value="option.value">{{ option.label }} </SelectItem>
+                    <SelectItem
+                        v-for="option in options"
+                        :key="option.label"
+                        :value="option.value"
+                        class="text-xl"
+                        >{{ option.label }}
+                    </SelectItem>
                 </SelectGroup>
             </SelectContent>
         </Select>

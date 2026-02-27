@@ -65,7 +65,7 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
 <template>
     <Head title="Веломастерская Coffeeriders" />
 
-    <div class="space-y-8  max-w-[920px] mx-auto">
+    <div class="mx-auto max-w-[920px] space-y-8">
         <section id="pricelist" class="space-y-6">
             <div
                 class="flex flex-wrap items-end justify-between gap-3 max-md:flex-col max-md:items-center"

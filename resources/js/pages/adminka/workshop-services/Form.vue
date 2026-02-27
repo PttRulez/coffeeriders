@@ -50,7 +50,7 @@ const submit = () => {
             {{ isEdit ? 'Редактирование услуги' : 'Добавление услуги' }}
         </h1>
 
-        <form @submit.prevent="submit" class="grid max-w-2xl gap-4">
+        <form @submit.prevent="submit" class="grid max-w-2xl gap-4 mx-auto">
             <FormSelect
                 field-name="workshop_category_id"
                 v-model="form.workshop_category_id"
