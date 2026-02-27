@@ -28,6 +28,8 @@ class AdminBlogController extends Controller
     {
         $validated = request()->validate([
             'title' => 'required|string',
+            'seo_title' => 'nullable|string|max:255',
+            'seo_description' => 'nullable|string|max:500',
             'content' => 'required|string',
             'date' => 'required|date',
             'featured_image' => 'required|image|max:5120',
@@ -37,6 +39,8 @@ class AdminBlogController extends Controller
 
         Blog::create([
             'title' => $validated['title'],
+            'seo_title' => $validated['seo_title'] ?? null,
+            'seo_description' => $validated['seo_description'] ?? null,
             'content' => $validated['content'],
             'date' => $validated['date'],
             'featured_img_path' => $featuredImgPath,
@@ -56,6 +60,8 @@ class AdminBlogController extends Controller
     {
         $validated = request()->validate([
             'title' => 'required|string',
+            'seo_title' => 'nullable|string|max:255',
+            'seo_description' => 'nullable|string|max:500',
             'content' => 'required|string',
             'date' => 'required|date',
             'featured_image' => 'nullable|image|max:5120',
@@ -63,6 +69,8 @@ class AdminBlogController extends Controller
 
         $data = [
             'title' => $validated['title'],
+            'seo_title' => $validated['seo_title'] ?? null,
+            'seo_description' => $validated['seo_description'] ?? null,
             'content' => $validated['content'],
             'date' => $validated['date'],
         ];

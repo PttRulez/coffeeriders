@@ -4,6 +4,8 @@ import { Head, Link } from '@inertiajs/vue3';
 type Blog = {
     id: number;
     title: string;
+    seo_title?: string | null;
+    seo_description?: string | null;
     date: string;
     content: string;
     featured_img_path: string;
@@ -23,7 +25,13 @@ const fmtDate = (str: string): string => {
 </script>
 
 <template>
-    <Head :title="blog.title" />
+    <Head :title="blog.seo_title || blog.title">
+        <meta
+            v-if="blog.seo_description"
+            name="description"
+            :content="blog.seo_description"
+        />
+    </Head>
 
     <div class="mx-auto max-w-3xl space-y-6">
         <Link :href="route('blog.index')" class="text-sm text-muted-foreground hover:underline mb-5">

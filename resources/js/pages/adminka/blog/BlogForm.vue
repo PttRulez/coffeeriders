@@ -2,6 +2,7 @@
 import { useTypedForm } from '@/composables/useTypedForm';
 import FormDatePicker from '@/components/form-elements/FormDatePicker.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
+import FormTextArea from '@/components/form-elements/FormTextArea.vue';
 import MarkdownEditor from '@/components/shared/MarkdownEditor/MarkdownEditor.vue';
 import { Button } from '@/components/ui/button';
 
@@ -10,6 +11,8 @@ type BlogData = {
     content: string;
     date: string;
     featured_img_path?: string;
+    seo_description?: string | null;
+    seo_title?: string | null;
     title: string;
 }
 
@@ -17,6 +20,8 @@ type BlogFormData = {
     content: string;
     date: string;
     featured_image: File | null;
+    seo_description: string;
+    seo_title: string;
     title: string;
     _method?: string;
 }
@@ -31,6 +36,8 @@ const form = useTypedForm<BlogFormData>(
               content: blog.content,
               date: blog.date,
               featured_image: null,
+              seo_description: blog.seo_description ?? '',
+              seo_title: blog.seo_title ?? '',
               title: blog.title,
               _method: 'PUT',
           }
@@ -38,6 +45,8 @@ const form = useTypedForm<BlogFormData>(
               content: '',
               date: today,
               featured_image: null,
+              seo_description: '',
+              seo_title: '',
               title: '',
           },
 );
@@ -61,6 +70,22 @@ const submit = () => {
             field-name="title"
             placeholder="Заголовок"
             v-model="form.title"
+        />
+        <FormInput
+            field-name="seo_title"
+            label="SEO title"
+            placeholder="SEO заголовок (необязательно)"
+            v-model="form.seo_title"
+            :error-message="form.errors.seo_title"
+        />
+        <FormTextArea
+            field-name="seo_description"
+            label="SEO description"
+            placeholder="SEO описание (необязательно)"
+            v-model="form.seo_description"
+            :error-message="form.errors.seo_description"
+            :rows="3"
+            class="text-base!"
         />
         <FormDatePicker
                 v-model="form.date"
