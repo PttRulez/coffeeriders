@@ -77,7 +77,7 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
 </script>
 
 <template>
-    <div class="space-y-5  max-w-[1080px] mx-auto">
+    <div class="mx-auto max-w-[1080px] space-y-5">
         <div class="flex flex-wrap items-end justify-between gap-3">
             <Button as-child>
                 <Link :href="route('adminka.workshop-services.create')" class="w-fit">
@@ -123,7 +123,7 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
             <TableBody>
                 <template v-for="group in groupedItems" :key="group.category">
                     <TableRow>
-                        <TableCell colspan="3" class="bg-muted font-semibold">
+                        <TableCell colspan="3" class="bg-muted text-[16px] font-semibold">
                             {{ group.category }}
                         </TableCell>
                     </TableRow>
@@ -144,6 +144,9 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
                                 </button>
                             </div>
                         </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell class="h-[40px]"></TableCell>
                     </TableRow>
                 </template>
                 <TableRow v-if="!filteredItems.length">

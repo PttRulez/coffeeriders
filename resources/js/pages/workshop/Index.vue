@@ -109,7 +109,7 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
                 <TableBody>
                     <template v-for="group in groupedServices" :key="group.category">
                         <TableRow>
-                            <TableCell colspan="2" class="bg-muted font-semibold">
+                            <TableCell colspan="2" class="bg-muted font-semibold text-[16px]">
                                 {{ group.category }}
                             </TableCell>
                         </TableRow>
@@ -128,6 +128,9 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
                                     <span>{{ formatPrice(service.price_rub) }}</span>
                                 </div>
                             </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell class="h-[40px]"></TableCell>
                         </TableRow>
                     </template>
                 </TableBody>
