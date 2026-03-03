@@ -8,17 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BikeBooking extends Model
 {
-    protected $fillable = [
-        'bike_id',
-        'user_id',
-        'customer_name',
-        'telegram_username',
-        'phone',
-        'comment',
-        'starts_at',
-        'ends_at',
-        'status',
-    ];
+    protected $guarded = [];
     
     protected $casts = [
         'starts_at' => 'date:Y-m-d',

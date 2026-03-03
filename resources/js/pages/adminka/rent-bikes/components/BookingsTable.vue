@@ -8,10 +8,10 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { BikeBooking } from '@/types/rent-bikes';
+import { router } from '@inertiajs/vue3';
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Trash } from 'lucide-vue-next';
-import { router } from '@inertiajs/vue3';
 import { toast } from 'vue-sonner';
 
 type Props = {
@@ -25,7 +25,7 @@ const formatDate = (date: string) => {
 };
 
 const deleteBooking = (id: number) => {
-    router.delete(route('adminka.rent-bikes.booking.destroy', id), {
+    router.delete(route('adminka.rent-bikes.bookings.destroy', id), {
         onSuccess: () => {
             toast.success('Букинг удален');
             router.reload({ only: ['bookings'] });
@@ -44,6 +44,7 @@ const deleteBooking = (id: number) => {
                 <TableHead>имя</TableHead>
                 <TableHead>телефон</TableHead>
                 <TableHead>телеграм</TableHead>
+                <TableHead>комментарий</TableHead>
                 <TableHead></TableHead>
             </TableRow>
         </TableHeader>
@@ -86,6 +87,9 @@ const deleteBooking = (id: number) => {
                     >
                         {{ booking.telegram_username }}
                     </a>
+                </TableCell>
+                <TableCell class="max-w-64 break-words whitespace-normal">
+                    {{ booking.comment }}
                 </TableCell>
                 <TableCell>
                     <Trash @click="deleteBooking(booking.id)" class="cursor-pointer" />

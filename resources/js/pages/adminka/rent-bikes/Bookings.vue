@@ -3,16 +3,16 @@ import BookingsTable from '@/pages/adminka/rent-bikes/components/BookingsTable.v
 import { BikeBooking } from '@/types/rent-bikes';
 
 type Props = {
-    bookings: BikeBooking[]
-}
+    bookings: BikeBooking[];
+};
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 </script>
 
 <template>
-    <h1 class="mb-10">Бронирования великов</h1>
+    <h1 class="mb-6">Бронирования великов</h1>
 
-    <div class="w-full overflow-x-auto" >
-        <BookingsTable :bookings="props.bookings" :showBikeName="true"/>
+    <div class="w-full overflow-x-auto">
+        <BookingsTable :bookings="props.bookings" :showBikeName="true" />
     </div>
 </template>

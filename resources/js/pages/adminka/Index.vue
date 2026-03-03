@@ -11,7 +11,7 @@
                     <Link :href="route('adminka.rent-bikes.index')">Велики</Link>
                 </li>
                 <li class="text-blue-400">
-                    <Link :href="route('adminka.rent-bikes.bookings')">Бронь</Link>
+                    <Link :href="route('adminka.rent-bikes.bookings.index')">Бронь</Link>
                 </li>
             </ul>
         </li>

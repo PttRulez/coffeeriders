@@ -1,21 +1,24 @@
 <script setup lang="ts">
+import BookingForm from '@/components/rent-bikes/BookingForm.vue';
 import CarouselThumbs from '@/components/shared/CarouselThumbs.vue';
 import Modal from '@/components/shared/Modal.vue';
-import BookingForm from '@/components/rent-bikes/BookingForm.vue';
 import { Button } from '@/components/ui/button';
+import { Role } from '@/types/enums';
 import { Bike } from '@/types/rent-bikes';
-import { ref } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
 const { bike } = defineProps<{ bike: Bike }>();
+const page = usePage();
+const isAdmin = computed(() => page.props.auth.user?.role === Role.Admin);
 
 const bookingDialogOpen = ref(false);
 
 function onSuccess() {
     bookingDialogOpen.value = false;
 }
-
 </script>
 
 <template>
@@ -26,7 +29,11 @@ function onSuccess() {
             <h1 class="text-center">{{ bike.name }}</h1>
             <CarouselThumbs :images="bike.images" />
             <p class="text-sm text-muted-foreground">{{ bike.short_description }}</p>
-             <Modal v-model:open="bookingDialogOpen" :title="`Бронирование ${bike.name}`">
+            <Modal
+                v-if="!isAdmin"
+                v-model:open="bookingDialogOpen"
+                :title="`Бронирование ${bike.name}`"
+            >
                 <template #trigger>
                     <Button>Забронировать</Button>
                 </template>
@@ -38,6 +45,12 @@ function onSuccess() {
                     @success="onSuccess"
                 />
             </Modal>
+
+            <Button v-else as-child>
+                <Link :href="route('adminka.rent-bikes.bookings.create', { bike: bike.id })">
+                    Создать бронь (админ)
+                </Link>
+            </Button>
         </div>
         <article class="prose prose-sm max-w-none" v-html="bike.full_description"></article>
     </div>

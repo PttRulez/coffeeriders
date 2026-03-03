@@ -32,7 +32,7 @@ export const getNavItems = ({
                     },
                     {
                         title: 'Бронь',
-                        href: route('adminka.rent-bikes.bookings'),
+                        href: route('adminka.rent-bikes.bookings.index'),
                         icon: FolderKanban,
                         show: true,
                     },

@@ -27,9 +27,11 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
         ->name('cycling-studio.bike-check');
     
     //      RENT BIKES
-    Route::get('rent-bikes/bookings', [AdminBikeBookingController::class, 'index'])->name('rent-bikes.bookings');
-    Route::delete('rent-bikes/bookings/{bikeBooking}',
-        [AdminBikeBookingController::class, 'destroy'])->name('rent-bikes.booking.destroy');
+    Route::prefix('rent-bikes')->name('rent-bikes.')->group(function () {
+        Route::resource('bookings', AdminBikeBookingController::class)
+            ->only(['index', 'create', 'store', 'destroy'])
+            ->parameters(['bookings' => 'bikeBooking']);
+    });
     Route::resource('rent-bikes', AdminBikeController::class)->parameters(['rent-bikes' => 'bike']);
     Route::delete('bikes/{bike}/images/{image}',
         [AdminBikeController::class, 'destroyImage'])->name('rent-bikes.images.destroy');

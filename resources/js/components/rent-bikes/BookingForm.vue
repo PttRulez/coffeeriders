@@ -9,9 +9,10 @@ import { useForm } from '@inertiajs/vue3';
 import { today } from '@internationalized/date';
 import { LoaderCircle } from 'lucide-vue-next';
 import { DateRange, DateValue } from 'reka-ui';
-import { Ref, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 type Props = {
+    mode?: 'user' | 'admin';
     bike_id: number;
     booked_dates: Array<string>;
     predoplata: number;
@@ -20,8 +21,10 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
     (e: 'success'): void;
 }>();
+const mode = computed(() => props.mode ?? 'user');
+const isAdminMode = computed(() => mode.value === 'admin');
 
-const dateRange = ref<DateRange>({ start: undefined, end: undefined }) as Ref<DateRange>;
+const dateRange = ref<DateRange>({ start: undefined, end: undefined });
 
 const form = useForm({
     bike_id: props.bike_id,
@@ -43,6 +46,12 @@ function submit(): void {
     form.starts_at = dateRange.value.start?.toString() ?? '';
     form.ends_at = dateRange.value.end?.toString() ?? '';
 
+    if (isAdminMode.value) {
+        form.post(route('adminka.rent-bikes.bookings.store'), {
+            onSuccess: () => emit('success'),
+        });
+        return;
+    }
     form.post(route('rent-bikes.booking.store', { bike: props.bike_id }), {
         onSuccess: () => emit('success'),
     });
@@ -54,7 +63,7 @@ function submit(): void {
         <div class="grid gap-4 md:grid-cols-2">
             <FormInput
                 field-name="customer_name"
-                placeholder="ваше имя"
+                :placeholder="isAdminMode ? 'Имя клиента' : 'ваше имя'"
                 v-model="form.customer_name"
                 :error-message="form.errors.customer_name"
             />
@@ -94,7 +103,7 @@ function submit(): void {
 
         <Button type="submit" class="mt-2 w-full" :disabled="form.processing">
             <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-            Оплатить {{ props.predoplata }} руб.
+            {{ isAdminMode ? 'Создать бронь без оплаты' : `Оплатить ${props.predoplata} руб.` }}
         </Button>
     </form>
 </template>
