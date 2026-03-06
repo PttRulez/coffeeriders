@@ -10,6 +10,7 @@ use App\Models\RaceCluster;
 use App\Services\AdminTelegram\AdminTelegram;
 use App\Services\TinkoffService;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -18,16 +19,83 @@ use Inertia\Response;
 
 class RaceController extends Controller
 {
+    public function calendar(Request $request, ?int $year = null): Response
+    {
+        $raceTimeFilter = $request->query('race_time_filter') ?? 'upcoming';
+
+        $selectedRaceTypes = collect($request->query('race_types', []))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $baseQuery = Race::query()->published();
+        if ($selectedRaceTypes->isNotEmpty()) {
+            $baseQuery->whereIn('race_type', $selectedRaceTypes->all());
+        }
+        if ($raceTimeFilter === 'upcoming') {
+            $baseQuery->whereDate('date', '>=', now()->toDateString());
+        }
+
+        $startYear = 2026;
+        $currentYear = now()->year;
+        $availableYears = collect(range($startYear, max($startYear, $currentYear)));
+
+        $selectedYear = $year ?? now()->year;
+        if (is_null($year) && $availableYears->isNotEmpty() && !$availableYears->contains($selectedYear)) {
+            $selectedYear = (int) $availableYears->last();
+        }
+
+        $races = (clone $baseQuery)
+            ->whereYear('date', $selectedYear)
+            ->orderBy('date')
+            ->get();
+
+        $user = $request->user();
+        $participatingRaceIds = [];
+        if ($user?->isCoffeeRider() && $races->isNotEmpty()) {
+            $participatingRaceIds = $user->participatingRaces()
+                ->whereIn('races.id', $races->pluck('id'))
+                ->pluck('races.id')
+                ->all();
+        }
+
+        $races->each(function (Race $race) use ($participatingRaceIds) {
+            $race->setAttribute('is_participating', in_array($race->id, $participatingRaceIds, true));
+        });
+
+        $prevYear = $availableYears
+            ->filter(fn (int $availableYear) => $availableYear < $selectedYear)
+            ->last();
+
+        $nextYear = $availableYears
+            ->first(fn (int $availableYear) => $availableYear > $selectedYear);
+
+        return Inertia::render('races/Calendar', [
+            'races' => $races,
+            'year' => $selectedYear,
+            'prevYear' => $prevYear,
+            'nextYear' => $nextYear,
+            'selectedRaceTypes' => $selectedRaceTypes,
+            'raceTimeFilter' => $raceTimeFilter,
+        ]);
+    }
+
     public function show(Request $request, Race $race): Response
     {
         abort_unless($race->is_published, 404);
 
-        $race->load(['clusters' => function ($query) {
-            $query->withCount('cyclingActivities');
-        }]);
-
+        $race->load('participants:id,name,avatar_url');
+        
+        // подгружаем кластеры, если это гонка у нас в студии
+        if ($race->in_our_studio) {
+            $race->load(['clusters' => function ($query) {
+                $query->withCount('cyclingActivities');
+            }]);
+        }
+        
+        // Делаем всем коферайдерам цену в два раза меньше
         $user = $request->user();
-        if ($user?->isCoffeeRider()) {
+        if ($race->in_our_studio && $user?->isCoffeeRider()) {
             $race->clusters->each(function ($cluster) {
                 $cluster->price = (int) ($cluster->price / 2);
             });
@@ -38,9 +106,28 @@ class RaceController extends Controller
         ]);
     }
 
+    public function participate(Request $request, Race $race): RedirectResponse
+    {
+        abort_unless($race->is_published, 404);
+
+        $user = $request->user();
+        abort_unless($user && $user->isCoffeeRider(), 403);
+
+        $isParticipating = $race->participants()->where('users.id', $user->id)->exists();
+        if ($isParticipating) {
+            $race->participants()->detach($user->id);
+            return back()->with('success', 'Вы удалены из списка участников.');
+        }
+
+        $race->participants()->attach($user->id);
+
+        return back()->with('success', 'Вы добавлены в список участников.');
+    }
+
     public function register(Request $request, Race $race, RaceCluster $cluster, AdminTelegram $adminTelegram)
     {
         abort_unless($race->is_published, 404);
+        abort_unless($race->in_our_studio, 404);
         abort_unless($cluster->race_id === $race->id, 404);
 
         if (!$cluster->hasAvailableSlots()) {

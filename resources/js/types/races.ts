@@ -1,13 +1,26 @@
+import { RaceType } from '@/types/enums';
+
 export type Race = {
     id: number;
     name: string;
     description: string | null;
+    race_type: RaceType;
+    in_our_studio: boolean;
+    organizer_name: string | null;
+    organizer_website_url: string | null;
+    registration_url: string | null;
+    yandex_map_url: string | null;
+    cover_img_url: string | null;
+    is_participating?: boolean;
     date: string;
     price: number;
     is_published: boolean;
     clusters?: RaceCluster[];
-    created_at: string;
-    updated_at: string;
+    participants?: Array<{
+        id: number;
+        name: string;
+        avatar_url: string | null;
+    }>;
 };
 
 export type RaceCluster = {

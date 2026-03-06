@@ -1,6 +1,6 @@
 export enum Role {
     Admin = 'admin',
-    Regular = 'regular'
+    Regular = 'regular',
 }
 
 export enum BikeCategory {
@@ -11,5 +11,14 @@ export enum BikeCategory {
 
 export enum Pedals {
     Shimano = 'shimano',
-    Look = 'look'
+    Look = 'look',
+}
+
+export enum RaceType {
+    Gravel = 'gravel',
+    Road = 'road',
+    MTB = 'mtb',
+    Indoor = 'indoor',
+    Track = 'track',
+    Cyclocross = 'cyclocross',
 }

@@ -246,7 +246,7 @@ const getCategoryName = (name: BikeCategory): string => {
         </div>
 
         <p>
-            Также вы можете <strong>взять в аренду щлем</strong> — в нескольких размерах, бесплатно
+            Также вы можете <strong>взять в аренду шлем</strong> — в нескольких размерах, бесплатно
             по запросу
         </p>
     </section>

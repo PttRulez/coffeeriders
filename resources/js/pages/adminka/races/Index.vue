@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { RaceType } from '@/types/enums';
 import { Race } from '@/types/races';
-import { SquarePen, Trash } from 'lucide-vue-next';
 import { router } from '@inertiajs/vue3';
+import { SquarePen, Trash } from 'lucide-vue-next';
 
-const { races } = defineProps<{ races: Race[] }>();
+const { ourIndoorRaces } = defineProps<{ races: Race[] }>();
 
 const deleteRace = (race: Race) => {
     if (confirm(`Удалить гонку "${race.name}"?`)) {
@@ -20,6 +28,15 @@ const formatDate = (dateString: string) => {
         year: 'numeric',
     });
 };
+
+const typeLabels: Record<Race['race_type'], string> = {
+    [RaceType.Road]: 'Шоссейная',
+    [RaceType.MTB]: 'МТБ',
+    [RaceType.Gravel]: 'Гравийная',
+    [RaceType.Indoor]: 'Indoor',
+    [RaceType.Track]: 'Трек',
+    [RaceType.Cyclocross]: 'Циклокросс',
+};
 </script>
 
 <template>
@@ -32,19 +49,47 @@ const formatDate = (dateString: string) => {
             <TableRow>
                 <TableHead>Название</TableHead>
                 <TableHead>Дата</TableHead>
+                <TableHead>Тип</TableHead>
+                <TableHead>Наша студия</TableHead>
+                <TableHead>Регистрация</TableHead>
+                <TableHead>Яндекс карта</TableHead>
                 <TableHead>Цена</TableHead>
                 <TableHead>Статус</TableHead>
                 <TableHead class="text-right"></TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
-            <TableRow v-for="race in races" :key="race.id">
+            <TableRow v-for="race in ourIndoorRaces" :key="race.id">
                 <TableCell class="font-medium">
                     <Link :href="route('adminka.races.show', race.id)">
                         {{ race.name }}
                     </Link>
                 </TableCell>
                 <TableCell>{{ formatDate(race.date) }}</TableCell>
+                <TableCell>{{ typeLabels[race.race_type] }}</TableCell>
+                <TableCell>{{ race.in_our_studio ? 'Да' : 'Нет' }}</TableCell>
+                <TableCell>
+                    <a
+                        v-if="race.registration_url"
+                        :href="race.registration_url"
+                        target="_blank"
+                        class="text-blue-400 hover:underline"
+                    >
+                        Открыть
+                    </a>
+                    <span v-else class="text-muted-foreground">-</span>
+                </TableCell>
+                <TableCell>
+                    <a
+                        v-if="race.yandex_map_url"
+                        :href="race.yandex_map_url"
+                        target="_blank"
+                        class="text-blue-400 hover:underline"
+                    >
+                        Открыть
+                    </a>
+                    <span v-else class="text-muted-foreground">-</span>
+                </TableCell>
                 <TableCell>{{ new Intl.NumberFormat('ru-RU').format(race.price) }} руб</TableCell>
                 <TableCell>
                     <span v-if="race.is_published" class="text-green-600">Опубликована</span>

@@ -151,8 +151,9 @@ const submit = () => {
             @change="form.images = Array.from(($event.target as HTMLInputElement).files || [])"
             field-name="images"
             type="file"
-            class="cursor-pointer"
+            class="cursor-pointer max-w-[250px]"
             enctype="multipart/form-data"
+            button-text="Фотки велосипеда"
             multiple
         />
 

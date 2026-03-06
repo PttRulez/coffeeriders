@@ -10,7 +10,7 @@ const props = defineProps<{ bike: Bike }>();
 
 <template>
     <h1>{{ props.bike.name }}</h1>
-    <img :src="bike.img_url" :alt="bike.name" class="mx-auto md:max-w-[560px]" />
+    <img :src="bike.primary_img_url" :alt="bike.name" class="mx-auto md:max-w-[560px] mb-10" />
     <div class="w-full overflow-x-auto">
         <BookingsTable :bookings="bike.bookings" />
     </div>

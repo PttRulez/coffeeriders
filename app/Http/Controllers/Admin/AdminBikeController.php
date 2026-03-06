@@ -101,18 +101,18 @@ class AdminBikeController extends Controller
             $bike->update($v);
             
             if ($request->hasFile('images')) {
-                $start = (int)$bike->images()->max('sort');
+                $startIndex = $bike->images->count();
                 
                 foreach ($request->file('images') as $i => $file) {
                     if (!$file->isValid()) continue;
                     
                     $url = $imgService->save($file);
-                    
+                    $curIndex = $startIndex + $i;
                     $bike->images()->create([
                         'url' => $url,
                         'alt' => $bike->name,
-                        'sort' => $start + $i + 1,
-                        'is_primary' => false,
+                        'sort' => $curIndex,
+                        'is_primary' => $curIndex === 0,
                     ]);
                 }
             }

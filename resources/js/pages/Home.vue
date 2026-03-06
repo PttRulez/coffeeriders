@@ -9,7 +9,7 @@ import RacesCard from '@/components/shared/RacesCard.vue';
 import { Race } from '@/types/races';
 import { ref } from 'vue';
 
-const { races } = defineProps<{ races: Race[] }>();
+const { ourIndoorRaces } = defineProps<{ ourIndoorRaces: Race[] }>();
 
 const bannerImages = [
     {
@@ -69,7 +69,7 @@ const isOpenJoinTeam = ref(false);
     <div class="space-y-10">
         <CarouselAutoplay :images="bannerImages" :hideArrows="true" />
 
-        <RacesCard :races="races" class="mx-auto" v-if="races?.length > 0" />
+        <RacesCard :races="ourIndoorRaces" class="mx-auto" v-if="ourIndoorRaces?.length > 0" />
 
         <section class="items-center gap-10 md:flex md:flex-row-reverse">
             <div class="min-w-[30%] space-y-5">
@@ -121,7 +121,7 @@ const isOpenJoinTeam = ref(false);
                     </div>
                 </div>
                 <p class="italic">
-                    " Всем привет. Являюсь Мастером спорта по велоспорту (мтб), Чемпионом России и
+                    " Всем привет. Являюсь Мастером спорта по велоспорту, Чемпионом России и
                     многократным победителем и призером Первенств России, всероссийских и
                     международных соревнований, в прошлом член Сборной команды России. Расскажу и
                     научу вас всем тонкостям и навыкам мтб и шоссе"

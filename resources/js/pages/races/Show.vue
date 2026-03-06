@@ -1,16 +1,29 @@
 <script setup lang="ts">
 import InputError from '@/components/form-elements/InputError.vue';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { useInitials } from '@/composables/useInitials';
 import { AppPageProps } from '@/types';
 import { Race, RaceCluster } from '@/types/races';
 import { Head, router, usePage } from '@inertiajs/vue3';
+import { Globe, MapPin, SquareArrowOutUpRight } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const { race } = defineProps<{ race: Race }>();
 
 const page = usePage<AppPageProps>();
 const user = page.props.auth.user;
+const { getInitials } = useInitials();
 
 const loading = ref(false);
 const errors = ref<Record<string, string>>({});
@@ -50,12 +63,89 @@ const register = (cluster: RaceCluster) => {
 <template>
     <Head :title="race.name" />
 
-    <div class="space-y-5">
+    <div class="max-w-[1280px] space-y-5">
         <h1 class="text-2xl font-bold">{{ race.name }}</h1>
 
-        <p class="text-lg">{{ formatDate(race.date) }}</p>
+        <img
+            v-if="race.cover_img_url"
+            :src="race.cover_img_url"
+            :alt="race.name"
+            class="mx-auto max-h-80 w-full max-w-xl rounded-lg object-cover"
+        />
 
-        <div class="mt-8">
+        <section class="flex max-md:flex-col px-5 md:mx-auto w-fit gap-5 md:gap-30 mt-10">
+            <div class="space-y-3">
+                <p class="text-lg">{{ formatDate(race.date) }}</p>
+                <p v-if="race.yandex_map_url" class="flex items-center gap-2">
+                    <MapPin class="size-4 text-muted-foreground" />
+                    <a
+                        :href="race.yandex_map_url"
+                        target="_blank"
+                        class="text-blue-500 hover:underline"
+                    >
+                        Я.Карты
+                    </a>
+                </p>
+                <p
+                    v-if="!race.in_our_studio && race.registration_url"
+                    class="flex items-center gap-2"
+                >
+                    <SquareArrowOutUpRight class="size-4 text-muted-foreground" />
+                    <a
+                        :href="race.registration_url"
+                        class="text-blue-500 hover:underline"
+                        target="_blank"
+                    >
+                        Регистрация
+                    </a>
+                </p>
+                <p v-if="race.organizer_website_url" class="flex items-center gap-2">
+                    <Globe class="size-4 text-muted-foreground" />
+                    <a
+                        :href="race.organizer_website_url"
+                        class="text-blue-500 hover:underline"
+                        target="_blank"
+                    >
+                        Сайт организатора
+                    </a>
+                </p>
+            </div>
+
+            <Separator class="md:hidden" />
+
+            <div>
+                <h2 class="mb-4 text-xl font-semibold">Участники от CoffeeRiders</h2>
+
+                <div
+                    v-if="!race.participants || race.participants.length === 0"
+                    class="rounded border p-4 text-muted-foreground"
+                >
+                    Пока никто не отметился.
+                </div>
+
+                <Table v-else>
+                    <TableBody>
+                        <TableRow v-for="participant in race.participants" :key="participant.id">
+                            <TableCell>
+                                <Avatar class="size-9">
+                                    <AvatarImage
+                                        v-if="participant.avatar_url"
+                                        :src="participant.avatar_url"
+                                        :alt="participant.name"
+                                    />
+                                    <AvatarFallback>
+                                        {{ getInitials(participant.name) }}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </TableCell>
+                            <TableCell class="text-xl">{{ participant.name }}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </div>
+        </section>
+
+        <div v-if="race.in_our_studio" class="mt-8">
             <h2 class="mb-4 text-xl font-semibold">Стартовые группы</h2>
 
             <InputError :message="errors.cluster" class="mb-4" />

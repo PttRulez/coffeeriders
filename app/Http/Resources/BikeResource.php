@@ -35,13 +35,14 @@ class BikeResource extends JsonResource
         }
         
         $oneDayPrice = min(array_column($this->prices, 'price'));
-        
+        $primaryImage = $this->images->filter(fn($img) => $img->is_primary)->first();
         return [
             'id' => $this->id,
             'bookings' => BikeBookingResource::collection($this->bookings)->resolve(),
             'booked_dates' => $bookedDates,
             'category' => $this->category,
             'images' => $this->images,
+            'primary_img_url' => $primaryImage?->url ?? '',
             'name' => $this->name,
             'prices' => $this->prices,
             'predoplata' => $oneDayPrice / 2,

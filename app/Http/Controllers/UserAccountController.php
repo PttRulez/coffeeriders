@@ -6,6 +6,7 @@ use Illuminate\Validation\Rules\Enum;
 use App\Enums\Pedals;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CyclingActivityResource;
+use App\Services\ImageService;
 use Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class UserAccountController extends Controller
         return back()->with('success', 'Пароль обновлён');
     }
     
-    public function updateUserInfo(Request $request): RedirectResponse
+    public function updateUserInfo(Request $request, ImageService $imageService): RedirectResponse
     {
         $user = Auth::user();
         
@@ -54,6 +55,7 @@ class UserAccountController extends Controller
             'height' => ['sometimes', 'integer'],
             'name' => ['required', 'string', 'max:255'],
             'pedals' => ['required', new Enum(Pedals::class)],
+            'avatar_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:8192'],
             'phone' => [
                 'nullable',
                 'regex:/^\+7\d{10}$/',
@@ -72,8 +74,22 @@ class UserAccountController extends Controller
                 'telegram_username.required_without' => 'Укажите Telegram или телефон.',
                 'phone.required_without' => 'Укажите телефон или Telegram.',
                 'phone.regex' => 'Неверный формат телефона',
+                'avatar_image.image' => 'Аватар должен быть изображением.',
+                'avatar_image.mimes' => 'Допустимые форматы аватара: jpeg, jpg, png, gif, webp.',
+                'avatar_image.max' => 'Размер аватара не должен превышать 8 МБ.',
             ]);
-        
+
+        $avatarUrl = $user->avatar_url;
+        if ($request->hasFile('avatar_image')) {
+            if ($avatarUrl) {
+                $imageService->delete($avatarUrl);
+            }
+            $avatarUrl = $imageService->save($request->file('avatar_image'), 'avatars', 800, 800);
+        }
+
+        unset($validated['avatar_image']);
+        $validated['avatar_url'] = $avatarUrl;
+
         $user->update($validated);
         
         return back()->with('success', 'Профиль обновлён');

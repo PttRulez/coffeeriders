@@ -1,6 +1,6 @@
 import type { NavItem } from '@/types';
 import { BikeCategory } from '@/types/enums';
-import { Bike, Dumbbell, FolderKanban, Wrench } from 'lucide-vue-next';
+import { Bike, CalendarDays, Dumbbell, FolderKanban, Wrench } from 'lucide-vue-next';
 
 type GetNavItemsParams = {
     device: 'desktop' | 'mobile';
@@ -110,6 +110,12 @@ export const getNavItems = ({
             title: 'Веломастерская',
             href: route('workshop.pricelist'),
             icon: Wrench,
+            show: true,
+        },
+        {
+            title: 'Календарь гонок',
+            href: route('races.calendar'),
+            icon: CalendarDays,
             show: true,
         },
     ];

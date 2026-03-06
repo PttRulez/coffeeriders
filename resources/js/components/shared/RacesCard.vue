@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Race } from '@/types/races';
 
-const { races } = defineProps<{ races: Race[] }>();
+const { ourIndoorRaces } = defineProps<{ races: Race[] }>();
 
 const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
@@ -14,11 +14,11 @@ const formatDate = (dateString: string) => {
 </script>
 
 <template>
-    <Card v-for="race in races" :key="race.id" class="w-fit bg-amber-200" v-bind="$attrs">
+    <Card v-for="race in ourIndoorRaces" :key="race.id" class="w-fit bg-amber-200" v-bind="$attrs">
         <CardTitle>Ближайшие гонки</CardTitle>
         <CardContent class="space-y-3 pt-4">
             <div>
-                <div class="flex gap-2 items-center">
+                <div class="flex items-center gap-2">
                     <p class="text-xl font-bold">{{ race.name }}</p>
                     <p class="text-lg">({{ formatDate(race.date) }})</p>
                     <Button as-child class="bg-red-300 text-blue-700" variant="outline">
@@ -31,7 +31,9 @@ const formatDate = (dateString: string) => {
                     </Button>
                 </div>
             </div>
-            <Button as-child class="w-full"> </Button>
+            <Button as-child class="w-full" variant="secondary">
+                <Link :href="route('races.calendar')">Календарь гонок</Link>
+            </Button>
         </CardContent>
     </Card>
 </template>

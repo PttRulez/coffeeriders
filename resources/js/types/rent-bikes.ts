@@ -15,6 +15,7 @@ export interface Bike {
     name: string;
     predoplata: number;
     prices: BikePrice[];
+    primary_img_url: string;
     short_description: string;
     title_img: string;
 }

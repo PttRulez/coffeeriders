@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -36,6 +37,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $appends = ['avatar'];
     
     /**
      * Get the attributes that should be cast.
@@ -78,5 +81,15 @@ class User extends Authenticatable
     public function isCoffeeRider(): bool
     {
         return $this->is_coffeerider;
+    }
+
+    public function getAvatarAttribute(): ?string
+    {
+        return $this->avatar_url;
+    }
+
+    public function participatingRaces(): BelongsToMany
+    {
+        return $this->belongsToMany(Race::class, 'races_users')->withTimestamps();
     }
 }

@@ -1,38 +1,72 @@
 <script lang="ts" setup="">
 import ErrorBag from '@/components/form-elements/ErrorBag.vue';
+import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
 import FormDatePicker from '@/components/form-elements/FormDatePicker.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
+import FormSelect from '@/components/form-elements/FormSelect.vue';
 import InputError from '@/components/form-elements/InputError.vue';
 import MarkdownEditor from '@/components/shared/MarkdownEditor/MarkdownEditor.vue';
 import { Button } from '@/components/ui/button';
 import { useTypedForm } from '@/composables/useTypedForm';
+import { RaceType } from '@/types/enums';
 import { Race, RaceCluster } from '@/types/races';
+import { today } from '@internationalized/date';
 import { Trash } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 type RaceFormData = Partial<Race> & {
+    cover_image: File | null;
     clusters: Array<Partial<RaceCluster>>;
     _method?: string;
 };
 
 const { race } = defineProps<{ race?: Race }>();
 
-const form = useTypedForm<RaceFormData>(
-    (race ?? {
-        name: '',
-        date: undefined,
-        price: undefined,
-        is_published: true,
-        clusters: [],
-        description: undefined,
-    }) as RaceFormData,
-);
+const form = useTypedForm<RaceFormData>({
+    id: race?.id,
+    name: race?.name,
+    description: race?.description ?? null,
+    race_type: race?.race_type ?? RaceType.Road,
+    in_our_studio: race?.in_our_studio ?? false,
+    organizer_name: race?.organizer_name ?? null,
+    organizer_website_url: race?.organizer_website_url ?? null,
+    registration_url: race?.registration_url ?? null,
+    yandex_map_url: race?.yandex_map_url ?? null,
+    cover_img_url: race?.cover_img_url ?? null,
+    cover_image: null,
+    date: race?.date ?? today('Europe/Moscow').toString(),
+    price: race?.price,
+    is_published: race?.is_published ?? true,
+    clusters: race?.clusters ?? [],
+    _method: race ? 'PUT' : undefined,
+});
+
+const isIndoorInStudio = computed(() => form.in_our_studio);
+
+const raceTypeOptions = [
+    { value: RaceType.Road, label: 'Шоссейная' },
+    { value: RaceType.MTB, label: 'МТБ' },
+    { value: RaceType.Gravel, label: 'Гравийная' },
+    { value: RaceType.Indoor, label: 'Indoor' },
+    { value: RaceType.Track, label: 'Track' },
+    { value: RaceType.Cyclocross, label: 'Cyclocross' },
+];
+
+const handleInOurStudioChange = (value: boolean) => {
+    if (!value) {
+        form.clusters = [];
+        return;
+    }
+
+    if (form.clusters.length === 0) {
+        addCluster();
+    }
+};
 
 const submit = () => {
-    if (form.id) {
-        form.put(route('adminka.races.update', form.id));
-    } else {
-        form.post(route('adminka.races.store'));
-    }
+    form.post(form.id ? route('adminka.races.update', form.id) : route('adminka.races.store'), {
+        forceFormData: true,
+    });
 };
 
 const addCluster = () => {
@@ -60,7 +94,7 @@ const removeCluster = (index: number) => {
         <h1 class="text-center text-2xl" v-if="form.id">Редактирование гонки</h1>
         <h1 class="text-center text-2xl" v-else>Создание гонки</h1>
 
-        <section class="flex gap-5 max-md:flex-col">
+        <section class="grid gap-5 md:grid-cols-2">
             <FormInput
                 class="flex-1"
                 v-model="form.name"
@@ -76,6 +110,14 @@ const removeCluster = (index: number) => {
                 placeholder="Дата гонки"
             />
 
+            <FormSelect
+                field-name="race_type"
+                v-model="form.race_type"
+                :error-message="form.errors.race_type"
+                :options="raceTypeOptions"
+                placeholder="Тип гонки"
+            />
+
             <FormInput
                 class="w-32"
                 v-model="form.price"
@@ -84,9 +126,65 @@ const removeCluster = (index: number) => {
                 type="number"
                 placeholder="Цена"
             />
+
+            <FormInput
+                v-model="form.yandex_map_url"
+                :errorMessage="form.errors.yandex_map_url"
+                field-name="yandex_map_url"
+                placeholder="Ссылка Яндекс.Карт или координаты: 60.630690, 30.121022"
+            />
+
+            <FormInput
+                accept="image/*"
+                field-name="cover_image"
+                type="file"
+                class="max-w-[250px] cursor-pointer"
+                label="Обложка гонки"
+                :error-message="form.errors.cover_image"
+                @change="
+                    (e: Event) =>
+                        (form.cover_image = (e.target as HTMLInputElement).files?.[0] ?? null)
+                "
+            />
         </section>
 
-        <div class="mt-5">
+        <img
+            v-if="form.cover_img_url && !form.cover_image"
+            :src="form.cover_img_url"
+            alt="Текущая обложка гонки"
+            class="h-40 max-w-xs rounded-lg object-cover"
+        />
+
+        <FormCheckBox
+            fieldName="in_our_studio"
+            v-model="form.in_our_studio"
+            label="Гонка в нашей студии (с регистрацией на сайте)"
+            @change="handleInOurStudioChange"
+        />
+
+        <FormInput
+            v-model="form.organizer_name"
+            :errorMessage="form.errors.organizer_name"
+            field-name="organizer_name"
+            placeholder="Имя организатора"
+        />
+
+        <FormInput
+            v-model="form.organizer_website_url"
+            :errorMessage="form.errors.organizer_website_url"
+            field-name="organizer_website_url"
+            placeholder="Сайт организатора гонки"
+        />
+
+        <FormInput
+            v-if="!form.in_our_studio"
+            v-model="form.registration_url"
+            :errorMessage="form.errors.registration_url"
+            field-name="registration_url"
+            placeholder="Ссылка на регистрацию у внешнего организатора"
+        />
+
+        <div v-if="isIndoorInStudio" class="mt-5">
             <h2 class="mb-3 text-xl font-semibold">Кластеры (стартовые группы)</h2>
 
             <section v-for="(cluster, i) in form.clusters" :key="i" class="mb-4 rounded border p-4">
@@ -103,7 +201,7 @@ const removeCluster = (index: number) => {
                 </div>
 
                 <div class="flex flex-col gap-3">
-                    <div class="flex max-md:flex-col items-center gap-3">
+                    <div class="flex items-center gap-3 max-md:flex-col">
                         <FormInput
                             v-model="form.clusters[i].name"
                             :field-name="'cluster_name_' + i"

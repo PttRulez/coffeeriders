@@ -30,6 +30,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
 
 export interface User {
     avatar?: string;
+    avatar_url?: string | null;
     created_at: string;
     email: string;
     email_verified_at: string | null;

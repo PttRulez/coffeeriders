@@ -239,7 +239,7 @@ const desktopNavItems = computed((): NavItem[] =>
                         <p class="hidden">{{ phoneNumber }}</p>
                     </a>
                     <a :href="`tel:${phoneNumber}`" class="flex items-center max-md:hidden">
-                        <p class="cursor-pointer">{{ formatPhone(phoneNumber) }}</p>
+                        <p class="cursor-pointer text-[18px]">{{ formatPhone(phoneNumber) }}</p>
                     </a>
                 </div>
             </div>
