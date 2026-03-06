@@ -37,7 +37,7 @@ class RaceController extends Controller
             $baseQuery->whereDate('date', '>=', now()->toDateString());
         }
 
-        $startYear = 2026;
+        $startYear = 2025;
         $currentYear = now()->year;
         $availableYears = collect(range($startYear, max($startYear, $currentYear)));
 
