@@ -23,14 +23,15 @@ class RaceController extends Controller
     {
         $raceTimeFilter = $request->query('race_time_filter') ?? 'upcoming';
 
-        $selectedRaceTypes = collect($request->query('race_types', []))
-            ->filter()
-            ->unique()
-            ->values();
+        $selectedRaceTypes = $request->query('race_types', []);
 
         $baseQuery = Race::query()->published();
-        if ($selectedRaceTypes->isNotEmpty()) {
-            $baseQuery->whereIn('race_type', $selectedRaceTypes->all());
+        if (!empty($selectedRaceTypes)) {
+            $baseQuery->where(function ($query) use ($selectedRaceTypes) {
+                foreach ($selectedRaceTypes as $raceType) {
+                    $query->orWhereJsonContains('race_types', $raceType);
+                }
+            });
         }
         if ($raceTimeFilter === 'upcoming') {
             $baseQuery->whereDate('date', '>=', now()->toDateString());
@@ -75,7 +76,7 @@ class RaceController extends Controller
             'year' => $selectedYear,
             'prevYear' => $prevYear,
             'nextYear' => $nextYear,
-            'selectedRaceTypes' => $selectedRaceTypes,
+            'selectedRaceTypes' => array_values($selectedRaceTypes),
             'raceTimeFilter' => $raceTimeFilter,
         ]);
     }

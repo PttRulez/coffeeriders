@@ -4,7 +4,7 @@ export type Race = {
     id: number;
     name: string;
     description: string | null;
-    race_type: RaceType;
+    race_types: RaceType[];
     in_our_studio: boolean;
     organizer_name: string | null;
     organizer_website_url: string | null;

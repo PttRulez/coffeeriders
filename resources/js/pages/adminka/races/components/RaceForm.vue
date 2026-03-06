@@ -3,7 +3,6 @@ import ErrorBag from '@/components/form-elements/ErrorBag.vue';
 import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
 import FormDatePicker from '@/components/form-elements/FormDatePicker.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
-import FormSelect from '@/components/form-elements/FormSelect.vue';
 import InputError from '@/components/form-elements/InputError.vue';
 import MarkdownEditor from '@/components/shared/MarkdownEditor/MarkdownEditor.vue';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,7 @@ const form = useTypedForm<RaceFormData>({
     id: race?.id,
     name: race?.name,
     description: race?.description ?? null,
-    race_type: race?.race_type ?? RaceType.Road,
+    race_types: race?.race_types?.length ? race.race_types : [RaceType.Road],
     in_our_studio: race?.in_our_studio ?? false,
     organizer_name: race?.organizer_name ?? null,
     organizer_website_url: race?.organizer_website_url ?? null,
@@ -43,14 +42,23 @@ const form = useTypedForm<RaceFormData>({
 
 const isIndoorInStudio = computed(() => form.in_our_studio);
 
-const raceTypeOptions = [
-    { value: RaceType.Road, label: 'Шоссейная' },
+const raceTypeOptions: Array<{ value: RaceType; label: string }> = [
+    { value: RaceType.Road, label: 'Шоссе' },
     { value: RaceType.MTB, label: 'МТБ' },
-    { value: RaceType.Gravel, label: 'Гравийная' },
+    { value: RaceType.Gravel, label: 'Грэвел' },
     { value: RaceType.Indoor, label: 'Indoor' },
     { value: RaceType.Track, label: 'Track' },
     { value: RaceType.Cyclocross, label: 'Cyclocross' },
 ];
+
+const toggleRaceType = (value: RaceType) => {
+    if (form.race_types.includes(value)) {
+        form.race_types = form.race_types.filter((it) => it !== value);
+        return;
+    }
+
+    form.race_types = [...form.race_types, value];
+};
 
 const handleInOurStudioChange = (value: boolean) => {
     if (!value) {
@@ -110,13 +118,24 @@ const removeCluster = (index: number) => {
                 placeholder="Дата гонки"
             />
 
-            <FormSelect
-                field-name="race_type"
-                v-model="form.race_type"
-                :error-message="form.errors.race_type"
-                :options="raceTypeOptions"
-                placeholder="Тип гонки"
-            />
+            <div class="md:col-span-2">
+                <p class="mb-2 text-sm text-muted-foreground">Типы гонки</p>
+                <div class="flex flex-wrap gap-3">
+                    <label
+                        v-for="option in raceTypeOptions"
+                        :key="option.value"
+                        class="inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm"
+                    >
+                        <input
+                            type="checkbox"
+                            :checked="form.race_types.includes(option.value)"
+                            @change="toggleRaceType(option.value)"
+                        />
+                        <span>{{ option.label }}</span>
+                    </label>
+                </div>
+                <InputError :message="form.errors.race_types || form.errors['race_types.0']" />
+            </div>
 
             <FormInput
                 class="w-32"

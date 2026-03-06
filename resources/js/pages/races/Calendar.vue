@@ -40,9 +40,9 @@ const formatDate = (dateString: string) => {
 };
 
 const raceTypeLabels: Record<RaceType, string> = {
-    [RaceType.Road]: 'Шоссейная',
+    [RaceType.Road]: 'Шоссе',
     [RaceType.MTB]: 'МТБ',
-    [RaceType.Gravel]: 'Гравийная',
+    [RaceType.Gravel]: 'Грэвел',
     [RaceType.Indoor]: 'Indoor',
     [RaceType.Track]: 'Трэк',
     [RaceType.Cyclocross]: 'Циклокросс',
@@ -56,6 +56,8 @@ const raceTypeOptions: Array<{ value: RaceType; label: string }> = [
     { value: RaceType.Track, label: raceTypeLabels[RaceType.Track] },
     { value: RaceType.Cyclocross, label: raceTypeLabels[RaceType.Cyclocross] },
 ];
+
+const getRaceTypes = (race: Race): RaceType[] => race.race_types ?? [];
 
 const isAllSelected = () => selectedRaceTypesValue.value.length === 0;
 
@@ -204,14 +206,20 @@ const participate = (raceId: number) => {
                 </CardHeader>
 
                 <CardContent class="flex-1 space-y-3 text-sm">
-                    <div class="flex justify-between">
-                        <p class="inline-flex items-center gap-2">
+                    <div class="flex justify-between gap-5 md:gap-10">
+                        <p class="inline-flex items-center gap-2 shrink-0">
                             <CalendarDays class="size-4 text-muted-foreground" />
                             <span>{{ formatDate(race.date) }}</span>
                         </p>
-                        <p class="inline-flex items-center gap-2">
-                            <Badge variant="outline">{{ raceTypeLabels[race.race_type] }}</Badge>
-                        </p>
+                        <div class="inline-flex flex-wrap items-center gap-2">
+                            <Badge
+                                v-for="raceType in getRaceTypes(race)"
+                                :key="`${race.id}-${raceType}`"
+                                variant="outline"
+                            >
+                                {{ raceTypeLabels[raceType] }}
+                            </Badge>
+                        </div>
                     </div>
                     <div class="flex justify-between">
                         <p v-if="race.yandex_map_url" class="flex items-center gap-2">

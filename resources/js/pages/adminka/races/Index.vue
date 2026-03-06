@@ -13,7 +13,7 @@ import { Race } from '@/types/races';
 import { router } from '@inertiajs/vue3';
 import { SquarePen, Trash } from 'lucide-vue-next';
 
-const { ourIndoorRaces } = defineProps<{ races: Race[] }>();
+const { races } = defineProps<{ races: Race[] }>();
 
 const deleteRace = (race: Race) => {
     if (confirm(`Удалить гонку "${race.name}"?`)) {
@@ -29,13 +29,21 @@ const formatDate = (dateString: string) => {
     });
 };
 
-const typeLabels: Record<Race['race_type'], string> = {
-    [RaceType.Road]: 'Шоссейная',
+const typeLabels: Record<RaceType, string> = {
+    [RaceType.Road]: 'Шоссе',
     [RaceType.MTB]: 'МТБ',
-    [RaceType.Gravel]: 'Гравийная',
+    [RaceType.Gravel]: 'Грэвел',
     [RaceType.Indoor]: 'Indoor',
     [RaceType.Track]: 'Трек',
     [RaceType.Cyclocross]: 'Циклокросс',
+};
+
+const getRaceTypeLabels = (race: Race): string => {
+    if (!race.race_types?.length) {
+        return '-';
+    }
+
+    return race.race_types.map((type) => typeLabels[type]).join(', ');
 };
 </script>
 
@@ -59,14 +67,14 @@ const typeLabels: Record<Race['race_type'], string> = {
             </TableRow>
         </TableHeader>
         <TableBody>
-            <TableRow v-for="race in ourIndoorRaces" :key="race.id">
+            <TableRow v-for="race in races" :key="race.id">
                 <TableCell class="font-medium">
                     <Link :href="route('adminka.races.show', race.id)">
                         {{ race.name }}
                     </Link>
                 </TableCell>
                 <TableCell>{{ formatDate(race.date) }}</TableCell>
-                <TableCell>{{ typeLabels[race.race_type] }}</TableCell>
+                <TableCell>{{ getRaceTypeLabels(race) }}</TableCell>
                 <TableCell>{{ race.in_our_studio ? 'Да' : 'Нет' }}</TableCell>
                 <TableCell>
                     <a

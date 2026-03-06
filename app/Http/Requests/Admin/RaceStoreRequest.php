@@ -50,7 +50,8 @@ class RaceStoreRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',
-            'race_type' => 'required|in:gravel,road,mtb,indoor,track,cyclocross',
+            'race_types' => 'required|array|min:1',
+            'race_types.*' => 'in:gravel,road,mtb,indoor,track,cyclocross',
             'in_our_studio' => 'required|boolean',
             'organizer_name' => 'nullable|string|max:255',
             'organizer_website_url' => 'nullable|url|max:2048',
@@ -81,8 +82,10 @@ class RaceStoreRequest extends FormRequest
             'description.string' => 'Описание должно быть строкой.',
             'date.required' => 'Укажите дату гонки.',
             'date.date' => 'Некорректный формат даты гонки.',
-            'race_type.required' => 'Укажите тип гонки.',
-            'race_type.in' => 'Допустимые типы гонки: гравийная, шоссейная, МТБ, indoor, трек, циклокросс.',
+            'race_types.required' => 'Укажите хотя бы один тип гонки.',
+            'race_types.array' => 'Типы гонки должны быть списком.',
+            'race_types.min' => 'Укажите хотя бы один тип гонки.',
+            'race_types.*.in' => 'Допустимые типы гонки: грэвел, шоссе, МТБ, indoor, трек, циклокросс.',
             'in_our_studio.required' => 'Укажите, проводится ли гонка в нашей студии.',
             'in_our_studio.boolean' => 'Поле "в нашей студии" должно быть типа да/нет.',
             'organizer_name.string' => 'Имя организатора должно быть строкой.',
@@ -124,8 +127,13 @@ class RaceStoreRequest extends FormRequest
                 return;
             }
 
-            if ($this->input('race_type') !== 'indoor') {
-                $validator->errors()->add('race_type', 'Для гонки в нашей студии тип должен быть indoor.');
+            $raceTypes = collect($this->input('race_types', []))
+                ->filter()
+                ->values()
+                ->all();
+
+            if (!in_array('indoor', $raceTypes, true)) {
+                $validator->errors()->add('race_types', 'Для гонки в нашей студии добавьте тип indoor.');
             }
 
             if ((int) $this->input('price', -1) < 0) {
