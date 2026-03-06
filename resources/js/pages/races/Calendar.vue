@@ -202,7 +202,10 @@ const participate = (raceId: number) => {
                 </div>
 
                 <CardHeader>
-                    <CardTitle class="line-clamp-2 leading-7">{{ race.name }}</CardTitle>
+                    <CardTitle class="line-clamp-2 leading-7">
+                        {{ race.name }}
+                        <span v-if="race.location" class="text-muted-foreground">({{ race.location }})</span>
+                    </CardTitle>
                 </CardHeader>
 
                 <CardContent class="flex-1 space-y-3 text-sm">

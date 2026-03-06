@@ -64,7 +64,10 @@ const register = (cluster: RaceCluster) => {
     <Head :title="race.name" />
 
     <div class="max-w-[1280px] space-y-5">
-        <h1 class="text-2xl font-bold">{{ race.name }}</h1>
+        <h1 class="text-2xl font-bold">
+            {{ race.name }}
+            <span v-if="race.location" class="text-muted-foreground">({{ race.location }})</span>
+        </h1>
 
         <img
             v-if="race.cover_img_url"

@@ -3,6 +3,7 @@ import { RaceType } from '@/types/enums';
 export type Race = {
     id: number;
     name: string;
+    location: string | null;
     description: string | null;
     race_types: RaceType[];
     in_our_studio: boolean;

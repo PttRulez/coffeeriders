@@ -20,6 +20,7 @@ const formatDate = (dateString: string) => {
             <div>
                 <div class="flex items-center gap-2">
                     <p class="text-xl font-bold">{{ race.name }}</p>
+                    <p v-if="race.location" class="text-sm text-muted-foreground">({{ race.location }})</p>
                     <p class="text-lg">({{ formatDate(race.date) }})</p>
                     <Button as-child class="bg-red-300 text-blue-700" variant="outline">
                         <Link

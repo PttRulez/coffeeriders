@@ -48,6 +48,7 @@ class RaceStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',
             'race_types' => 'required|array|min:1',
@@ -79,6 +80,8 @@ class RaceStoreRequest extends FormRequest
         return [
             'name.required' => 'Укажите название гонки.',
             'name.max' => 'Название гонки не должно быть длиннее 255 символов.',
+            'location.string' => 'Место проведения должно быть строкой.',
+            'location.max' => 'Место проведения не должно быть длиннее 255 символов.',
             'description.string' => 'Описание должно быть строкой.',
             'date.required' => 'Укажите дату гонки.',
             'date.date' => 'Некорректный формат даты гонки.',
@@ -118,10 +121,6 @@ class RaceStoreRequest extends FormRequest
     {
         $validator->after(function (Validator $validator) {
             $inOurStudio = filter_var($this->input('in_our_studio'), FILTER_VALIDATE_BOOL);
-
-            if (!$inOurStudio && blank($this->input('registration_url'))) {
-                $validator->errors()->add('registration_url', 'Для внешней гонки укажите ссылку на регистрацию.');
-            }
 
             if (!$inOurStudio) {
                 return;

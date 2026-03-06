@@ -40,6 +40,7 @@ class AdminRaceController extends Controller
 
             $race = Race::create([
                 'name' => $validated['name'],
+                'location' => $validated['location'] ?? null,
                 'description' => $validated['description'] ?? null,
                 'date' => $validated['date'],
                 'race_types' => $validated['race_types'],
@@ -95,6 +96,7 @@ class AdminRaceController extends Controller
 
             $race->update([
                 'name' => $validated['name'],
+                'location' => $validated['location'] ?? null,
                 'description' => $validated['description'] ?? null,
                 'date' => $validated['date'],
                 'race_types' => $validated['race_types'],

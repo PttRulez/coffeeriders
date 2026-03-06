@@ -24,6 +24,7 @@ const { race } = defineProps<{ race?: Race }>();
 const form = useTypedForm<RaceFormData>({
     id: race?.id,
     name: race?.name,
+    location: race?.location ?? null,
     description: race?.description ?? null,
     race_types: race?.race_types?.length ? race.race_types : [RaceType.Road],
     in_our_studio: race?.in_our_studio ?? false,
@@ -116,6 +117,14 @@ const removeCluster = (index: number) => {
                 :error-message="form.errors.date"
                 field-name="date"
                 placeholder="Дата гонки"
+            />
+
+            <FormInput
+                class="flex-1"
+                v-model="form.location"
+                :errorMessage="form.errors.location"
+                field-name="location"
+                placeholder="Место проведения (город)"
             />
 
             <div class="md:col-span-2">
