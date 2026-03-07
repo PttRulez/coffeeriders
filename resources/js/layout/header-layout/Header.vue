@@ -134,7 +134,7 @@ const desktopNavItems = computed((): NavItem[] =>
                 :href="route('home')"
                 class="font-ze text-center text-2xl text-purple-900 lg:hidden"
             >
-                Coffeeriders
+                CoffeeRiders
             </Link>
             <Link
                 :href="route('home')"
@@ -146,7 +146,7 @@ const desktopNavItems = computed((): NavItem[] =>
             <!-- Desktop Menu -->
             <div class="hidden h-full lg:flex lg:flex-1">
                 <NavigationMenu class="ml-10 flex h-full items-stretch">
-                    <NavigationMenuList class="flex h-full items-stretch space-x-2">
+                    <NavigationMenuList class="flex h-full items-stretch gap-0">
                         <template v-for="(item, index) in desktopNavItems" :key="index">
                             <NavigationMenuItem
                                 v-if="item.show"
@@ -161,7 +161,7 @@ const desktopNavItems = computed((): NavItem[] =>
                                             :class="[
                                                 navigationMenuTriggerStyle(),
                                                 activeItemStyles(item.href),
-                                                'flex h-9 cursor-pointer items-center px-3 text-xl',
+                                                'flex h-9 cursor-pointer items-center px-3 text-[18px]',
                                             ]"
                                             :href="item.href"
                                         >
@@ -185,7 +185,7 @@ const desktopNavItems = computed((): NavItem[] =>
                                                     :class="[
                                                         navigationMenuTriggerStyle(),
                                                         activeItemStyles(subitem.href),
-                                                        'flex h-9 w-full! cursor-pointer px-3 text-xl whitespace-nowrap',
+                                                        'flex h-9 w-full! cursor-pointer px-3 text-[18px] whitespace-nowrap',
                                                     ]"
                                                     :href="subitem.href"
                                                 >
@@ -205,7 +205,7 @@ const desktopNavItems = computed((): NavItem[] =>
                                         :class="[
                                             navigationMenuTriggerStyle(),
                                             activeItemStyles(item.href),
-                                            'h-9 cursor-pointer px-3 text-xl',
+                                            'h-9 cursor-pointer px-3 text-[18px]',
                                         ]"
                                         :href="item.href"
                                     >

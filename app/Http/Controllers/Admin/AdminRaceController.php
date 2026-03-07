@@ -35,7 +35,7 @@ class AdminRaceController extends Controller
             $inOurStudio = (bool) $validated['in_our_studio'];
             $coverImgUrl = null;
             if ($request->hasFile('cover_image')) {
-                $coverImgUrl = $imageService->save($request->file('cover_image'), 'races');
+                $coverImgUrl = $imageService->save(file: $request->file('cover_image'), dir: 'races', quality: 50);
             }
 
             $race = Race::create([

@@ -55,7 +55,7 @@ class UserAccountController extends Controller
             'height' => ['sometimes', 'integer'],
             'name' => ['required', 'string', 'max:255'],
             'pedals' => ['required', new Enum(Pedals::class)],
-            'avatar_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:8192'],
+            'avatar_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp'],
             'phone' => [
                 'nullable',
                 'regex:/^\+7\d{10}$/',
@@ -78,18 +78,18 @@ class UserAccountController extends Controller
                 'avatar_image.mimes' => 'Допустимые форматы аватара: jpeg, jpg, png, gif, webp.',
                 'avatar_image.max' => 'Размер аватара не должен превышать 8 МБ.',
             ]);
-
+        
         $avatarUrl = $user->avatar_url;
         if ($request->hasFile('avatar_image')) {
             if ($avatarUrl) {
                 $imageService->delete($avatarUrl);
             }
-            $avatarUrl = $imageService->save($request->file('avatar_image'), 'avatars', 800, 800);
+            $avatarUrl = $imageService->save(file: $request->file('avatar_image'), dir: 'avatars', maxW: 800, maxH: 800, quality: 50);
         }
-
+        
         unset($validated['avatar_image']);
         $validated['avatar_url'] = $avatarUrl;
-
+        
         $user->update($validated);
         
         return back()->with('success', 'Профиль обновлён');

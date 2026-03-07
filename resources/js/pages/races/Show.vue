@@ -75,7 +75,40 @@ const register = (cluster: RaceCluster) => {
         />
 
         <section class="flex max-md:flex-col px-5 md:mx-auto w-fit gap-5 md:gap-30 mt-10">
-            <div class="space-y-3">
+             <div>
+                <h2 class="mb-4 text-xl font-semibold">Участники от CoffeeRiders</h2>
+
+                <div
+                    v-if="!race.participants || race.participants.length === 0"
+                    class="rounded border p-4 text-muted-foreground"
+                >
+                    Пока никто не отметился.
+                </div>
+
+                <Table v-else>
+                    <TableBody>
+                        <TableRow v-for="participant in race.participants" :key="participant.id">
+                            <TableCell>
+                                <Avatar class="size-9">
+                                    <AvatarImage
+                                        v-if="participant.avatar_url"
+                                        :src="participant.avatar_url"
+                                        :alt="participant.name"
+                                    />
+                                    <AvatarFallback>
+                                        {{ getInitials(participant.name) }}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </TableCell>
+                            <TableCell class="text-xl">{{ participant.name }}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </div>
+
+            <Separator class="md:hidden" />
+
+           <div class="space-y-3">
                 <p class="text-lg">{{ formatDate(race.date) }}</p>
                 <p v-if="race.yandex_map_url" class="flex items-center gap-2">
                     <MapPin class="size-4 text-muted-foreground" />
@@ -110,39 +143,6 @@ const register = (cluster: RaceCluster) => {
                         Сайт организатора
                     </a>
                 </p>
-            </div>
-
-            <Separator class="md:hidden" />
-
-            <div>
-                <h2 class="mb-4 text-xl font-semibold">Участники от CoffeeRiders</h2>
-
-                <div
-                    v-if="!race.participants || race.participants.length === 0"
-                    class="rounded border p-4 text-muted-foreground"
-                >
-                    Пока никто не отметился.
-                </div>
-
-                <Table v-else>
-                    <TableBody>
-                        <TableRow v-for="participant in race.participants" :key="participant.id">
-                            <TableCell>
-                                <Avatar class="size-9">
-                                    <AvatarImage
-                                        v-if="participant.avatar_url"
-                                        :src="participant.avatar_url"
-                                        :alt="participant.name"
-                                    />
-                                    <AvatarFallback>
-                                        {{ getInitials(participant.name) }}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </TableCell>
-                            <TableCell class="text-xl">{{ participant.name }}</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
             </div>
         </section>
 
