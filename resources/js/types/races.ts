@@ -6,6 +6,7 @@ export type Race = {
     location: string | null;
     description: string | null;
     race_types: RaceType[];
+    rank: 1 | 2 | 3;
     in_our_studio: boolean;
     organizer_name: string | null;
     organizer_website_url: string | null;

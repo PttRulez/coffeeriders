@@ -23,8 +23,9 @@ class RaceController extends Controller
     {
         $raceTimeFilter = $request->query('race_time_filter') ?? 'upcoming';
 
-        $selectedRaceTypes = $request->query('race_types', []);
-
+        $selectedRaceTypes = $this->normalizeRaceTypes($request->query('race_types', []));
+        $selectedRaceRanks = $this->normalizeRaceRanks($request->query('race_ranks', []));
+       
         $baseQuery = Race::query()->published();
         if (!empty($selectedRaceTypes)) {
             $baseQuery->where(function ($query) use ($selectedRaceTypes) {
@@ -32,6 +33,9 @@ class RaceController extends Controller
                     $query->orWhereJsonContains('race_types', $raceType);
                 }
             });
+        }
+        if (!empty($selectedRaceRanks)) {
+            $baseQuery->whereIn('rank', array_map('intval', $selectedRaceRanks));
         }
         if ($raceTimeFilter === 'upcoming') {
             $baseQuery->whereDate('date', '>=', now()->toDateString());
@@ -77,8 +81,31 @@ class RaceController extends Controller
             'prevYear' => $prevYear,
             'nextYear' => $nextYear,
             'selectedRaceTypes' => array_values($selectedRaceTypes),
+            'selectedRaceRanks' => array_values($selectedRaceRanks),
             'raceTimeFilter' => $raceTimeFilter,
         ]);
+    }
+
+    private function normalizeRaceTypes(mixed $value): array
+    {
+        $items = is_array($value) ? $value : [$value];
+        $allowed = ['gravel', 'road', 'mtb', 'indoor', 'track', 'cyclocross'];
+
+        return array_values(array_filter(
+            array_map(static fn ($item) => strtolower(trim((string) $item)), $items),
+            static fn (string $item) => in_array($item, $allowed, true),
+        ));
+    }
+
+    private function normalizeRaceRanks(mixed $value): array
+    {
+        $items = is_array($value) ? $value : [$value];
+        $allowed = ['1', '2', '3'];
+
+        return array_values(array_filter(
+            array_map(static fn ($item) => trim((string) $item), $items),
+            static fn (string $item) => in_array($item, $allowed, true),
+        ));
     }
 
     public function show(Request $request, Race $race): Response

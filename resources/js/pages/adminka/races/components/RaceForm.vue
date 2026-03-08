@@ -3,6 +3,7 @@ import ErrorBag from '@/components/form-elements/ErrorBag.vue';
 import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
 import FormDatePicker from '@/components/form-elements/FormDatePicker.vue';
 import FormInput from '@/components/form-elements/FormInput.vue';
+import FormSelect from '@/components/form-elements/FormSelect.vue';
 import InputError from '@/components/form-elements/InputError.vue';
 import MarkdownEditor from '@/components/shared/MarkdownEditor/MarkdownEditor.vue';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ const form = useTypedForm<RaceFormData>({
     location: race?.location ?? null,
     description: race?.description ?? null,
     race_types: race?.race_types?.length ? race.race_types : [RaceType.Road],
+    rank: race?.rank ?? 2,
     in_our_studio: race?.in_our_studio ?? false,
     organizer_name: race?.organizer_name ?? null,
     organizer_website_url: race?.organizer_website_url ?? null,
@@ -50,6 +52,12 @@ const raceTypeOptions: Array<{ value: RaceType; label: string }> = [
     { value: RaceType.Indoor, label: 'Indoor' },
     { value: RaceType.Track, label: 'Track' },
     { value: RaceType.Cyclocross, label: 'Cyclocross' },
+];
+
+const rankOptions = [
+    { value: 1, label: '1' },
+    { value: 2, label: '2' },
+    { value: 3, label: '3' },
 ];
 
 const toggleRaceType = (value: RaceType) => {
@@ -125,6 +133,14 @@ const removeCluster = (index: number) => {
                 :errorMessage="form.errors.location"
                 field-name="location"
                 placeholder="Место проведения (город)"
+            />
+
+            <FormSelect
+                field-name="rank"
+                v-model="form.rank"
+                :error-message="form.errors.rank"
+                :options="rankOptions"
+                placeholder="Ранг гонки"
             />
 
             <div class="md:col-span-2">

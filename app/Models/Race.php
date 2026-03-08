@@ -13,6 +13,7 @@ class Race extends Model
     protected $casts = [
         'date' => 'date:Y-m-d',
         'race_types' => 'array',
+        'rank' => 'integer',
         'is_published' => 'boolean',
         'in_our_studio' => 'boolean',
     ];

@@ -10,6 +10,7 @@ import {
     ArrowLeft,
     ArrowRight,
     CalendarDays,
+    Coffee,
     Globe,
     MapPin,
     SquareArrowOutUpRight,
@@ -22,6 +23,7 @@ const props = defineProps<{
     prevYear: number | null;
     nextYear: number | null;
     selectedRaceTypes: RaceType[];
+    selectedRaceRanks: string[];
     raceTimeFilter: 'all' | 'upcoming';
 }>();
 
@@ -29,6 +31,7 @@ const page = usePage<AppPageProps>();
 const user = page.props.auth.user;
 
 const selectedRaceTypesValue = ref<RaceType[]>(props.selectedRaceTypes ?? []);
+const selectedRaceRanksValue = ref<string[]>(props.selectedRaceRanks ?? []);
 const raceTimeFilterValue = ref<'all' | 'upcoming'>(props.raceTimeFilter ?? 'all');
 
 const formatDate = (dateString: string) => {
@@ -58,13 +61,17 @@ const raceTypeOptions: Array<{ value: RaceType; label: string }> = [
 ];
 
 const getRaceTypes = (race: Race): RaceType[] => race.race_types ?? [];
+const rankOptions = ['1', '2', '3'] as const;
 
 const isAllSelected = () => selectedRaceTypesValue.value.length === 0;
 
 const calendarLink = (targetYear: number) => {
-    const params: Record<string, number | string | RaceType[]> = { year: targetYear };
+    const params: Record<string, number | string | RaceType[] | string[]> = { year: targetYear };
     if (selectedRaceTypesValue.value.length > 0) {
         params.race_types = selectedRaceTypesValue.value;
+    }
+    if (selectedRaceRanksValue.value.length > 0) {
+        params.race_ranks = selectedRaceRanksValue.value;
     }
     params.race_time_filter = raceTimeFilterValue.value;
 
@@ -72,9 +79,12 @@ const calendarLink = (targetYear: number) => {
 };
 
 const submitFilters = () => {
-    const params: Record<string, number | string | RaceType[]> = { year: props.year };
+    const params: Record<string, number | string | RaceType[] | string[]> = { year: props.year };
     if (selectedRaceTypesValue.value.length > 0) {
         params.race_types = selectedRaceTypesValue.value;
+    }
+    if (selectedRaceRanksValue.value.length > 0) {
+        params.race_ranks = selectedRaceRanksValue.value;
     }
     params.race_time_filter = raceTimeFilterValue.value;
 
@@ -101,6 +111,19 @@ const toggleRaceType = (raceType: RaceType) => {
 };
 
 const isRaceTypeSelected = (raceType: RaceType) => selectedRaceTypesValue.value.includes(raceType);
+
+const toggleRaceRank = (rank: string) => {
+    const exists = selectedRaceRanksValue.value.includes(rank);
+    if (exists) {
+        selectedRaceRanksValue.value = selectedRaceRanksValue.value.filter((it) => it !== rank);
+    } else {
+        selectedRaceRanksValue.value = [...selectedRaceRanksValue.value, rank];
+    }
+
+    submitFilters();
+};
+
+const isRaceRankSelected = (rank: string) => selectedRaceRanksValue.value.includes(rank);
 
 const toggleRaceTimeFilter = (filter: 'all' | 'upcoming') => {
     raceTimeFilterValue.value = filter;
@@ -183,6 +206,28 @@ const participate = (raceId: number) => {
             </button>
         </div>
 
+        <div class="flex flex-wrap items-center gap-2">
+            <button
+                v-for="rank in rankOptions"
+                :key="rank"
+                type="button"
+                @click="toggleRaceRank(rank)"
+            >
+                <Badge
+                    :variant="isRaceRankSelected(rank) ? 'default' : 'secondary'"
+                    class="cursor-pointer"
+                >
+                    <span class="inline-flex items-center gap-1">
+                        <Coffee
+                            v-for="cupIndex in Number(rank)"
+                            :key="`${rank}-${cupIndex}`"
+                            class="size-4"
+                        />
+                    </span>
+                </Badge>
+            </button>
+        </div>
+
         <div v-if="props.races.length === 0" class="rounded-xl border p-6 text-muted-foreground">
             В этом году пока нет опубликованных гонок.
         </div>
@@ -202,15 +247,25 @@ const participate = (raceId: number) => {
                 </div>
 
                 <CardHeader>
-                    <CardTitle class="line-clamp-2 leading-7">
+                    <CardTitle class="line-clamp-2 leading-7 flex justify-center items-center gap-2">
                         {{ race.name }}
-                        <span v-if="race.location" class="text-muted-foreground">({{ race.location }})</span>
+                        <span v-if="race.location" class="text-muted-foreground"
+                            >({{ race.location }})</span
+                        >
+                        -
+                        <div class="inline-flex items-center gap-1">
+                            <Coffee
+                                v-for="cupIndex in Number(race.rank)"
+                                :key="`${race.id}-cup-${cupIndex}`"
+                                class="size-4 text-amber-600"
+                            />
+                        </div>
                     </CardTitle>
                 </CardHeader>
 
                 <CardContent class="flex-1 space-y-3 text-sm">
                     <div class="flex justify-between gap-5 md:gap-10">
-                        <p class="inline-flex items-center gap-2 shrink-0">
+                        <p class="inline-flex shrink-0 items-center gap-2">
                             <CalendarDays class="size-4 text-muted-foreground" />
                             <span>{{ formatDate(race.date) }}</span>
                         </p>
@@ -250,16 +305,18 @@ const participate = (raceId: number) => {
                         </p>
                     </div>
 
-                    <p v-if="race.organizer_website_url" class="flex items-center gap-2">
-                        <Globe class="size-4 text-muted-foreground" />
-                        <a
-                            :href="race.organizer_website_url"
-                            class="text-blue-500 hover:underline"
-                            target="_blank"
-                        >
-                            {{ race.organizer_name || 'Сайт организатора' }}
-                        </a>
-                    </p>
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <p v-if="race.organizer_website_url" class="flex items-center gap-2">
+                            <Globe class="size-4 text-muted-foreground" />
+                            <a
+                                :href="race.organizer_website_url"
+                                class="text-blue-500 hover:underline"
+                                target="_blank"
+                            >
+                                {{ race.organizer_name || 'Сайт организатора' }}
+                            </a>
+                        </p>
+                    </div>
                 </CardContent>
 
                 <CardFooter>
@@ -273,10 +330,7 @@ const participate = (raceId: number) => {
                         {{ race.is_participating ? 'Не буду участвовать' : 'Буду участвовать' }}
                     </Button>
 
-                    <Link
-                        :href="route('races.show', race.id)"
-                        class="font-bold underline"
-                    >
+                    <Link :href="route('races.show', race.id)" class="font-bold underline">
                         Подробнее
                     </Link>
                 </CardFooter>

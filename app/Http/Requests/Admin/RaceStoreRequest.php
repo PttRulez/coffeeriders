@@ -14,6 +14,7 @@ class RaceStoreRequest extends FormRequest
         $this->merge([
             'description' => $this->normalizeDescription($this->input('description')),
             'yandex_map_url' => YandexMapUrlNormalizer::normalize($this->input('yandex_map_url')),
+            'rank' => (int) $this->input('rank', 2),
         ]);
     }
 
@@ -53,6 +54,7 @@ class RaceStoreRequest extends FormRequest
             'date' => 'required|date',
             'race_types' => 'required|array|min:1',
             'race_types.*' => 'in:gravel,road,mtb,indoor,track,cyclocross',
+            'rank' => 'required|integer|in:1,2,3',
             'in_our_studio' => 'required|boolean',
             'organizer_name' => 'nullable|string|max:255',
             'organizer_website_url' => 'nullable|url|max:2048',
@@ -89,6 +91,9 @@ class RaceStoreRequest extends FormRequest
             'race_types.array' => 'Типы гонки должны быть списком.',
             'race_types.min' => 'Укажите хотя бы один тип гонки.',
             'race_types.*.in' => 'Допустимые типы гонки: грэвел, шоссе, МТБ, indoor, трек, циклокросс.',
+            'rank.required' => 'Укажите ранг гонки.',
+            'rank.integer' => 'Ранг гонки должен быть числом.',
+            'rank.in' => 'Ранг гонки должен быть 1, 2 или 3.',
             'in_our_studio.required' => 'Укажите, проводится ли гонка в нашей студии.',
             'in_our_studio.boolean' => 'Поле "в нашей студии" должно быть типа да/нет.',
             'organizer_name.string' => 'Имя организатора должно быть строкой.',
