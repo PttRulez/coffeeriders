@@ -2,11 +2,14 @@ import type { NavItem } from '@/types';
 import { BikeCategory } from '@/types/enums';
 import { Bike, CalendarDays, Dumbbell, FolderKanban, Wrench } from 'lucide-vue-next';
 
+type RouteFn = (name: string, params?: any) => string;
+
 type GetNavItemsParams = {
     device: 'desktop' | 'mobile';
     isAdmin: boolean;
     isAdminPanel: boolean;
     isAuthenticated: boolean;
+    route: RouteFn;
 };
 
 export const getNavItems = ({
@@ -14,6 +17,7 @@ export const getNavItems = ({
     isAdmin,
     isAdminPanel,
     isAuthenticated,
+    route
 }: GetNavItemsParams): NavItem[] => {
 
     // МЕНЮ В АДМИНКЕ

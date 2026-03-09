@@ -11,23 +11,17 @@ import {
     Sheet,
     SheetClose,
     SheetContent,
-    SheetHeader,
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
 import AppLogo from '@/layout/components/AppLogo.vue';
-import AppLogoIcon from '@/layout/components/AppLogoIcon.vue';
 import { getNavItems } from '@/layout/header-layout/nav-items';
-import type { BreadcrumbItem, NavItem } from '@/types';
+import type { NavItem } from '@/types';
 import { Role } from '@/types/enums';
 import { Link, usePage } from '@inertiajs/vue3';
 import { ChevronDown, Menu, PhoneCall } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, getCurrentInstance } from 'vue';
 import { formatPhone } from '../../helpers';
-
-interface Props {
-    breadcrumbs?: BreadcrumbItem[];
-}
 
 const page = usePage();
 
@@ -43,12 +37,15 @@ const isAdmin = computed(() => auth.user?.role === Role.Admin);
 const isAuthenticated = computed(() => Boolean(auth.user));
 const isAdminPanel = computed(() => page.url.includes('adminka'));
 
+const routeFn = getCurrentInstance()!.appContext.config.globalProperties.route;
+
 const mobileNavItems = computed((): NavItem[] =>
     getNavItems({
         device: 'mobile',
         isAdmin: isAdmin.value,
         isAuthenticated: isAuthenticated.value,
         isAdminPanel: isAdminPanel.value,
+        route: routeFn
     }),
 );
 
@@ -58,6 +55,7 @@ const desktopNavItems = computed((): NavItem[] =>
         isAdmin: isAdmin.value,
         isAuthenticated: isAuthenticated.value,
         isAdminPanel: isAdminPanel.value,
+        route: routeFn
     }),
 );
 </script>
@@ -105,13 +103,13 @@ const desktopNavItems = computed((): NavItem[] =>
                                         </Link>
                                     </SheetClose>
                                     <template v-if="item.children?.length">
-                                        <template v-for="item in item.children">
+                                        <template v-for="i in item.children" :key="i.title">
                                             <SheetClose as-child>
                                                 <Link
                                                     v-if="item.show"
-                                                    :href="item.href"
+                                                    :href="i.href"
                                                     class="ml-9 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                                    :class="activeItemStyles(item.href)"
+                                                    :class="activeItemStyles(i.href)"
                                                 >
                                                     <component
                                                         v-if="item.icon"
