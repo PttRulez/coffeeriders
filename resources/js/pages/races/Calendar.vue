@@ -226,6 +226,7 @@ const participate = (raceId: number) => {
                     </span>
                 </Badge>
             </button>
+            <p class="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">Приоритетность</p>
         </div>
 
         <div v-if="props.races.length === 0" class="rounded-xl border p-6 text-muted-foreground">
