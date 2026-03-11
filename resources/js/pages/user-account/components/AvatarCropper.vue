@@ -24,27 +24,62 @@ const emit = defineEmits<{
 const cropperRef = ref<any>(null);
 const saving = ref(false);
 
+const MAX_AVATAR_SIZE = 512;
+const WEBP_QUALITY = 0.85;
+const JPEG_QUALITY = 0.85;
+
 const handleSave = async () => {
     if (!props.image || !cropperRef.value) {
         return;
     }
 
     const result = cropperRef.value.getResult();
-    const canvas = result?.canvas;
+    const canvas = result?.canvas as HTMLCanvasElement | undefined;
     if (!canvas) {
         return;
     }
 
     saving.value = true;
     try {
+        const targetSize = Math.min(MAX_AVATAR_SIZE, canvas.width, canvas.height);
+        const outputCanvas =
+            canvas.width === targetSize && canvas.height === targetSize
+                ? canvas
+                : (() => {
+                      const resized = document.createElement('canvas');
+                      resized.width = targetSize;
+                      resized.height = targetSize;
+                      const ctx = resized.getContext('2d');
+                      if (!ctx) {
+                          return canvas;
+                      }
+                      ctx.drawImage(canvas, 0, 0, targetSize, targetSize);
+                      return resized;
+                  })();
+
         const croppedImageFile = await new Promise<File>((resolve, reject) => {
-            canvas.toBlob((blob) => {
-                if (!blob) {
-                    reject(new Error('Failed to create blob from canvas.'));
-                    return;
-                }
-                resolve(new File([blob], 'avatar.png', { type: 'image/png' }));
-            }, 'image/png');
+            outputCanvas.toBlob(
+                (webpBlob) => {
+                    if (webpBlob) {
+                        resolve(new File([webpBlob], 'avatar.webp', { type: 'image/webp' }));
+                        return;
+                    }
+                    // Fallback for browsers without WebP canvas support
+                    outputCanvas.toBlob(
+                        (jpegBlob) => {
+                            if (!jpegBlob) {
+                                reject(new Error('Failed to create blob from canvas.'));
+                                return;
+                            }
+                            resolve(new File([jpegBlob], 'avatar.jpg', { type: 'image/jpeg' }));
+                        },
+                        'image/jpeg',
+                        JPEG_QUALITY,
+                    );
+                },
+                'image/webp',
+                WEBP_QUALITY,
+            );
         });
 
         emit('crop', croppedImageFile);
