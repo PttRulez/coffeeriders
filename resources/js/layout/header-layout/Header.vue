@@ -112,11 +112,11 @@ const desktopNavItems = computed((): NavItem[] =>
                                                     :class="activeItemStyles(i.href)"
                                                 >
                                                     <component
-                                                        v-if="item.icon"
-                                                        :is="item.icon"
+                                                        v-if="i.icon"
+                                                        :is="i.icon"
                                                         class="h-5 w-5"
                                                     />
-                                                    {{ item.title }}
+                                                    {{ i.title }}
                                                 </Link>
                                             </SheetClose>
                                         </template>

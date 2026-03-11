@@ -88,7 +88,7 @@ export const getNavItems = ({
             show: true,
             children: [
                 {
-                    title: 'Шоссер',
+                    title: 'Шоссейные',
                     href: route('rent-bikes.category', BikeCategory.Road),
                     show: true,
                 },
