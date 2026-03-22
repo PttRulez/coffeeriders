@@ -15,6 +15,7 @@ import { toast } from 'vue-sonner';
 
 interface BikeForm extends Partial<Bike>, Record<string, any> {
     images: File[];
+    is_published?: boolean;
     prices: Array<{
         period: string;
         price: number;
@@ -37,6 +38,7 @@ const form = useTypedForm<BikeForm>(
               images: [],
               name: undefined,
               short_description: undefined,
+              is_published: true,
               prices: [{ price: 2500, period: 'сутки' }],
           },
 );
@@ -131,6 +133,11 @@ const setPrimaryImage = (imageId: number) => {
             field-name="name"
             placeholder="название велика"
         />
+
+        <label class="inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <input type="checkbox" v-model="form.is_published" />
+            <span>Опубликован</span>
+        </label>
 
         <FormSelect
             v-model="form.category"

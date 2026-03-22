@@ -54,7 +54,7 @@ const getCategoryName = (name: BikeCategory): string => {
         />
     </Head>
 
-    <h1 class="px-5 text-center max-md:text-[18px]!">
+    <h1 class="px-5 text-center max-md:text-[18px]! mb-5">
         Прокат велосипедов в Санкт-Петербурге с прозрачным сервисом
     </h1>
 

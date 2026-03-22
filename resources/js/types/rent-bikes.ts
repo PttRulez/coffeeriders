@@ -12,6 +12,7 @@ export interface Bike {
     full_description: string;
     id: number;
     images: any[];
+    is_published: boolean;
     name: string;
     predoplata: number;
     prices: BikePrice[];

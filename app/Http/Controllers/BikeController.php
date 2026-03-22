@@ -15,19 +15,21 @@ class BikeController extends Controller
     public function index(): Response
     {
         return Inertia::render('rent-bikes/Index', [
-            'bikes' => $this->bikeRentService->getAllBikes()
+            'bikes' => $this->bikeRentService->getPublishedBikes()
         ]);
     }
 
     public function category(string $categoryName): Response
     {
         return Inertia::render('rent-bikes/' . ucfirst($categoryName), [
-            'bikes' => $this->bikeRentService->getByCategoryName($categoryName)->toArray()
+            'bikes' => $this->bikeRentService->getPublishedByCategoryName($categoryName)->toArray()
         ]);
     }
 
     public function show(Bike $bike): Response
     {
+        abort_unless($bike->is_published, 404);
+
         return Inertia::render('rent-bikes/Show', [
             'bike' => fn () => BikeResource::make($bike)->resolve(),
         ]);

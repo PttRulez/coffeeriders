@@ -22,7 +22,7 @@ const { bikes } = defineProps<Props>();
             аренда велосипеда для шоссе, прокат гоночных велосипедов Санкт-Петербург">
     </Head>
 
-    <h1 class="text-center">Аренда шоссейных велосипедов</h1>
+    <h1 class="text-center mb-5">Аренда шоссейных велосипедов</h1>
 
     <div class="mb-10 grid grid-cols-1 gap-4 md:mb-20 md:grid-cols-3">
             <Link

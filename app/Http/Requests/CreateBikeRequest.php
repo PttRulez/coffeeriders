@@ -34,6 +34,7 @@ class CreateBikeRequest extends FormRequest
             'prices.*.period' => 'required|string',
             'short_description' => 'required|string',
             'full_description' => 'sometimes',
+            'is_published' => 'sometimes|boolean',
         ];
     }
 }

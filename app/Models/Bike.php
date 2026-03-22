@@ -15,6 +15,7 @@ class Bike extends Model
     protected $casts = [
         'prices' => 'array',
         'category' => BikeCategory::class,
+        'is_published' => 'boolean',
     ];
     
     public function bookings(): HasMany
