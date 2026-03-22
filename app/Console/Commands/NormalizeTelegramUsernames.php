@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Rules\TelegramUsername;
+use App\Support\TelegramUsernameExtractor;
 use Illuminate\Console\Command;
 
 class NormalizeTelegramUsernames extends Command
@@ -23,11 +23,10 @@ class NormalizeTelegramUsernames extends Command
         
         foreach ($users as $user) {
             $original = $user->telegram_username;
-            
-            $rule = new TelegramUsername();
-            
-            if ($rule->passes('telegram_username', $original)) {
-                $normalized = $rule->getExtractedUsername();
+
+            $normalized = TelegramUsernameExtractor::extract($original);
+
+            if ($normalized !== null) {
                 
                 if ($normalized === $original) {
                     $skipped++;
@@ -41,7 +40,7 @@ class NormalizeTelegramUsernames extends Command
                 $updated++;
                 
             } else {
-                $this->error("✗ User #{$user->id}: '{$original}' - {$rule->message()}");
+                $this->error("✗ User #{$user->id}: '{$original}' - Некорректный формат Telegram username");
                 $failed++;
             }
         }

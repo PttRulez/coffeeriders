@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\BikeBooking;
+use App\Support\TelegramUsernameExtractor;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -32,6 +33,22 @@ class AdminCreateBikeBookingRequest extends FormRequest
         $validator->after(function (Validator $v) {
             if ($v->errors()->isNotEmpty()) {
                 return;
+            }
+
+            $telegram = $this->input('telegram_username');
+
+            if ($telegram) {
+                $normalizedTelegram = TelegramUsernameExtractor::extract($telegram);
+
+                if ($normalizedTelegram === null) {
+                    $v->errors()->add(
+                        'telegram_username',
+                        'Некорректный формат Telegram username. Используйте: @nickname, nickname, t.me/nickname или https://t.me/nickname'
+                    );
+                    return;
+                }
+
+                $this->merge(['telegram_username' => $normalizedTelegram]);
             }
 
             $start = Carbon::parse($this->input('starts_at'));

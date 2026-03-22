@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Support\TelegramUsernameExtractor;
 use Illuminate\Contracts\Validation\Rule;
 
 class TelegramUsername implements Rule
@@ -13,26 +14,10 @@ class TelegramUsername implements Rule
         if (empty($value)) {
             return true; // Пустое значение обрабатывается через nullable
         }
-        
-        $input = trim($value);
-        
-        // Паттерны для разных форматов
-        $patterns = [
-            '/^@([a-zA-Z0-9_]{5,32})$/',                           // @nickname
-            '/^([a-zA-Z0-9_]{5,32})$/',                            // nickname
-            '/^t\.me\/([a-zA-Z0-9_]{5,32})$/',                     // t.me/nickname
-            '/^https?:\/\/t\.me\/([a-zA-Z0-9_]{5,32})$/',          // https://t.me/nickname
-            '/^https?:\/\/t\.me\/s\/([a-zA-Z0-9_]{5,32})$/',       // https://t.me/s/nickname
-        ];
-        
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $input, $matches)) {
-                $this->extractedUsername = $matches[1];
-                return true;
-            }
-        }
-        
-        return false;
+
+        $this->extractedUsername = TelegramUsernameExtractor::extract($value);
+
+        return $this->extractedUsername !== null;
     }
     
     public function message(): string
