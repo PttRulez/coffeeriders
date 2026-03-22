@@ -35,6 +35,8 @@ Route::prefix('adminka')->middleware('admin')->name('adminka.')->group(function 
     Route::resource('rent-bikes', AdminBikeController::class)->parameters(['rent-bikes' => 'bike']);
     Route::delete('bikes/{bike}/images/{image}',
         [AdminBikeController::class, 'destroyImage'])->name('rent-bikes.images.destroy');
+    Route::patch('bikes/{bike}/images/{image}/primary',
+        [AdminBikeController::class, 'setPrimaryImage'])->name('rent-bikes.images.set-primary');
     
     //      USERS
     Route::resource('users', AdminUsersController::class)->only(['index', 'edit', 'update']);

@@ -7,10 +7,11 @@ import MarkdownEditor from '@/components/shared/MarkdownEditor/MarkdownEditor.vu
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTypedForm } from '@/composables/useTypedForm';
-import BikeForm from '@/pages/adminka/rent-bikes/components/BikeForm.vue';
 import { BikeCategory } from '@/types/enums';
 import { Bike } from '@/types/rent-bikes';
-import { Trash } from 'lucide-vue-next';
+import { router } from '@inertiajs/vue3';
+import { Star, Trash } from 'lucide-vue-next';
+import { toast } from 'vue-sonner';
 
 interface BikeForm extends Partial<Bike>, Record<string, any> {
     images: File[];
@@ -20,12 +21,12 @@ interface BikeForm extends Partial<Bike>, Record<string, any> {
     }>;
 }
 
-const { bike } = defineProps<{ bike?: Bike }>();
+const props = defineProps<{ bike?: Bike }>();
 
 const form = useTypedForm<BikeForm>(
-    bike
+    props.bike
         ? {
-              ...bike,
+              ...props.bike,
               images: [],
               _method: 'PUT',
           }
@@ -87,6 +88,33 @@ const submit = () => {
             forceFormData: true,
         });
     }
+};
+
+const deleteImage = (imageId: number) => {
+    if (!form.id) return;
+    if (!confirm('Удалить фото?')) return;
+
+    router.delete(route('adminka.rent-bikes.images.destroy', { bike: form.id, image: imageId }), {
+        onSuccess: () => {
+            toast.success('Фотография удалена');
+            router.reload({ only: ['bike'] });
+        },
+    });
+};
+
+const setPrimaryImage = (imageId: number) => {
+    if (!form.id) return;
+
+    router.patch(
+        route('adminka.rent-bikes.images.set-primary', { bike: form.id, image: imageId }),
+        {},
+        {
+            onSuccess: () => {
+                toast.success('Главное фото обновлено');
+                router.reload({ only: ['bike'] });
+            },
+        },
+    );
 };
 </script>
 
@@ -156,6 +184,40 @@ const submit = () => {
             button-text="Фотки велосипеда"
             multiple
         />
+
+        <section v-if="props.bike?.images?.length" class="flex flex-col gap-3">
+            <h2 class="text-lg">Текущие фото</h2>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div
+                    v-for="img in props.bike.images"
+                    :key="img.id"
+                    class="flex flex-col gap-2 rounded-2xl border border-sidebar-border/80 p-3"
+                >
+                    <img :src="img.url" :alt="img.alt || props.bike?.name" class="rounded-xl" />
+                    <div class="flex items-center justify-between gap-2">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            class="h-9 px-3"
+                            @click="setPrimaryImage(img.id)"
+                            :disabled="img.is_primary"
+                        >
+                            <Star class="mr-2" />
+                            {{ img.is_primary ? 'Главная' : 'Сделать главной' }}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            class="h-9 px-3"
+                            @click="deleteImage(img.id)"
+                        >
+                            <Trash class="mr-2" />
+                            Удалить
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <Textarea
             placeholder="Краткое описание"

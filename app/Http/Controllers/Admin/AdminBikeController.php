@@ -13,7 +13,6 @@ use Illuminate\Http\RedirectResponse;
 use App\Services\ImageService;
 use Inertia\Inertia;
 use Inertia\Response;
-use Storage;
 
 class AdminBikeController extends Controller
 {
@@ -21,19 +20,38 @@ class AdminBikeController extends Controller
     {
     }
     
-    public function destroyImage(Bike $bike, BikeImage $image)
+    public function destroyImage(Bike $bike, BikeImage $image, ImageService $imageService)
     {
         abort_unless($image->bike_id === $bike->id, 404);
-        
-        if ($image->url && Storage::disk('public')->exists($bike->url)) {
-            Storage::disk('public')->delete($image->url);
-        }
-        $image->delete();
-        
-        if (!$bike->primaryImage && $bike->images()->exists()) {
-            $bike->images()->first()->update(['is_primary' => true]);
-        }
-        
+
+        DB::transaction(function () use ($bike, $image, $imageService) {
+            if ($image->url) {
+                $imageService->delete($image->url);
+            }
+
+            $image->delete();
+
+            if (!$bike->images()->where('is_primary', true)->exists()) {
+                $newPrimary = $bike->images()->orderBy('sort')->first();
+
+                if ($newPrimary) {
+                    $newPrimary->update(['is_primary' => true]);
+                }
+            }
+        });
+
+        return back();
+    }
+
+    public function setPrimaryImage(Bike $bike, BikeImage $image)
+    {
+        abort_unless($image->bike_id === $bike->id, 404);
+
+        DB::transaction(function () use ($bike, $image) {
+            $bike->images()->where('id', '!=', $image->id)->update(['is_primary' => false]);
+            $image->update(['is_primary' => true]);
+        });
+
         return back();
     }
     
@@ -88,7 +106,7 @@ class AdminBikeController extends Controller
     public function edit(Bike $bike): Response
     {
         return Inertia::render('adminka/rent-bikes/Edit', [
-            'bike' => $bike,
+            'bike' => $bike->load('images'),
         ]);
     }
     
