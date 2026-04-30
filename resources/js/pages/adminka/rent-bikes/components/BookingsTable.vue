@@ -23,7 +23,7 @@ const props = defineProps<Props>();
 const formatDate = (date: string) => {
     return format(parseISO(date), 'd MMMM', { locale: ru });
 };
-
+console.log('bookings', props.bookings);
 const deleteBooking = (id: number) => {
     console.log('deleteBooking', 'id:', id);
     router.delete(route('adminka.rent-bikes.bookings.destroy', { bikeBooking: id }), {
