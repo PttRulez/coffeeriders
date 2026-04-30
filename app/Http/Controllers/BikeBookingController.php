@@ -38,7 +38,16 @@ class BikeBookingController extends Controller
             'telegram_username' => $this->normalizeTelegramUsername($data['telegram_username'] ?? null),
         ]);
 
-        $adminTelegram->sendProkatBookingNotification($booking);
+        try {
+            $adminTelegram->sendProkatBookingNotification($booking);
+        } catch (\Throwable $e) {
+            // Telegram notification failure must not block booking/payment flow.
+            Log::channel('payments')->error('BikeBookingController.store Ошибка отправки уведомления в Telegram', [
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+            ]);
+            report($e);
+        }
 
         $bike = Bike::findOrFail($data['bike_id']);
 
