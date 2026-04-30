@@ -25,14 +25,14 @@ const deleteItem = (item: WorkshopCategory) => {
         return;
     }
 
-    router.delete(route('adminka.workshop-categories.destroy', item.id));
+    router.delete(route('adminka.workshop.categories.destroy', item.id));
 };
 </script>
 
 <template>
     <div class="space-y-5">
         <Button as-child>
-            <Link :href="route('adminka.workshop-categories.create')" class="w-fit">
+            <Link :href="route('adminka.workshop.categories.create')" class="w-fit">
                 Добавить категорию
             </Link>
         </Button>
@@ -53,7 +53,7 @@ const deleteItem = (item: WorkshopCategory) => {
                     <TableCell>{{ item.services_count }}</TableCell>
                     <TableCell class="text-right">
                         <div class="flex justify-end gap-3">
-                            <Link :href="route('adminka.workshop-categories.edit', item.id)">
+                            <Link :href="route('adminka.workshop.categories.edit', item.id)">
                                 <SquarePen class="cursor-pointer" />
                             </Link>
                             <button @click="deleteItem(item)" class="cursor-pointer text-red-600">

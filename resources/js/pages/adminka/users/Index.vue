@@ -114,6 +114,41 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
+        accessorKey: 'is_mechanic',
+        header: () => h('div', { class: 'text-center w-full' }, 'Механик'),
+        cell: ({ row }) => {
+            const id = row.original.id;
+            const isMechanic = row.getValue('is_mechanic');
+
+            const toggle = () => {
+                router.put(
+                    route('adminka.users.update-is-mechanic', { user: id }),
+                    { is_mechanic: !isMechanic },
+                    {
+                        preserveScroll: true,
+                        preserveState: true,
+                        onError: (e) => console.error('Error updating:', e),
+                    },
+                );
+            };
+
+            return h(
+                'div',
+                {
+                    class: 'flex items-center justify-center h-full cursor-pointer',
+                    onClick: toggle,
+                },
+                [
+                    isMechanic
+                        ? h('span', { class: 'text-green-600 font-semibold' }, 'Да')
+                        : h(XCircle, {
+                              class: 'text-red-500 w-5 h-5',
+                          }),
+                ],
+            );
+        },
+    },
+    {
         header: '',
         id: 'actions',
         cell: ({ row }) =>

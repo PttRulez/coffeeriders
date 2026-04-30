@@ -36,11 +36,11 @@ const form = useForm({
 
 const submit = () => {
     if (isEdit.value) {
-        form.put(route('adminka.workshop-services.update', props.item!.id));
+        form.put(route('adminka.workshop.services.update', props.item!.id));
         return;
     }
 
-    form.post(route('adminka.workshop-services.store'));
+    form.post(route('adminka.workshop.services.store'));
 };
 </script>
 
@@ -55,14 +55,13 @@ const submit = () => {
                 field-name="workshop_category_id"
                 v-model="form.workshop_category_id"
                 label="Категория"
-                placeholder="Выберите категорию"
                 :options="categoryOptions"
                 :error-message="form.errors.workshop_category_id"
             >
                 <template #additionToLabel>
                     <Link
                         class="text-sm text-blue-500"
-                        :href="route('adminka.workshop-categories.create')"
+                        :href="route('adminka.workshop.categories.create')"
                     >
                         + Новая категория
                     </Link>
@@ -73,7 +72,6 @@ const submit = () => {
                 field-name="name"
                 v-model="form.name"
                 label="Название услуги"
-                placeholder="Например: Настройка переключателей"
                 :error-message="form.errors.name"
             />
 
@@ -90,7 +88,6 @@ const submit = () => {
                 field-name="additional_info"
                 v-model="form.additional_info"
                 label="Доп. информация (необязательно)"
-                placeholder="Например: за 1 колесо"
                 :error-message="form.errors.additional_info"
             />
 
@@ -99,7 +96,7 @@ const submit = () => {
                     {{ isEdit ? 'Сохранить' : 'Добавить' }}
                 </Button>
                 <Button as-child variant="outline">
-                    <Link :href="route('adminka.workshop-services.index')">Отмена</Link>
+                    <Link :href="route('adminka.workshop.services.index')">Отмена</Link>
                 </Button>
             </div>
         </form>

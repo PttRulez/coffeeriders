@@ -49,6 +49,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'is_coffeerider' => 'boolean',
+            'is_mechanic' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -56,6 +58,11 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === Role::ADMIN->value;
+    }
+
+    public function isMechanic(): bool
+    {
+        return (bool) $this->is_mechanic;
     }
     
     public function sendPasswordResetNotification($token): void
@@ -91,5 +98,10 @@ class User extends Authenticatable
     public function participatingRaces(): BelongsToMany
     {
         return $this->belongsToMany(Race::class, 'races_users')->withTimestamps();
+    }
+
+    public function workshopRepairOrders(): HasMany
+    {
+        return $this->hasMany(WorkshopRepairOrder::class, 'mechanic_id');
     }
 }

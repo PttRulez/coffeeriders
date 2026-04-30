@@ -37,6 +37,7 @@ export interface User {
     height: number;
     id: number;
     is_coffeerider: boolean;
+    is_mechanic: boolean;
     name: string;
     paid_cycling_count: number;
     pedals: Pedals;

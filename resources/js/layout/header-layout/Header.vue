@@ -34,6 +34,9 @@ const activeItemStyles = computed(
 const { auth, phoneNumber, telegramLink } = page.props;
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
 const isAdmin = computed(() => auth.user?.role === Role.Admin);
+const canManageWorkshopRepairOrders = computed(
+    () => Boolean(auth.user?.role === Role.Admin || auth.user?.is_mechanic),
+);
 const isAuthenticated = computed(() => Boolean(auth.user));
 const isAdminPanel = computed(() => page.url.includes('adminka'));
 
@@ -42,6 +45,7 @@ const routeFn = getCurrentInstance()!.appContext.config.globalProperties.route;
 const mobileNavItems = computed((): NavItem[] =>
     getNavItems({
         device: 'mobile',
+        canManageWorkshopRepairOrders: canManageWorkshopRepairOrders.value,
         isAdmin: isAdmin.value,
         isAuthenticated: isAuthenticated.value,
         isAdminPanel: isAdminPanel.value,
@@ -52,6 +56,7 @@ const mobileNavItems = computed((): NavItem[] =>
 const desktopNavItems = computed((): NavItem[] =>
     getNavItems({
         device: 'desktop',
+        canManageWorkshopRepairOrders: canManageWorkshopRepairOrders.value,
         isAdmin: isAdmin.value,
         isAuthenticated: isAuthenticated.value,
         isAdminPanel: isAdminPanel.value,
@@ -106,7 +111,7 @@ const desktopNavItems = computed((): NavItem[] =>
                                         <template v-for="i in item.children" :key="i.title">
                                             <SheetClose as-child>
                                                 <Link
-                                                    v-if="item.show"
+                                                    v-if="item.show && i.show"
                                                     :href="i.href"
                                                     class="ml-9 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
                                                     :class="activeItemStyles(i.href)"
@@ -173,28 +178,27 @@ const desktopNavItems = computed((): NavItem[] =>
                                         </Link>
 
                                         <ul
-                                            class="invisible absolute top-full left-0 z-20 mt-1 min-w-full rounded-md border bg-popover p-1 opacity-0 shadow transition-all group-focus-within/menu:visible group-focus-within/menu:opacity-100 group-hover/menu:visible group-hover/menu:opacity-100"
+                                            class="invisible absolute top-full left-0 z-20 mt-1 min-w-full rounded-md border bg-popover p-1 opacity-0 shadow transition-all group-hover/menu:visible group-hover/menu:opacity-100"
                                         >
-                                            <li
-                                                v-for="subitem in item.children"
-                                                :key="subitem.title"
-                                            >
-                                                <Link
-                                                    :class="[
-                                                        navigationMenuTriggerStyle(),
-                                                        activeItemStyles(subitem.href),
-                                                        'flex h-9 w-full! cursor-pointer px-3 text-[18px] whitespace-nowrap',
-                                                    ]"
-                                                    :href="subitem.href"
-                                                >
-                                                    <component
-                                                        v-if="subitem.icon"
-                                                        :is="subitem.icon"
-                                                        class="mr-2 h-6"
-                                                    />
-                                                    {{ subitem.title }}
-                                                </Link>
-                                            </li>
+                                            <template v-for="subitem in item.children" :key="subitem.title">
+                                                <li v-if="subitem.show">
+                                                    <Link
+                                                        :class="[
+                                                            navigationMenuTriggerStyle(),
+                                                            activeItemStyles(subitem.href),
+                                                            'flex h-9 w-full! cursor-pointer px-3 text-[18px] whitespace-nowrap',
+                                                        ]"
+                                                        :href="subitem.href"
+                                                    >
+                                                        <component
+                                                            v-if="subitem.icon"
+                                                            :is="subitem.icon"
+                                                            class="mr-2 h-6"
+                                                        />
+                                                        {{ subitem.title }}
+                                                    </Link>
+                                                </li>
+                                            </template>
                                         </ul>
                                     </div>
                                 </template>

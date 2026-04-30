@@ -5,6 +5,7 @@ import { Bike, CalendarDays, Dumbbell, FolderKanban, Wrench } from 'lucide-vue-n
 type RouteFn = (name: string, params?: any) => string;
 
 type GetNavItemsParams = {
+    canManageWorkshopRepairOrders: boolean;
     device: 'desktop' | 'mobile';
     isAdmin: boolean;
     isAdminPanel: boolean;
@@ -13,19 +14,19 @@ type GetNavItemsParams = {
 };
 
 export const getNavItems = ({
+    canManageWorkshopRepairOrders,
     device,
     isAdmin,
     isAdminPanel,
     isAuthenticated,
-    route
+    route,
 }: GetNavItemsParams): NavItem[] => {
-
     // МЕНЮ В АДМИНКЕ
     if (isAdminPanel) {
         return [
             {
                 title: 'Прокат',
-                show: true,
+                show: isAdmin,
                 href: '',
                 children: [
                     {
@@ -44,7 +45,7 @@ export const getNavItems = ({
             },
             {
                 title: 'Студия',
-                show: true,
+                show: isAdmin,
                 href: '',
                 children: [
                     {
@@ -56,25 +57,41 @@ export const getNavItems = ({
             },
             {
                 title: 'Мастерская',
-                show: true,
+                show: canManageWorkshopRepairOrders,
                 href: '',
                 children: [
                     {
-                        href: route('adminka.workshop-categories.index'),
-                        title: 'Категории',
+                        href: route('adminka.workshop.repair-orders.index'),
+                        title: 'Велосипеды',
                         show: true,
                     },
                     {
-                        href: route('adminka.workshop-services.index'),
+                        href: route('adminka.workshop.services.index'),
                         title: 'Услуги',
-                        show: true,
+                        show: isAdmin,
                     },
+
+                    // {
+                    //     href: route('adminka.workshop.spare-part-categories.index'),
+                    //     title: 'Категории запчастей',
+                    //     show: true,
+                    // },
+                    {
+                        href: route('adminka.workshop.spare-parts.index'),
+                        title: 'Запчасти',
+                        show: isAdmin,
+                    },
+                    // {
+                    //     href: route('adminka.workshop.spare-part-purchases.index'),
+                    //     title: 'Закупки',
+                    //     show: true,
+                    // },
                 ],
             },
             {
                 title: 'Админка',
                 href: route('adminka.index'),
-                show: isAdmin,
+                show: canManageWorkshopRepairOrders,
             },
         ];
     }
@@ -100,7 +117,7 @@ export const getNavItems = ({
                 {
                     title: 'МТБ',
                     href: route('rent-bikes.category', BikeCategory.MTB),
-                    show: true,
+                    show: false,
                 },
             ],
         },
@@ -144,7 +161,7 @@ export const getNavItems = ({
         {
             title: 'Админка',
             href: route('adminka.index'),
-            show: isAdmin,
+            show: canManageWorkshopRepairOrders,
         },
     ];
 
@@ -158,7 +175,7 @@ export const getNavItems = ({
         {
             title: 'Регистрация',
             href: route('register'),
-            show: !isAuthenticated,
+            show: !isAuthenticated && device === 'mobile',
         },
     ];
 

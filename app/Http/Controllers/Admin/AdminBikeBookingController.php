@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\AdminCreateBikeBookingRequest;
 use App\Http\Resources\BikeResource;
 use App\Models\Bike;
 use App\Models\BikeBooking;
+use App\Support\TelegramUsernameExtractor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -44,7 +45,7 @@ class AdminBikeBookingController extends Controller
             'bike_id' => $data['bike_id'],
             'comment' => $data['comment'] ?? null,
             'customer_name' => $data['customer_name'],
-            'telegram_username' => $data['telegram_username'] ?? null,
+            'telegram_username' => $this->normalizeTelegramUsername($data['telegram_username'] ?? null),
             'phone' => $data['phone'] ?? null,
             'starts_at' => Carbon::parse($data['starts_at'])->toDateString(),
             'ends_at' => Carbon::parse($data['ends_at'])->toDateString(),
@@ -62,5 +63,10 @@ class AdminBikeBookingController extends Controller
         $bikeBooking->delete();
         
         return back()->with('success', 'Бронь удалена');
+    }
+
+    private function normalizeTelegramUsername(?string $value): ?string
+    {
+        return TelegramUsernameExtractor::extract($value);
     }
 }

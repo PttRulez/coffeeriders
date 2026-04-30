@@ -19,14 +19,14 @@ class AdminWorkshopCategoryController extends Controller
             ->orderBy('name')
             ->get();
 
-        return Inertia::render('adminka/workshop-categories/Index', [
+        return Inertia::render('adminka/workshop/categories/Index', [
             'items' => $items,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('adminka/workshop-categories/Form', [
+        return Inertia::render('adminka/workshop/categories/Form', [
             'item' => null,
         ]);
     }
@@ -36,13 +36,13 @@ class AdminWorkshopCategoryController extends Controller
         WorkshopCategory::create($request->validated());
 
         return redirect()
-            ->route('adminka.workshop-categories.index')
+            ->route('adminka.workshop.categories.index')
             ->with('success', 'Категория добавлена');
     }
 
     public function edit(WorkshopCategory $workshopCategory): Response
     {
-        return Inertia::render('adminka/workshop-categories/Form', [
+        return Inertia::render('adminka/workshop/categories/Form', [
             'item' => $workshopCategory,
         ]);
     }
@@ -54,7 +54,7 @@ class AdminWorkshopCategoryController extends Controller
         $workshopCategory->update($request->validated());
 
         return redirect()
-            ->route('adminka.workshop-categories.index')
+            ->route('adminka.workshop.categories.index')
             ->with('success', 'Категория обновлена');
     }
 
@@ -62,14 +62,14 @@ class AdminWorkshopCategoryController extends Controller
     {
         if ($workshopCategory->services()->exists()) {
             return redirect()
-                ->route('adminka.workshop-categories.index')
+                ->route('adminka.workshop.categories.index')
                 ->with('error', 'Нельзя удалить категорию с привязанными услугами');
         }
 
         $workshopCategory->delete();
 
         return redirect()
-            ->route('adminka.workshop-categories.index')
+            ->route('adminka.workshop.categories.index')
             ->with('success', 'Категория удалена');
     }
 }

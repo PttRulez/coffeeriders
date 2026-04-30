@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FormInput from '@/components/form-elements/FormInput.vue';
+import FormCheckBox from '@/components/form-elements/FormCheckBox.vue';
 import FormSelect from '@/components/form-elements/FormSelect.vue';
 import { Card } from '@/components/ui/card';
 import { User } from '@/types';
@@ -14,6 +15,7 @@ const form = useForm({
     height: user.height,
     weight: user.weight,
     pedals: user.pedals,
+    is_mechanic: user.is_mechanic,
 });
 
 const pedalOptions = [
@@ -47,6 +49,7 @@ const submit = () => {
             />
 
             <FormSelect field-name="pedals" :options="pedalOptions" v-model="form.pedals" />
+            <FormCheckBox field-name="is_mechanic" label="Механик" v-model="form.is_mechanic" />
 
             <Button type="submit">Сохранить</Button>
         </form>

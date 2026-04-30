@@ -70,7 +70,7 @@ const deleteItem = (item: WorkshopService) => {
         return;
     }
 
-    router.delete(route('adminka.workshop-services.destroy', item.id));
+    router.delete(route('adminka.workshop.services.destroy', item.id));
 };
 
 const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU').format(price)} ₽`;
@@ -78,17 +78,20 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
 
 <template>
     <div class="mx-auto max-w-[1080px] space-y-5">
-        <div class="flex flex-wrap items-end justify-between gap-3">
-            <Button as-child>
-                <Link :href="route('adminka.workshop-services.create')" class="w-fit">
-                    Добавить услугу
-                </Link>
-            </Button>
-
-            <div class="grid gap-1">
-                <label for="services-category-filter" class="text-sm text-muted-foreground">
-                    Фильтр по категории
-                </label>
+        <div class="flex flex-wrap items-end justify-end md:justify-between gap-3">
+            <div class="flex gap-5">
+                <Button as-child>
+                    <Link :href="route('adminka.workshop.services.create')" class="w-fit">
+                        Добавить услугу
+                    </Link>
+                </Button>
+                <Button as-child variant="outline">
+                    <Link :href="route('adminka.workshop.categories.index')" class="w-fit">
+                        Категории
+                    </Link>
+                </Button>
+            </div>
+            <div>
                 <Select v-model="selectedCategoryId">
                     <SelectTrigger
                         id="services-category-filter"
@@ -133,7 +136,7 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
                         <TableCell>{{ formatPrice(item.price_rub) }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-3">
-                                <Link :href="route('adminka.workshop-services.edit', item.id)">
+                                <Link :href="route('adminka.workshop.services.edit', item.id)">
                                     <SquarePen class="cursor-pointer" />
                                 </Link>
                                 <button

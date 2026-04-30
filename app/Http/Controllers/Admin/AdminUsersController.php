@@ -17,7 +17,16 @@ class AdminUsersController extends Controller
     public function index(): Response
     {
         return Inertia::render('adminka/users/Index', [
-            'users' => User::select(['id', 'name', 'email', 'paid_cycling_count', 'phone', 'telegram_username', 'is_coffeerider'])->get()
+            'users' => User::select([
+                'id',
+                'name',
+                'email',
+                'paid_cycling_count',
+                'phone',
+                'telegram_username',
+                'is_coffeerider',
+                'is_mechanic',
+            ])->get()
         ]);
     }
     
@@ -34,6 +43,7 @@ class AdminUsersController extends Controller
             'height' => ['sometimes', 'integer'],
             'pedals' => ['required', new Enum(Pedals::class)],
             'weight' => ['sometimes', 'integer'],
+            'is_mechanic' => ['required', 'boolean'],
         ]);
         
         $user->update($validated);
@@ -61,5 +71,16 @@ class AdminUsersController extends Controller
         $user->update($validated);
         
         return back()->with('success', 'Заапдейчено');
+    }
+
+    public function updateIsMechanic(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'is_mechanic' => ['required', 'boolean'],
+        ]);
+
+        $user->update($validated);
+
+        return back()->with('success', 'Статус механика обновлён');
     }
 }

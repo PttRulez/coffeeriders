@@ -23,14 +23,14 @@ class AdminWorkshopServiceController extends Controller
             ->select('workshop_services.*')
             ->get();
 
-        return Inertia::render('adminka/workshop-services/Index', [
+        return Inertia::render('adminka/workshop/services/Index', [
             'items' => $items,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('adminka/workshop-services/Form', [
+        return Inertia::render('adminka/workshop/services/Form', [
             'item' => null,
             'categories' => WorkshopCategory::query()
                 ->orderBy('sort_order')
@@ -44,13 +44,13 @@ class AdminWorkshopServiceController extends Controller
         WorkshopService::create($request->validated());
 
         return redirect()
-            ->route('adminka.workshop-services.index')
+            ->route('adminka.workshop.services.index')
             ->with('success', 'Услуга добавлена');
     }
 
     public function edit(WorkshopService $workshopService): Response
     {
-        return Inertia::render('adminka/workshop-services/Form', [
+        return Inertia::render('adminka/workshop/services/Form', [
             'item' => $workshopService,
             'categories' => WorkshopCategory::query()
                 ->orderBy('sort_order')
@@ -66,7 +66,7 @@ class AdminWorkshopServiceController extends Controller
         $workshopService->update($request->validated());
 
         return redirect()
-            ->route('adminka.workshop-services.index')
+            ->route('adminka.workshop.services.index')
             ->with('success', 'Услуга обновлена');
     }
 
@@ -75,7 +75,7 @@ class AdminWorkshopServiceController extends Controller
         $workshopService->delete();
 
         return redirect()
-            ->route('adminka.workshop-services.index')
+            ->route('adminka.workshop.services.index')
             ->with('success', 'Услуга удалена');
     }
 }

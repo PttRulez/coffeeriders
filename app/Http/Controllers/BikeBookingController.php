@@ -7,6 +7,7 @@ use App\Enums\BookingStatusEnum;
 use App\Http\Requests\CreateBikeBookingRequest;
 use App\Models\Bike;
 use App\Models\BikeBooking;
+use App\Support\TelegramUsernameExtractor;
 use App\Services\AdminTelegram\AdminTelegram;
 use App\Services\TinkoffService;
 use Carbon\Carbon;
@@ -34,7 +35,7 @@ class BikeBookingController extends Controller
             'phone' => $data['phone'] ?? null,
             'starts_at' => Carbon::parse($data['starts_at'])->toDateString(),
             'status' => BookingStatusEnum::Booked->value,
-            'telegram_username' => $data['telegram_username'] ?? null,
+            'telegram_username' => $this->normalizeTelegramUsername($data['telegram_username'] ?? null),
         ]);
 
         $adminTelegram->sendProkatBookingNotification($booking);
@@ -62,5 +63,10 @@ class BikeBookingController extends Controller
         }
 
         return Inertia::location($payment['PaymentURL']);
+    }
+
+    private function normalizeTelegramUsername(?string $value): ?string
+    {
+        return TelegramUsernameExtractor::extract($value);
     }
 }
