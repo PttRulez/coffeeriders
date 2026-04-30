@@ -25,6 +25,7 @@ const formatDate = (date: string) => {
 };
 
 const deleteBooking = (id: number) => {
+    console.log('deleteBooking', 'id:', id);
     router.delete(route('adminka.rent-bikes.bookings.destroy', { bikeBooking: id }), {
         onSuccess: () => {
             toast.success('Букинг удален');
