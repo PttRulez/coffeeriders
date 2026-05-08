@@ -29,22 +29,24 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
 };
 
 export interface User {
-    avatar?: string;
-    avatar_url?: string | null;
-    created_at: string;
+    avatar?: string | null;
     email: string;
-    email_verified_at: string | null;
+    id: number;
+    is_mechanic: boolean;
+    name: string;
+    role: Role;
+}
+
+export interface ProfileUser {
+    avatar?: string | null;
+    email: string;
     height: number;
     id: number;
-    is_coffeerider: boolean;
-    is_mechanic: boolean;
     name: string;
     paid_cycling_count: number;
     pedals: Pedals;
     phone: string;
-    role: Role;
     telegram_username: string;
-    updated_at: string;
     weight: number;
 }
 

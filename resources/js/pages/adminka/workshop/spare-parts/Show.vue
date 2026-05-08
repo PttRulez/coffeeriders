@@ -46,6 +46,19 @@ const deleteItem = () => {
         }),
     );
 };
+
+const deletePurchase = (purchaseId: number) => {
+    if (!confirm('Удалить эту закупку?')) {
+        return;
+    }
+
+    router.delete(
+        route('adminka.workshop.spare-parts.purchases.destroy', {
+            workshopSparePart: item.id,
+            workshopSparePartPurchase: purchaseId,
+        }),
+    );
+};
 </script>
 
 <template>
@@ -124,6 +137,7 @@ const deleteItem = () => {
                         <TableHead>Цена закупки</TableHead>
                         <TableHead>Кто внёс</TableHead>
                         <TableHead>Комментарий</TableHead>
+                        <TableHead class="text-right"></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -138,9 +152,30 @@ const deleteItem = () => {
                             </span>
                             <span v-else class="text-muted-foreground">—</span>
                         </TableCell>
+                        <TableCell class="text-right">
+                            <div class="flex justify-end gap-3">
+                                <Link
+                                    :href="
+                                        route('adminka.workshop.spare-parts.purchases.edit', {
+                                            workshopSparePart: item.id,
+                                            workshopSparePartPurchase: purchase.id,
+                                        })
+                                    "
+                                >
+                                    <SquarePen class="h-4 w-4 cursor-pointer" />
+                                </Link>
+                                <button
+                                    type="button"
+                                    class="cursor-pointer text-red-600"
+                                    @click="deletePurchase(purchase.id)"
+                                >
+                                    <Trash2 class="h-4 w-4" />
+                                </button>
+                            </div>
+                        </TableCell>
                     </TableRow>
                     <TableRow v-if="!item.purchases.length">
-                        <TableCell colspan="5" class="py-8 text-center text-muted-foreground">
+                        <TableCell colspan="6" class="py-8 text-center text-muted-foreground">
                             Закупок пока нет
                         </TableCell>
                     </TableRow>

@@ -7,26 +7,37 @@ import { Button } from '@/components/ui/button';
 import { useInitials } from '@/composables/useInitials';
 import AvatarCropper from '@/pages/user-account/components/AvatarCropper.vue';
 import { Pedals } from '@/types/enums';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
 
-const page = usePage();
-const { auth } = page.props;
+type ProfileUser = {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    telegram_username: string;
+    height: number;
+    weight: number;
+    pedals: Pedals;
+    avatar: string | null;
+};
+
+const props = defineProps<{ user: ProfileUser }>();
 const { getInitials } = useInitials();
 const cropperOpen = ref(false);
 const sourceAvatarImage = ref<string | null>(null);
-const previewAvatarImage = ref<string | null>(auth.user.avatar ?? null);
+const previewAvatarImage = ref<string | null>(props.user.avatar ?? null);
 
 const form = useForm({
-    email: auth.user.email,
-    name: auth.user.name,
-    height: auth.user.height,
-    pedals: auth.user.pedals,
+    email: props.user.email,
+    name: props.user.name,
+    height: props.user.height,
+    pedals: props.user.pedals,
     avatar_image: null as File | null,
-    phone: auth.user.phone,
-    telegram_username: auth.user.telegram_username,
-    weight: auth.user.weight,
+    phone: props.user.phone,
+    telegram_username: props.user.telegram_username,
+    weight: props.user.weight,
 });
 
 const pedalOptions = [
@@ -75,7 +86,7 @@ const submit = () => {
         <div class="mx-auto">
             <Avatar class="size-20">
                 <AvatarImage v-if="previewAvatarImage" :src="previewAvatarImage" :alt="form.name" />
-                <AvatarFallback>{{ getInitials(form.name || auth.user.name) }}</AvatarFallback>
+                <AvatarFallback>{{ getInitials(form.name || props.user.name) }}</AvatarFallback>
             </Avatar>
         </div>
 

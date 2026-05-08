@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\SharedAuthUserResource;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -43,7 +44,9 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => fn () => $request->user()
+                    ? SharedAuthUserResource::make($request->user())->resolve()
+                    : null,
             ],
             'flash' => [
                 'success' => fn() => $request->session()->get('success'),

@@ -6,6 +6,7 @@ use Illuminate\Validation\Rules\Enum;
 use App\Enums\Pedals;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CyclingActivityResource;
+use App\Http\Resources\ProfileUserResource;
 use App\Services\ImageService;
 use Hash;
 use Illuminate\Http\RedirectResponse;
@@ -22,6 +23,7 @@ class UserAccountController extends Controller
     public function index(): Response
     {
         return Inertia::render('user-account/Index', [
+            'user' => ProfileUserResource::make(Auth::user())->resolve(),
             'activities' => CyclingActivityResource::collection(Auth::user()
                 ->cyclingActivities()
                 ->orderByDesc('starts_at')

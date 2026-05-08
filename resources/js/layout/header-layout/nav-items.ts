@@ -88,11 +88,6 @@ export const getNavItems = ({
                     // },
                 ],
             },
-            {
-                title: 'Админка',
-                href: route('adminka.index'),
-                show: canManageWorkshopRepairOrders,
-            },
         ];
     }
 

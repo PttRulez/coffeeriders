@@ -29,7 +29,7 @@ const isEdit = computed(() => Boolean(props.item?.id));
 const today = new Date().toISOString().slice(0, 10);
 
 const form = useForm({
-    quantity: props.item?.quantity ?? 1,
+    quantity: props.item?.quantity ?? 0,
     purchase_price_rub: props.item?.purchase_price_rub ?? 0,
     purchased_at: props.item?.purchased_at ?? today,
     comment: props.item?.comment ?? '',

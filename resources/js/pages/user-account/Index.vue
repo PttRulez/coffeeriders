@@ -5,15 +5,24 @@ import NewPasswordForm from '@/pages/user-account/components/NewPasswordForm.vue
 import ProfileForm from '@/pages/user-account/components/ProfileForm.vue';
 import StudioActivities from '@/pages/user-account/components/StudioActivities.vue';
 import { CyclingActivity } from '@/types';
-import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Pedals } from '@/types/enums';
 
 type Props = {
     activities: CyclingActivity[];
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        phone: string;
+        telegram_username: string;
+        height: number;
+        weight: number;
+        pedals: Pedals;
+        paid_cycling_count: number;
+        avatar: string | null;
+    };
 };
 const props = defineProps<Props>();
-const page = usePage();
-const cyclingCount = computed(() => page.props.auth.user.paid_cycling_count);
 </script>
 
 <template>
@@ -26,12 +35,12 @@ const cyclingCount = computed(() => page.props.auth.user.paid_cycling_count);
         </TabsList>
 
         <TabsContent value="cycling-activities">
-            <h2 class="mb-5">Баланс тренировок (абонементы): {{ cyclingCount }} шт.</h2>
+            <h2 class="mb-5">Баланс тренировок (абонементы): {{ props.user.paid_cycling_count }} шт.</h2>
             <StudioActivities :activities="props.activities" />
         </TabsContent>
         <TabsContent value="profile" class="mx-auto flex items-start gap-5 max-md:flex-col">
             <Card class="p-5 max-md:w-full">
-                <ProfileForm />
+                <ProfileForm :user="props.user" />
             </Card>
 
             <Card class="p-5 max-md:w-full">
