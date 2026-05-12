@@ -151,7 +151,7 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
                         </div>
                     </Link>
                     <div class="flex items-center gap-5 p-3">
-                        <div class="">
+                        <div class="min-w-0">
                             <p class="text-xl font-bold">
                                 {{ formatPrice(item.sale_price_rub) }}
                                 <span class="text-sm text-muted-foreground"
@@ -164,7 +164,8 @@ const formatPrice = (price: number): string => `${new Intl.NumberFormat('ru-RU')
                                         workshopSparePart: item.id,
                                     })
                                 "
-                                class="hover:underline"
+                                class="block truncate hover:underline"
+                                :title="item.name"
                             >
                                 {{ item.name }}
                             </Link>

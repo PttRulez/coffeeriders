@@ -63,9 +63,9 @@ const deletePurchase = (purchaseId: number) => {
 
 <template>
     <div class="space-y-6">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <h1 class="text-2xl font-semibold">{{ item.name }}</h1>
-            <div class="flex flex-wrap gap-2">
+        <div class="space-y-3">
+            <h1 class="break-words text-2xl font-semibold">{{ item.name }}</h1>
+            <div class="flex flex-wrap justify-end gap-2">
                 <Button as-child>
                     <Link
                         :href="
