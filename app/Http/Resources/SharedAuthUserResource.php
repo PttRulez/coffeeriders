@@ -18,6 +18,7 @@ class SharedAuthUserResource extends JsonResource
             'email' => $this->email,
             'role' => $this->role,
             'is_mechanic' => (bool) $this->is_mechanic,
+            'is_coffeerider' => (bool) $this->is_coffeerider,
             'avatar' => $this->avatar,
         ];
     }

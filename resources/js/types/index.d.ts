@@ -32,6 +32,7 @@ export interface User {
     avatar?: string | null;
     email: string;
     id: number;
+    is_coffeerider: boolean;
     is_mechanic: boolean;
     name: string;
     role: Role;
