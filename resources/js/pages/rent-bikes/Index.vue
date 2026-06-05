@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import BikeCard from '@/components/rent-bikes/BikeCard.vue';
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from '@/components/ui/accordion';
+
 import { BikeCategory } from '@/types/enums';
 import { Bike } from '@/types/rent-bikes';
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import Conditions from '@/pages/rent-bikes/Conditions.vue';
 
 type Props = {
     bikes: Bike[];
@@ -58,64 +54,7 @@ const getCategoryName = (name: BikeCategory): string => {
         Прокат велосипедов в Санкт-Петербурге с прозрачным сервисом
     </h1>
 
-    <Accordion type="single" class="" collapsible>
-        <AccordionItem value="terms" class="border-none">
-            <AccordionTrigger class="max-w-fit cursor-pointer text-xl items-center">Условия аренды</AccordionTrigger>
-            <AccordionContent>
-                <h3 class="text-left! text-2xl font-bold">⏱ Срок аренды</h3>
-                <p>
-                    Минимальный срок — 1 сутки. Также возможна аренда на выходные или неделю. Для
-                    постоянных клиентов доступны скидки и акции.
-                </p>
-
-                <h3  class="text-left! text-2xl font-bold">Стоимость</h3>
-                <p>Цена зависит от типа велосипеда и срока аренды. В среднем:</p>
-                <ul>
-                    <li>Шоссейные — от 2500 ₽ в сутки</li>
-                    <li>Гравийные — от 2700 ₽</li>
-                    <li>MTB — от 2000 ₽</li>
-                </ul>
-                <p>Актуальные цены указаны в карточках моделей.</p>
-
-                <h3 class="text-left! text-2xl font-bold">📄 Документы</h3>
-                <p>
-                    Оформляем простой договор. Нужен только паспорт и возвратный залог в 10 000
-                    рублей.
-                </p>
-            </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="who">
-            <AccordionTrigger class="max-w-fit cursor-pointer  text-xl items-center">
-                Кому подойдёт аренда велосипеда
-            </AccordionTrigger>
-            <AccordionContent>
-                <p>
-                    Наш прокат подходит как опытным спортсменам, так и новичкам. Вот кому особенно
-                    может быть полезен Coffeeriders:
-                </p>
-
-                <ul>
-                    <li>
-                        🧑‍🚴‍♂️ <strong>Тем, кто готовится к гонке</strong> — Ironman, Gran Fondo,
-                        шоссейные и gravel старты
-                    </li>
-                    <li>
-                        🏕 <strong>Тем, кто планирует поездку за город</strong> или по Ленобласти
-                    </li>
-                    <li>
-                        🎒 <strong>Путешественникам</strong>, которые не хотят везти свой велосипед
-                    </li>
-                    <li>
-                        🛠 <strong>Тем, чей велосипед в ремонте</strong>, но хочется не пропускать
-                        катание
-                    </li>
-                    <li>
-                        🎉 <strong>Гостям города</strong>, которым нужен быстрый и удобный транспорт
-                    </li>
-                </ul>
-            </AccordionContent>
-        </AccordionItem>
-    </Accordion>
+    <Conditions />
 
     <template v-for="(bikes, categoryName) in groupedBikes" :key="categoryName">
         <h2 class="text-center text-2xl">
