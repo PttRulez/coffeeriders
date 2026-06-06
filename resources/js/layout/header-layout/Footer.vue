@@ -21,7 +21,7 @@ const { instagramLink, vkLink, phoneNumber } = page.props;
                     </li>
                     <li>
                         <a
-                            href="https://t.me/coffeeriders_procat"
+                            href="https://t.me/coffeeriders_studio"
                             target="_blank"
                             class="flex items-center gap-2"
                         >
