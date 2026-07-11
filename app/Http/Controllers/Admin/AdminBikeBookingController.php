@@ -19,10 +19,14 @@ class AdminBikeBookingController extends Controller
 {
     public function index(): Response
     {
+        $showArchive = request()->boolean('archive');
+
         return Inertia::render('adminka/rent-bikes/Bookings', [
             'bookings' => BikeBooking::with('bike')
-                ->orderByDesc('starts_at')
+                ->when(! $showArchive, fn ($query) => $query->currentOrUpcoming())
+                ->chronological()
                 ->get(),
+            'archive' => $showArchive,
         ]);
     }
 

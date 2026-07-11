@@ -20,7 +20,7 @@ class Bike extends Model
     
     public function bookings(): HasMany
     {
-        return $this->hasMany(BikeBooking::class);
+        return $this->hasMany(BikeBooking::class)->chronological();
     }
     
     public function images(): HasMany
