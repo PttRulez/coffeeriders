@@ -72,21 +72,50 @@ class AdminBikeBookingTest extends TestCase
 
     public function test_admin_bike_page_shows_bookings_chronologically(): void
     {
+        Carbon::setTestNow('2026-07-09 12:00:00');
+        $this->beforeApplicationDestroyed(fn () => Carbon::setTestNow());
+
         $admin = User::factory()->create(['role' => Role::ADMIN->value]);
         $bike = $this->createBike();
 
         $futureBooking = $this->createBooking($bike, '2026-07-10', '2026-07-12');
-        $pastBooking = $this->createBooking($bike, '2026-07-01', '2026-07-08');
-        $middleBooking = $this->createBooking($bike, '2026-07-08', '2026-07-09');
+        $this->createBooking($bike, '2026-07-01', '2026-07-08');
+        $endingTodayBooking = $this->createBooking($bike, '2026-07-08', '2026-07-09');
 
         $this->actingAs($admin)
             ->get(route('adminka.rent-bikes.show', ['bike' => $bike]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('adminka/rent-bikes/Show')
+                ->where('archive', false)
+                ->where('bike.bookings', fn ($bookings) => $bookings->pluck('id')->all() === [
+                    $endingTodayBooking->id,
+                    $futureBooking->id,
+                ])
+            );
+    }
+
+    public function test_admin_bike_page_shows_all_bookings_in_archive_mode(): void
+    {
+        Carbon::setTestNow('2026-07-09 12:00:00');
+        $this->beforeApplicationDestroyed(fn () => Carbon::setTestNow());
+
+        $admin = User::factory()->create(['role' => Role::ADMIN->value]);
+        $bike = $this->createBike();
+
+        $futureBooking = $this->createBooking($bike, '2026-07-10', '2026-07-12');
+        $pastBooking = $this->createBooking($bike, '2026-07-01', '2026-07-08');
+        $endingTodayBooking = $this->createBooking($bike, '2026-07-08', '2026-07-09');
+
+        $this->actingAs($admin)
+            ->get(route('adminka.rent-bikes.show', ['bike' => $bike, 'archive' => 1]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('adminka/rent-bikes/Show')
+                ->where('archive', true)
                 ->where('bike.bookings', fn ($bookings) => $bookings->pluck('id')->all() === [
                     $pastBooking->id,
-                    $middleBooking->id,
+                    $endingTodayBooking->id,
                     $futureBooking->id,
                 ])
             );

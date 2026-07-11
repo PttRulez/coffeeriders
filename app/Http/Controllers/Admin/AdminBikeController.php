@@ -69,8 +69,15 @@ class AdminBikeController extends Controller
     
     public function show(Bike $bike): Response
     {
+        $showArchive = request()->boolean('archive');
+
+        $bike->load([
+            'bookings' => fn ($query) => $query->when(! $showArchive, fn ($query) => $query->currentOrUpcoming()),
+        ]);
+
         return Inertia::render('adminka/rent-bikes/Show', [
             'bike' => fn() => BikeResource::make($bike)->resolve(),
+            'archive' => $showArchive,
         ]);
     }
     
