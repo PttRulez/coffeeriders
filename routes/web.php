@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/contacts', fn() => Inertia::render('Contacts'))->name('contacts');
+Route::get('/bikefit', fn() => Inertia::render('bikefit/Index'))->name('bikefit');
 Route::post('/feedback', [GeneralController::class, 'feedBackForm'])->name('feedback-form');
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 Route::post('/pricing-preview', [PricingController::class, 'preview'])->name('pricing.preview');

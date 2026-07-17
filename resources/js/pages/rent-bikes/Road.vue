@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import { Bike } from '@/types';
 import BikeCard from '@/components/rent-bikes/BikeCard.vue';
+import Conditions from '@/pages/rent-bikes/Conditions.vue';
 
 type Props = {
     bikes: Bike[];
@@ -23,6 +24,8 @@ const { bikes } = defineProps<Props>();
     </Head>
 
     <h1 class="text-center mb-5">Аренда шоссейных велосипедов</h1>
+
+    <Conditions />
 
     <div class="mb-10 grid grid-cols-1 gap-4 md:mb-20 md:grid-cols-3">
             <Link

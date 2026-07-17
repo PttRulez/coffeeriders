@@ -7,6 +7,7 @@ import { Role } from '@/types/enums';
 import { Bike } from '@/types/rent-bikes';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import Conditions from '@/pages/rent-bikes/Conditions.vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -29,6 +30,9 @@ function onSuccess() {
             <h1 class="text-center">{{ bike.name }}</h1>
             <CarouselThumbs :images="bike.images" />
             <p class="text-sm text-muted-foreground">{{ bike.short_description }}</p>
+
+            <Conditions />
+
             <Modal
                 v-if="!isAdmin"
                 v-model:open="bookingDialogOpen"
@@ -51,6 +55,8 @@ function onSuccess() {
                     Создать бронь (админ)
                 </Link>
             </Button>
+
+
         </div>
         <article class="prose prose-sm max-w-none" v-html="bike.full_description"></article>
     </div>
