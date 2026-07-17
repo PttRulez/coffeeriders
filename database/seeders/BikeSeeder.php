@@ -4,9 +4,8 @@ namespace Database\Seeders;
 
 use App\Enums\BikeCategory;
 use App\Models\Bike;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\BikeImage;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class BikeSeeder extends Seeder
 {
@@ -26,7 +25,7 @@ class BikeSeeder extends Seeder
                     ['price' => 60000, 'period' => 'месяц'],
                 ],
                 'short_description' => 'Paзмep 54, нa рост 168-178. SRAM- Электроника',
-                'img_url' => 'https://www.velodrom.cc/cdn/shop/files/specialized-crux-comp-complete-bike-gravel-sram-rival-gloss-dove-greymetallic-navy.webp?v=1722032437'
+                'img_url' => 'https://www.velodrom.cc/cdn/shop/files/specialized-crux-comp-complete-bike-gravel-sram-rival-gloss-dove-greymetallic-navy.webp?v=1722032437',
             ],
             [
                 'name' => 'Specialized Diverge E5',
@@ -38,7 +37,7 @@ class BikeSeeder extends Seeder
                     ['price' => 60000, 'period' => 'месяц'],
                 ],
                 'short_description' => 'Ручки grx810. Тормоза ХТ. Кассета m7000',
-                'img_url' => 'https://assets.specialized.com/i/specialized/95423-70_DIVERGE-E5-BRCH-WHTMTN_HERO'
+                'img_url' => 'https://assets.specialized.com/i/specialized/95423-70_DIVERGE-E5-BRCH-WHTMTN_HERO',
             ],
             [
                 'name' => 'Giant Revolt M',
@@ -50,7 +49,7 @@ class BikeSeeder extends Seeder
                     ['price' => 40000, 'period' => 'месяц'],
                 ],
                 'short_description' => 'Ручки grx810. Тормоза ХТ. Кассета m7000',
-                'img_url' => 'https://www.sefiles.net/images/library/zoom/giant-revolt-advanced-pro-1-570972-1.png'
+                'img_url' => 'https://www.sefiles.net/images/library/zoom/giant-revolt-advanced-pro-1-570972-1.png',
             ],
             [
                 'name' => 'Pardus Sport XL',
@@ -62,7 +61,7 @@ class BikeSeeder extends Seeder
                     ['price' => 30000, 'period' => 'месяц'],
                 ],
                 'short_description' => 'Shimano 105. Гидравлическая группа р7000',
-                'img_url' => 'https://all-bikes.ru/goods_img/_goods/a06152458d7ea54b161cace2cdd4d94e_large.jpg'
+                'img_url' => 'https://all-bikes.ru/goods_img/_goods/a06152458d7ea54b161cace2cdd4d94e_large.jpg',
             ],
             [
                 'name' => 'Boardman Team Carbon',
@@ -74,7 +73,7 @@ class BikeSeeder extends Seeder
                     ['price' => 30000, 'period' => 'месяц'],
                 ],
                 'short_description' => 'Shimano 105',
-                'img_url' => 'https://storage.googleapis.com/fm-coresites-assets/rcuk/wp-content/uploads/2011/06/Boardman_Road_TeamC_xl_two.jpg'
+                'img_url' => 'https://storage.googleapis.com/fm-coresites-assets/rcuk/wp-content/uploads/2011/06/Boardman_Road_TeamC_xl_two.jpg',
             ],
             [
                 'name' => 'Cube Elite C68 Race 29',
@@ -86,13 +85,24 @@ class BikeSeeder extends Seeder
                     ['price' => 40000, 'period' => 'месяц'],
                 ],
                 'short_description' => 'Shimano XTR. Пушка-гонка',
-                'img_url' => 'https://static.cyclelab.eu/velos/cube/2007/highres/617400.jpg'
-            ]
-        
+                'img_url' => 'https://static.cyclelab.eu/velos/cube/2007/highres/617400.jpg',
+            ],
+
         ];
-        
+
         foreach ($bikes as $bike) {
-            Bike::create($bike);
+            $imageUrl = $bike['img_url'];
+            unset($bike['img_url']);
+
+            $createdBike = Bike::create($bike);
+
+            BikeImage::create([
+                'bike_id' => $createdBike->id,
+                'url' => $imageUrl,
+                'alt' => $createdBike->name,
+                'sort' => 0,
+                'is_primary' => true,
+            ]);
         }
     }
 }

@@ -47,7 +47,7 @@ function formatDate(val: DateValue): string {
         <PopoverTrigger as-child>
             <Button
                 variant="outline"
-                class="justify-start p-6 text-left font-normal md:text-xl"
+                class="w-full justify-start p-6 text-left font-normal md:text-xl"
             >
                 <span v-if="props.modelValue">
                     {{ formatDate(props.modelValue) }}

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,8 +17,8 @@ class BikeBookingResource extends JsonResource
             'comment' => $this->comment,
             'paid_money' => (int) $this->paid_money,
             'ends_at' => $this->ends_at->format('Y-m-d'),
+            'days_count' => (int) $this->days_count,
             'starts_at' => $this->starts_at->format('Y-m-d'),
         ];
     }
-    
 }

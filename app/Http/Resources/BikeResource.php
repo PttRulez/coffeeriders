@@ -16,26 +16,20 @@ class BikeResource extends JsonResource
     public function toArray(Request $request): array
     {
         $bookedDates = [];
-        
+
         foreach ($this->bookings as $booking) {
             $start = Carbon::parse($booking->starts_at);
             $end = Carbon::parse($booking->ends_at);
-            
-            // один день аренды
-            if ($start->equalTo($end)) {
-                $bookedDates[] = $start->toDateString();
-                continue;
-            }
-            
-            // иначе блокируем все дни до даты возврата (не включая её)
-            while ($start->lt($end)) {
+
+            while ($start->lte($end)) {
                 $bookedDates[] = $start->toDateString();
                 $start->addDay();
             }
         }
-        
+
         $oneDayPrice = min(array_column($this->prices, 'price'));
-        $primaryImage = $this->images->filter(fn($img) => $img->is_primary)->first();
+        $primaryImage = $this->images->filter(fn ($img) => $img->is_primary)->first();
+
         return [
             'id' => $this->id,
             'bookings' => BikeBookingResource::collection($this->bookings)->resolve(),

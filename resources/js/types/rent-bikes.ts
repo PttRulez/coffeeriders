@@ -26,6 +26,7 @@ export interface BikeBooking {
     bike: Bike;
     comment: string;
     customer_name: string;
+    days_count: number;
     ends_at: string;
     id: number;
     paid_money: number;

@@ -9,21 +9,24 @@ use App\Models\RaceCluster;
 use App\Services\AdminTelegram\Dto\FeedBackFormDto;
 use Carbon\Carbon;
 use Telegram\Bot\Api;
+
 use function route;
 
 class AdminTelegram
 {
     protected Api $adminBot;
+
     protected Api $prokatBot;
+
     protected Api $studioBot;
-    
+
     public function __construct()
     {
         $this->prokatBot = new Api(config('telegram.bots.prokat.token'));
         $this->studioBot = new Api(config('telegram.bots.studio.token'));
         $this->adminBot = new Api(config('telegram.bots.admin.token'));
     }
-    
+
     public function sendMessage(string $text, ?int $chatId = null): void
     {
         $this->api->sendMessage([
@@ -31,113 +34,116 @@ class AdminTelegram
             'text' => $text,
         ]);
     }
-    
+
     public function sendProkatBookingNotification(BikeBooking $booking): void
     {
         $telegram = $booking->telegram_username
-            ? '@' . ltrim($booking->telegram_username, '@')
+            ? '@'.ltrim($booking->telegram_username, '@')
             : '—';
-        
+
         $bikeUrl = route('rent-bikes.show', $booking->bike->id);
-        
+
         $startsAt = Carbon::parse($booking->starts_at)->translatedFormat('d F');
         $endsAt = Carbon::parse($booking->ends_at)->translatedFormat('d F');
-        
+        $dates = $booking->starts_at->equalTo($booking->ends_at)
+            ? $startsAt
+            : "{$startsAt} – {$endsAt}";
+
         $text = "🟢 Новое бронирование (Прокат)\n\n"
-            . "🚲 Велосипед: <a href=\"{$bikeUrl}\">{$booking->bike->name}</a>\n"
-            . "👤 {$booking->customer_name}\n"
-            . "📅 {$startsAt} – {$endsAt}\n"
-            . "📞 {$booking->phone}\n"
-            . "📱 Telegram: {$telegram}\n"
-            . "💬 Коммент: {$booking->comment}";
-        
+            ."🚲 Велосипед: <a href=\"{$bikeUrl}\">{$booking->bike->name}</a>\n"
+            ."👤 {$booking->customer_name}\n"
+            ."📅 {$dates}\n"
+            ."📞 {$booking->phone}\n"
+            ."📱 Telegram: {$telegram}\n"
+            ."💬 Коммент: {$booking->comment}";
+
         $this->prokatBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
             'text' => $text,
             'parse_mode' => 'HTML',
         ]);
     }
-    
+
     public function sendStudioBookingStoreNotification(CyclingActivity $cyclingActivity, ?bool $paid = false, ?string $couponCode = null): void
     {
         $cyclingActivity->loadMissing('user');
-        
+
         $telegram = $cyclingActivity->user->telegram_username
-            ? '@' . ltrim($cyclingActivity->user->telegram_username, '@')
+            ? '@'.ltrim($cyclingActivity->user->telegram_username, '@')
             : '—';
-        
+
         $startsAt = Carbon::parse($cyclingActivity->starts_at)->translatedFormat('d F H:i');
-        
+
         $text = "🟢 Новое бронирование (Студия)\n\n"
-            . "👤 {$cyclingActivity->user->name}\n"
-            . "📅 {$startsAt}\n"
-            . "📞 {$cyclingActivity->user->phone}\n"
-            . "📱 Telegram: {$telegram}\n"
-            . "{$cyclingActivity->user->height} см, {$cyclingActivity->user->weight} кг, {$cyclingActivity->user->pedals}\n"
-            . ($paid ? "Оплата на сайте\n" : "Оплата в студии\n")
-            . ($couponCode ? 'Купон: ' . $couponCode : '');
-        
+            ."👤 {$cyclingActivity->user->name}\n"
+            ."📅 {$startsAt}\n"
+            ."📞 {$cyclingActivity->user->phone}\n"
+            ."📱 Telegram: {$telegram}\n"
+            ."{$cyclingActivity->user->height} см, {$cyclingActivity->user->weight} кг, {$cyclingActivity->user->pedals}\n"
+            .($paid ? "Оплата на сайте\n" : "Оплата в студии\n")
+            .($couponCode ? 'Купон: '.$couponCode : '');
+
         $this->studioBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
             'text' => $text,
         ]);
     }
-    
+
     public function sendStudioBookingUpdatedNotification(CyclingActivity $cyclingActivity): void
     {
         $cyclingActivity->loadMissing('user');
-        
+
         $telegram = $cyclingActivity->user->telegram_username
-            ? '@' . ltrim($cyclingActivity->user->telegram_username, '@')
+            ? '@'.ltrim($cyclingActivity->user->telegram_username, '@')
             : '—';
-        
+
         $original = Carbon::parse($cyclingActivity->getOriginal('starts_at'))->translatedFormat('d F H:i');
         $updated = Carbon::parse($cyclingActivity->starts_at)->translatedFormat('d F H:i');
-        
-        $text = "🟢 Изменение времени бронирования (Студия)\n\n" .
-            "👤 {$cyclingActivity->user->name}\n" .
-            "📞 {$cyclingActivity->user->phone}\n" .
-            "📱 Telegram: {$telegram}\n\n" .
-            "⏱ Время изменено:\n" .
-            "с {$original}\n" .
-            "на {$updated}" .
+
+        $text = "🟢 Изменение времени бронирования (Студия)\n\n".
+            "👤 {$cyclingActivity->user->name}\n".
+            "📞 {$cyclingActivity->user->phone}\n".
+            "📱 Telegram: {$telegram}\n\n".
+            "⏱ Время изменено:\n".
+            "с {$original}\n".
+            "на {$updated}".
             "{$cyclingActivity->user->height} см, {$cyclingActivity->user->weight} кг, {$cyclingActivity->user->pedals}";
-        
+
         $this->studioBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
             'text' => $text,
         ]);
     }
-    
+
     public function sendStudioBookingDeletedNotification(CyclingActivity $cyclingActivity): void
     {
         $cyclingActivity->loadMissing('user');
-        
+
         $telegram = $cyclingActivity->user->telegram_username
-            ? '@' . ltrim($cyclingActivity->user->telegram_username, '@')
+            ? '@'.ltrim($cyclingActivity->user->telegram_username, '@')
             : '—';
-        
+
         $startsAt = Carbon::parse($cyclingActivity->getOriginal('starts_at'))->translatedFormat('d F H:i');
         $updated = Carbon::parse($cyclingActivity->starts_at)->translatedFormat('d F H:i');
-        
-        $text = "😭 Удалено бронирование (Студия)\n\n" .
-            "👤 {$cyclingActivity->user->name}\n" .
-            "📞 {$cyclingActivity->user->phone}\n" .
-            "📱 Telegram: {$telegram}\n\n" .
+
+        $text = "😭 Удалено бронирование (Студия)\n\n".
+            "👤 {$cyclingActivity->user->name}\n".
+            "📞 {$cyclingActivity->user->phone}\n".
+            "📱 Telegram: {$telegram}\n\n".
             "⏱ {$startsAt}";
-        
+
         $this->studioBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
             'text' => $text,
         ]);
     }
-    
+
     public function sendFeedbackFormNotification(FeedBackFormDto $dto): void
     {
         $text = "🟢 Новое сообщение (Форма обратной связи)\n\n"
-            . "👤 Имя: {$dto->name}\n"
-            . "📞 Телефон: {$dto->phone}\n"
-            . "✉️ Сообщение:\n{$dto->message}\n";
+            ."👤 Имя: {$dto->name}\n"
+            ."📞 Телефон: {$dto->phone}\n"
+            ."✉️ Сообщение:\n{$dto->message}\n";
 
         $this->adminBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
@@ -150,21 +156,20 @@ class AdminTelegram
         $activity->loadMissing('user');
 
         $telegram = $activity->user->telegram_username
-            ? '@' . ltrim($activity->user->telegram_username, '@')
+            ? '@'.ltrim($activity->user->telegram_username, '@')
             : '—';
 
         $text = "🏁 Регистрация на гонку\n\n"
-            . "🏆 Гонка: {$race->name}\n"
-            . "🚀 Группа: {$cluster->name}\n\n"
-            . "👤 {$activity->user->name}\n"
-            . "📞 {$activity->user->phone}\n"
-            . "📱 Telegram: {$telegram}\n"
-            . "{$activity->user->height} см, {$activity->user->weight} кг, {$activity->user->pedals}";
+            ."🏆 Гонка: {$race->name}\n"
+            ."🚀 Группа: {$cluster->name}\n\n"
+            ."👤 {$activity->user->name}\n"
+            ."📞 {$activity->user->phone}\n"
+            ."📱 Telegram: {$telegram}\n"
+            ."{$activity->user->height} см, {$activity->user->weight} кг, {$activity->user->pedals}";
 
         $this->studioBot->sendMessage([
             'chat_id' => config('telegram.admin_chat_id'),
             'text' => $text,
         ]);
     }
-
 }

@@ -6,9 +6,10 @@ import PhoneInput from '@/components/form-elements/PhoneInput.vue';
 import DateRangePicker from '@/components/shared/DateRangePicker.vue';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/vue3';
-import { today } from '@internationalized/date';
+import { differenceInCalendarDays, format, parseISO } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { LoaderCircle } from 'lucide-vue-next';
-import { DateRange, DateValue } from 'reka-ui';
+import { DateRange } from 'reka-ui';
 import { computed, ref } from 'vue';
 
 type Props = {
@@ -36,11 +37,33 @@ const form = useForm({
     ends_at: '',
 });
 
-function isDisabledDate(day: DateValue): boolean {
-    const booked = props.booked_dates.includes(day.toString());
-    const isInPast = day.compare(today('Europe/Moscow')) < 0;
-    return booked || isInPast;
-}
+const rentalPeriod = computed(() => {
+    const startIso = dateRange.value.start?.toString();
+    const endIso = dateRange.value.end?.toString();
+
+    if (!startIso || !endIso) {
+        return '';
+    }
+
+    const startsAt = parseISO(startIso);
+    const endsAt = parseISO(endIso);
+    const days = differenceInCalendarDays(endsAt, startsAt) + 1;
+
+    const dayWord = days === 1 ? 'день' : days > 1 && days < 5 ? 'дня' : 'дней';
+
+    if (
+        startsAt.getMonth() === endsAt.getMonth() &&
+        startsAt.getFullYear() === endsAt.getFullYear()
+    ) {
+        if (days === 1) {
+            return `Аренда ${days} ${dayWord} ${format(startsAt, 'd MMMM', { locale: ru })}`;
+        }
+
+        return `Аренда ${days} ${dayWord} с ${format(startsAt, 'd', { locale: ru })} по ${format(endsAt, 'd MMMM', { locale: ru })}`;
+    }
+
+    return `Аренда ${days} ${dayWord} с ${format(startsAt, 'd MMMM', { locale: ru })} по ${format(endsAt, 'd MMMM', { locale: ru })}`;
+});
 
 function submit(): void {
     form.starts_at = dateRange.value.start?.toString() ?? '';
@@ -70,14 +93,17 @@ function submit(): void {
 
             <div>
                 <DateRangePicker
-                    :is-date-disabled="isDisabledDate"
                     :booked-dates="props.booked_dates"
                     v-model="dateRange"
-                    placeholderText="даты брони"
+                    placeholderText="даты аренды"
                 />
                 <InputError v-if="form.errors.starts_at" :message="form.errors.starts_at" />
                 <InputError v-if="form.errors.ends_at" :message="form.errors.ends_at" />
             </div>
+
+            <p v-if="rentalPeriod" class="text-sm text-muted-foreground md:col-span-2">
+                {{ rentalPeriod }}
+            </p>
 
             <FormInput
                 field-name="telegram_username"

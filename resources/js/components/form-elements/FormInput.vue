@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import InputError from '@/components/form-elements/InputError.vue';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ref, computed } from 'vue';
 import { Upload } from 'lucide-vue-next';
+import { computed, ref, useAttrs } from 'vue';
 
 const model = defineModel<any>();
 
@@ -29,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
     buttonText: 'Выбрать файл',
     showFileName: true,
 });
+const attrs = useAttrs();
 
 const fileInputRef = ref<HTMLInputElement>();
 const selectedFileName = ref<string>('');
@@ -48,6 +49,37 @@ const openFileDialog = () => {
 };
 
 const isFileInput = computed(() => props.type === 'file');
+
+const numberMin = computed(() => {
+    const min = attrs.min;
+    if (typeof min !== 'string' && typeof min !== 'number') {
+        return null;
+    }
+
+    const value = Number(min);
+    return Number.isNaN(value) ? null : value;
+});
+
+const handleModelUpdate = (value: string | number) => {
+    if (props.type !== 'number' || numberMin.value === null || value === '') {
+        model.value = value;
+        return;
+    }
+
+    const numericValue = Number(value);
+    model.value =
+        !Number.isNaN(numericValue) && numericValue < numberMin.value ? numberMin.value : value;
+};
+
+const handleNumberKeydown = (event: KeyboardEvent) => {
+    if (props.type !== 'number' || numberMin.value === null || numberMin.value < 0) {
+        return;
+    }
+
+    if (event.key === '-') {
+        event.preventDefault();
+    }
+};
 </script>
 
 <template>
@@ -84,7 +116,10 @@ const isFileInput = computed(() => props.type === 'file');
                     {{ props.buttonText }}
                 </Button>
 
-                <span v-if="props.showFileName && selectedFileName" class="text-sm text-muted-foreground">
+                <span
+                    v-if="props.showFileName && selectedFileName"
+                    class="text-sm text-muted-foreground"
+                >
                     Выбран файл: {{ selectedFileName }}
                 </span>
             </div>
@@ -93,11 +128,13 @@ const isFileInput = computed(() => props.type === 'file');
         <!-- Regular input for other types -->
         <Input
             v-else
-            v-model="model"
+            :model-value="model"
+            @update:model-value="handleModelUpdate"
+            @keydown="handleNumberKeydown"
             :id="props.fieldName"
             :name="props.fieldName"
             :type="props.type"
-            :class="cn('p-6 md:text-xl text-base', props.class)"
+            :class="cn('p-6 text-base md:text-xl', props.class)"
             :placeholder="props.placeholder"
             autocomplete="off"
             v-bind="$attrs"

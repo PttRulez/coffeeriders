@@ -10,8 +10,8 @@ use App\Models\Bike;
 use App\Models\BikeBooking;
 use App\Support\TelegramUsernameExtractor;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -44,6 +44,8 @@ class AdminBikeBookingController extends Controller
     public function store(AdminCreateBikeBookingRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        $startsAt = Carbon::parse($data['starts_at']);
+        $endsAt = Carbon::parse($data['ends_at']);
 
         BikeBooking::create([
             'bike_id' => $data['bike_id'],
@@ -51,8 +53,9 @@ class AdminBikeBookingController extends Controller
             'customer_name' => $data['customer_name'],
             'telegram_username' => $this->normalizeTelegramUsername($data['telegram_username'] ?? null),
             'phone' => $data['phone'] ?? null,
-            'starts_at' => Carbon::parse($data['starts_at'])->toDateString(),
-            'ends_at' => Carbon::parse($data['ends_at'])->toDateString(),
+            'starts_at' => $startsAt->toDateString(),
+            'ends_at' => $endsAt->toDateString(),
+            'days_count' => $startsAt->diffInDays($endsAt) + 1,
             'status' => BookingStatusEnum::Booked->value,
             'paid_money' => 0,
         ]);
@@ -61,11 +64,11 @@ class AdminBikeBookingController extends Controller
             ->route('adminka.rent-bikes.bookings.index')
             ->with('success', 'Бронь создана без оплаты');
     }
-    
+
     public function destroy(BikeBooking $bikeBooking): RedirectResponse
     {
         $bikeBooking->delete();
-        
+
         return back()->with('success', 'Бронь удалена');
     }
 

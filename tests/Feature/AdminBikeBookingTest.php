@@ -121,6 +121,76 @@ class AdminBikeBookingTest extends TestCase
             );
     }
 
+    public function test_admin_booking_store_saves_date_range(): void
+    {
+        Carbon::setTestNow('2026-07-09 12:00:00');
+        $this->beforeApplicationDestroyed(fn () => Carbon::setTestNow());
+
+        $admin = User::factory()->create(['role' => Role::ADMIN->value]);
+        $bike = $this->createBike();
+
+        $this->actingAs($admin)
+            ->post(route('adminka.rent-bikes.bookings.store'), [
+                'bike_id' => $bike->id,
+                'customer_name' => 'Customer',
+                'phone' => '+79990000001',
+                'starts_at' => '2026-07-12',
+                'ends_at' => '2026-07-14',
+            ])
+            ->assertRedirect(route('adminka.rent-bikes.bookings.index'));
+
+        $this->assertDatabaseHas('bike_bookings', [
+            'bike_id' => $bike->id,
+            'customer_name' => 'Customer',
+            'starts_at' => '2026-07-12',
+            'ends_at' => '2026-07-14',
+            'days_count' => 3,
+        ]);
+    }
+
+    public function test_admin_booking_store_rejects_date_overlap(): void
+    {
+        Carbon::setTestNow('2026-07-09 12:00:00');
+        $this->beforeApplicationDestroyed(fn () => Carbon::setTestNow());
+
+        $admin = User::factory()->create(['role' => Role::ADMIN->value]);
+        $bike = $this->createBike();
+
+        $this->createBooking($bike, '2026-07-12', '2026-07-14');
+
+        $this->actingAs($admin)
+            ->from(route('adminka.rent-bikes.bookings.create', ['bike' => $bike->id]))
+            ->post(route('adminka.rent-bikes.bookings.store'), [
+                'bike_id' => $bike->id,
+                'customer_name' => 'Customer',
+                'phone' => '+79990000001',
+                'starts_at' => '2026-07-14',
+                'ends_at' => '2026-07-14',
+            ])
+            ->assertRedirect(route('adminka.rent-bikes.bookings.create', ['bike' => $bike->id]))
+            ->assertSessionHasErrors('starts_at');
+    }
+
+    public function test_admin_booking_store_requires_phone_or_telegram(): void
+    {
+        Carbon::setTestNow('2026-07-09 12:00:00');
+        $this->beforeApplicationDestroyed(fn () => Carbon::setTestNow());
+
+        $admin = User::factory()->create(['role' => Role::ADMIN->value]);
+        $bike = $this->createBike();
+
+        $this->actingAs($admin)
+            ->from(route('adminka.rent-bikes.bookings.create', ['bike' => $bike->id]))
+            ->post(route('adminka.rent-bikes.bookings.store'), [
+                'bike_id' => $bike->id,
+                'customer_name' => 'Customer',
+                'starts_at' => '2026-07-14',
+                'ends_at' => '2026-07-14',
+            ])
+            ->assertRedirect(route('adminka.rent-bikes.bookings.create', ['bike' => $bike->id]))
+            ->assertSessionHasErrors(['phone', 'telegram_username']);
+    }
+
     private function createBike(): Bike
     {
         return Bike::query()->create([
@@ -139,6 +209,7 @@ class AdminBikeBookingTest extends TestCase
             'customer_name' => 'Customer',
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
+            'days_count' => Carbon::parse($startsAt)->diffInDays(Carbon::parse($endsAt)) + 1,
             'status' => BookingStatusEnum::Booked->value,
         ]);
     }

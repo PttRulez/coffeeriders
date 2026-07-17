@@ -24,6 +24,14 @@ const formatDate = (date: string) => {
     return format(parseISO(date), 'd MMMM', { locale: ru });
 };
 
+const formatBookingDates = (booking: BikeBooking) => {
+    if (booking.starts_at === booking.ends_at) {
+        return formatDate(booking.starts_at);
+    }
+
+    return `${formatDate(booking.starts_at)} - ${formatDate(booking.ends_at)}`;
+};
+
 const deleteBooking = (id: number) => {
     router.delete(route('adminka.rent-bikes.bookings.destroy', { bikeBooking: id }), {
         onSuccess: () => {
@@ -40,6 +48,7 @@ const deleteBooking = (id: number) => {
             <TableRow>
                 <TableHead v-if="showBikeName">велик</TableHead>
                 <TableHead>даты</TableHead>
+                <TableHead>дней</TableHead>
                 <TableHead>бабки</TableHead>
                 <TableHead>имя</TableHead>
                 <TableHead>телефон</TableHead>
@@ -57,11 +66,11 @@ const deleteBooking = (id: number) => {
                 </TableCell>
 
                 <TableCell class="whitespace-nowrap">
-                    <div class="flex flex-col md:flex-row md:gap-1">
-                        <span>{{ formatDate(booking.starts_at) }}</span>
-                        <span class="hidden md:inline">-</span>
-                        <span>{{ formatDate(booking.ends_at) }}</span>
-                    </div>
+                    {{ formatBookingDates(booking) }}
+                </TableCell>
+
+                <TableCell class="font-medium">
+                    {{ booking.days_count }}
                 </TableCell>
 
                 <TableCell class="font-medium">

@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon } from 'lucide-vue-next';
-import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { RangeCalendar } from '@/components/ui/range-calendar';
+import { cn } from '@/lib/utils';
+import { DateFormatter, today } from '@internationalized/date';
+import { Calendar as CalendarIcon } from 'lucide-vue-next';
 import { DateRange, DateValue } from 'reka-ui';
 import { Matcher, toDate } from 'reka-ui/date';
-import { DateFormatter, today } from '@internationalized/date';
+import { ref, watch } from 'vue';
 
 const props = withDefaults(
     defineProps<{
         placeholderText?: string;
         isDateDisabled?: Matcher;
-         bookedDates?: string[];
+        bookedDates?: string[];
         class?: string;
     }>(),
     { placeholderText: 'Даты аренды', bookedDates: () => [] },
@@ -35,28 +35,38 @@ watch(
 );
 
 const isDateDisabled = (day: DateValue): boolean => {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const todayDate = today(timeZone);
-  const iso = day.toString();
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const todayDate = today(timeZone);
+    const iso = day.toString();
 
-  // прошлое всегда блокируем
-  if (day.compare(todayDate) < 0) {
-    return true;
-  }
+    // прошлое всегда блокируем
+    if (day.compare(todayDate) < 0) {
+        return true;
+    }
 
-  // если start ещё не выбран → выбираем start
-  if (!placeholder.value?.start) {
-    return props.bookedDates.includes(iso);
-  }
+    // если start ещё не выбран → выбираем start
+    if (!placeholder.value?.start) {
+        return props.bookedDates.includes(iso);
+    }
 
-  // если start уже выбран → выбираем end
-  if (props.bookedDates.includes(iso)) {
-    // можно end = start (однодневная аренда)
-    return iso !== placeholder.value.start.toString();
-  }
+    // если start уже выбран → выбираем end
+    if (props.bookedDates.includes(iso)) {
+        // можно end = start (однодневная аренда)
+        return iso !== placeholder.value.start.toString();
+    }
 
-  return false;
-}
+    const start = placeholder.value.start;
+    const rangeStart = start.compare(day) <= 0 ? start.toString() : iso;
+    const rangeEnd = start.compare(day) <= 0 ? iso : start.toString();
+
+    if (
+        props.bookedDates.some((bookedDate) => bookedDate >= rangeStart && bookedDate <= rangeEnd)
+    ) {
+        return true;
+    }
+
+    return false;
+};
 </script>
 
 <template>
@@ -67,9 +77,9 @@ const isDateDisabled = (day: DateValue): boolean => {
                 variant="outline"
                 :class="
                     cn(
-                        'w-full justify-start p-6 text-xl text-left font-normal',
+                        'w-full justify-start p-6 text-left text-xl font-normal',
                         !model?.start && 'text-muted-foreground',
-                        props.class
+                        props.class,
                     )
                 "
             >

@@ -7,12 +7,12 @@ use App\Enums\BookingStatusEnum;
 use App\Http\Requests\CreateBikeBookingRequest;
 use App\Models\Bike;
 use App\Models\BikeBooking;
-use App\Support\TelegramUsernameExtractor;
 use App\Services\AdminTelegram\AdminTelegram;
 use App\Services\TinkoffService;
+use App\Support\TelegramUsernameExtractor;
 use Carbon\Carbon;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 use function back;
 use function route;
@@ -27,13 +27,17 @@ class BikeBookingController extends Controller
             return response()->json(['message' => 'Дата начала не может быть в прошлом'], 422);
         }
 
+        $startsAt = Carbon::parse($data['starts_at']);
+        $endsAt = Carbon::parse($data['ends_at']);
+
         $booking = BikeBooking::create([
             'bike_id' => $data['bike_id'],
             'comment' => $data['comment'] ?? null,
             'customer_name' => $data['customer_name'],
-            'ends_at' => Carbon::parse($data['ends_at'])->toDateString(),
+            'days_count' => $startsAt->diffInDays($endsAt) + 1,
+            'ends_at' => $endsAt->toDateString(),
             'phone' => $data['phone'] ?? null,
-            'starts_at' => Carbon::parse($data['starts_at'])->toDateString(),
+            'starts_at' => $startsAt->toDateString(),
             'status' => BookingStatusEnum::Booked->value,
             'telegram_username' => $this->normalizeTelegramUsername($data['telegram_username'] ?? null),
         ]);
@@ -56,7 +60,7 @@ class BikeBookingController extends Controller
         $dto = new TinkoffInitPaymentDto(
             amount: $oneDayPrice / 2,
             failUrl: route('failed-payment'),
-            orderId: 'bike_booking_id_' . $booking->id,
+            orderId: 'bike_booking_id_'.$booking->id,
             successUrl: route('success-payment'),
             notificationUrl: route('tinkoff.handle-bike-booking-notification', ['bikeBooking' => $booking->id]),
         );
@@ -68,6 +72,7 @@ class BikeBookingController extends Controller
                 'booking_id' => $booking->id,
                 'response' => $payment,
             ]);
+
             return back()->with('error', 'Ошибка запроса к банку');
         }
 
